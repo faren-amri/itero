@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
+</head>
+<body>
+  <h3>🎯 Complete Challenge</h3>
+  <button onclick="completeChallenge()">Mark as Done</button>
+
+  <script>
+    const t = TrelloPowerUp.iframe();
+    async function completeChallenge() {
+      const res = await fetch('https://your-backend.onrender.com/api/complete_challenge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: 1, challenge_id: 5 })
+      });
+      const data = await res.json();
+      t.alert({ message: data.message });
+      t.closePopup();
+    }
+  </script>
+</body>
+</html>

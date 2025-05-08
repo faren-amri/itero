@@ -6,7 +6,7 @@ const t = TrelloPowerUp.initialize({
       text: 'Open Itero',
       callback: function (t) {
         return t.popup({
-          title: 'Itero Motivation Engine',
+          title: 'Complete Challenge',
           url: '/public/popup.html',
           height: 200
         });

@@ -14,6 +14,6 @@
     "icon": {
       "url": "/public/icon.png"
     },
-    "iframeConnectorUrl": "https://your-netlify-site.netlify.app"
+    "iframeConnectorUrl": "https://itero-powerup.netlify.app/"
   }
   

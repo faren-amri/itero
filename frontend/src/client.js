@@ -1,5 +1,6 @@
 const TrelloPowerUp = window.TrelloPowerUp;
-const t = TrelloPowerUp.initialize({
+
+TrelloPowerUp.initialize({
   'board-buttons': function (t, options) {
     return [{
       icon: '/public/icon.png',

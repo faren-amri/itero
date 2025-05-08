@@ -10,7 +10,7 @@
   <script>
     const t = TrelloPowerUp.iframe();
     async function completeChallenge() {
-      const res = await fetch('https://your-backend.onrender.com/api/complete_challenge', {
+      const res = await fetch(' https://itero.onrender.com/api/complete_challenge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: 1, challenge_id: 5 })
@@ -22,3 +22,4 @@
   </script>
 </body>
 </html>
+git remote add origin https://github.com/faren-amri/itero-powerup.git

@@ -1,0 +1,3 @@
+curl -X POST https://itero.onrender.com/api/complete_challenge \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": 1, "challenge_id": 123}'

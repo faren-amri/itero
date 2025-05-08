@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <link rel="stylesheet" href="../src/style.css">
+  </head>
+  <body>
+    <h2>🎯 Complete a Challenge</h2>
+    <button onclick="markDone()">✅ Done</button>
+
+    <script>
+      const t = TrelloPowerUp.iframe();
+      function markDone() {
+        t.alert({ message: 'Nice job! Challenge complete.' });
+        t.closePopup();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+    "name": "Itero Motivation Engine",
+    "description": "Gamify your Trello workflow with challenges & streaks",
+    "permissions": ["read", "write"],
+    "capabilities": {
+      "board-buttons": [
+        {
+          "text": "Open Itero",
+          "callback": "openPopup"
+        }
+      ]
+    },
+    "author": "Your Name",
+    "icon": {
+      "url": "/public/icon.png"
+    },
+    "iframeConnectorUrl": "https://your-netlify-site.netlify.app"
+  }
+  

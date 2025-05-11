@@ -3,10 +3,10 @@
   "description": "Minimal working setup",
   "permissions": ["read", "write"],
   "capabilities": {
-    "board-buttons": [
+    "card-buttons": [
       {
-        "text": "Open Itero",
-        "callback": "openPopup"
+        "text": "Complete Task 🎯",
+        "callback": "onCompleteTask"
       }
     ]
   },

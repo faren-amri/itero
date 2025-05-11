@@ -1,5 +1,5 @@
 import os
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:hello@localhost/itero_powerUp"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

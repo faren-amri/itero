@@ -1,6 +1,6 @@
 {
   "name": "Itero Motivation Engine",
-  "description": "Gamify your Trello workflow with challenges & streaks",
+  "description": "Minimal test version",
   "permissions": ["read", "write"],
   "capabilities": {
     "board-buttons": [
@@ -10,7 +10,7 @@
       }
     ]
   },
-  "author": "Farnoud Aimri",
+  "author": "Farnoud Amiri",
   "icon": {
     "url": "https://itero-powerup.netlify.app/icon.png"
   },

@@ -1,5 +1,7 @@
 # app/challenges/routes.py
 from flask import Blueprint
+from app.challenges.models import ChallengeTemplate, UserChallenge
+
 
 challenge_bp = Blueprint("challenges", __name__)
 

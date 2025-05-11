@@ -10,9 +10,9 @@
       }
     ]
   },
-  "author": "Your Name",
+  "author": "Farnoud Aimri",
   "icon": {
-    "url": "https://itero-powerup.netlify.app/public/icon.png"
+    "url": "https://itero-powerup.netlify.app/icon.png"
   },
-  "iframeConnectorUrl": "https://itero-powerup.netlify.app/"
+  "iframeConnectorUrl": "https://itero-powerup.netlify.app"
 }

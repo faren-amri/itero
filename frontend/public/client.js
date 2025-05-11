@@ -8,7 +8,7 @@ TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Hello from Itero!',
-          url: 'popup.html',
+          url: 'public/popup.html',
           height: 150
         });
       }

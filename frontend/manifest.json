@@ -1,6 +1,6 @@
 {
   "name": "Itero Motivation Engine",
-  "description": "Minimal test version",
+  "description": "Minimal working setup",
   "permissions": ["read", "write"],
   "capabilities": {
     "board-buttons": [

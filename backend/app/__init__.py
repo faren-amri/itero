@@ -6,7 +6,12 @@ def create_app():
     CORS(app)
 
     # Register routes
-    from .routes.challenge import challenge_bp
-    app.register_blueprint(challenge_bp)
+    from app.routes import register_routes
+    register_routes(app)
 
     return app
+
+
+
+
+

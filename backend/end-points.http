@@ -1,4 +1,0 @@
-curl -X POST https://itero-api-fme7.onrender.com/api/tasks/complete \
--H "Content-Type: application/json" \
--d '{"trello_user_id": "test-id", "trello_username": "tester", "task_id": 123}'
-

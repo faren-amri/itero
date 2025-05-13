@@ -1,11 +1,6 @@
 [build]
-  publish = "frontend/dist"
-  command = "npm run build"
-
-[[redirects]]
-  from = "/powerup.js"
-  to = "/public/powerup.js"
-  status = 200
+  publish = "frontend"
+  command = ""
 
 [[redirects]]
   from = "/*"

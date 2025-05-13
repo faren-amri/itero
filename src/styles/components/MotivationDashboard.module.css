@@ -1,0 +1,55 @@
+.dashboard {
+    padding: 2rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--gray-light);
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .progressBarContainer {
+    background: var(--gray-medium);
+    height: 14px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .progressBar {
+    background: var(--progress-blue);
+    height: 100%;
+    transition: width 0.4s ease;
+  }
+  
+  .progressLabel {
+    margin-top: 0.5rem;
+    display: block;
+    font-size: 0.875rem;
+    text-align: right;
+  }
+  
+  .streakValue {
+    font-size: 1.5rem;
+    color: var(--progress-blue);
+  }
+  
+  .placeholder {
+    font-style: italic;
+    color: var(--gray-light);
+  }
+  
+  .logMoodBtn {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--progress-blue);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+  }
+  

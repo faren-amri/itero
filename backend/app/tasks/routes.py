@@ -12,25 +12,30 @@ XP_PER_TASK = 10
 @task_bp.route("/complete", methods=["POST"])
 def complete_task():
     data = request.get_json()
-    user_id = data.get("user_id")
+    trello_user_id = data.get("trello_user_id")
+    trello_username = data.get("trello_username")
+    task_id = data.get("task_id")
 
-    if not user_id:
-        return jsonify({"error": "Missing user_id"}), 400
+    if not trello_user_id or not task_id:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # 🔁 Get or create the user based on Trello ID
+    user = User.query.filter_by(trello_id=trello_user_id).first()
+    if not user:
+        user = User(trello_id=trello_user_id, username=trello_username, xp=0, level=1)
+        db.session.add(user)
+        db.session.commit()
 
     # ✅ Reward XP
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
     user.xp += XP_PER_TASK
     if user.xp >= user.level * 100:
         user.level += 1
 
     # ✅ Handle streak
     today = datetime.utcnow().date()
-    streak = Streak.query.filter_by(user_id=user_id, streak_type='daily').first()
+    streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
     if not streak:
-        streak = Streak(user_id=user_id, count=1, streak_type='daily', last_updated=today)
+        streak = Streak(user_id=user.id, count=1, streak_type='daily', last_updated=today)
         db.session.add(streak)
     else:
         last = streak.last_updated.date()

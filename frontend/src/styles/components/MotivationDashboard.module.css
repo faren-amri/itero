@@ -41,3 +41,15 @@
     color: var(--gray-light);
   }
   
+  .logMoodBtn {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--progress-blue);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+  }
+  

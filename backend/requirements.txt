@@ -65,3 +65,5 @@ urllib3==1.26.18
 Werkzeug==2.3.7
 wrapt==1.16.0
 yarl==1.9.4
+Flask-Migrate==4.1.0
+

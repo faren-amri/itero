@@ -1,0 +1,13 @@
+{
+  "name": "Itero Motivation Engine",
+  "description": "Minimal working setup",
+  "permissions": ["read", "write"],
+  "capabilities": {
+    "card-buttons": []
+  },
+  "author": "Farnoud Amiri",
+  "icon": {
+    "url": "https://itero-powerup.netlify.app/icon.png"
+  },
+  "iframeConnectorUrl": "https://itero-powerup.netlify.app/#/"
+}

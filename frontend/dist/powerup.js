@@ -1,5 +1,3 @@
-console.log("🧠 Itero Power-Up initializing...");
-
 window.TrelloPowerUp.initialize({
   'board-buttons': function (t) {
     return [{

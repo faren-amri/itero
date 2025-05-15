@@ -5,18 +5,21 @@ const MotivationDashboardPage = () => {
   const [userId, setUserId] = useState(null);
   const [statusMessage, setStatusMessage] = useState('Completing task…');
   const [isTaskComplete, setIsTaskComplete] = useState(false);
+  const [notInTrello, setNotInTrello] = useState(false);
 
   useEffect(() => {
-    if (!window.TrelloPowerUp || !window.TrelloPowerUp.iframe) {
+    const trello = window.TrelloPowerUp?.iframe?.();
+
+    if (!trello) {
       console.warn("🚫 Not inside Trello iframe — skipping task completion.");
+      setNotInTrello(true);
       return;
     }
 
-    const t = window.TrelloPowerUp.iframe();
-
+    // Proceed inside Trello iframe
     Promise.all([
-      t.card('id'),
-      t.member('id', 'fullName', 'username')
+      trello.card('id'),
+      trello.member('id', 'username')
     ])
       .then(([card, member]) => {
         const payload = {
@@ -27,7 +30,7 @@ const MotivationDashboardPage = () => {
 
         console.log('📤 Sending task completion:', payload);
 
-        return fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
+        return fetch('https://itero-api.onrender.com/api/tasks/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -35,8 +38,6 @@ const MotivationDashboardPage = () => {
       })
       .then(async (res) => {
         const text = await res.text();
-        console.log("🧾 Server response:", text);
-
         try {
           const data = JSON.parse(text);
           setUserId(data.user_id || null);
@@ -56,12 +57,14 @@ const MotivationDashboardPage = () => {
   return (
     <div style={{ padding: '2rem', color: 'black' }}>
       <h1>🎯 Motivation Dashboard</h1>
-      {!isTaskComplete ? (
+      {notInTrello ? (
+        <p>⚠️ This app must be opened inside a Trello Power-Up.</p>
+      ) : !isTaskComplete ? (
         <p style={{ fontSize: '18px', fontWeight: 600 }}>{statusMessage}</p>
       ) : userId ? (
         <MotivationDashboard userId={userId} />
       ) : (
-        <p>⚠️ Task complete, but no user ID found.</p>
+        <p>⚠️ Task complete, but no user ID returned.</p>
       )}
     </div>
   );

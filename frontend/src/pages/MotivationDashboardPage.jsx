@@ -3,7 +3,7 @@ import MotivationDashboard from '../components/MotivationDashboard/MotivationDas
 
 const MotivationDashboardPage = () => {
   const [userId, setUserId] = useState(null);
-  const [statusMessage, setStatusMessage] = useState('Completing task...');
+  const [statusMessage, setStatusMessage] = useState('Completing task…');
   const [isTaskComplete, setIsTaskComplete] = useState(false);
 
   useEffect(() => {
@@ -11,9 +11,9 @@ const MotivationDashboardPage = () => {
       console.warn("🚫 Not inside Trello iframe — skipping task completion.");
       return;
     }
-  
+
     const t = window.TrelloPowerUp.iframe();
-  
+
     Promise.all([
       t.card('id'),
       t.member('id', 'fullName', 'username')
@@ -24,9 +24,9 @@ const MotivationDashboardPage = () => {
           trello_username: member.username,
           task_id: card.id
         };
-  
+
         console.log('📤 Sending task completion:', payload);
-  
+
         return fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -35,13 +35,15 @@ const MotivationDashboardPage = () => {
       })
       .then(async (res) => {
         const text = await res.text();
+        console.log("🧾 Server response:", text);
+
         try {
           const data = JSON.parse(text);
           setUserId(data.user_id || null);
           setStatusMessage(`✅ Task complete!\nXP: ${data.xp} | Streak: ${data.streak_count}`);
           setIsTaskComplete(true);
         } catch (e) {
-          console.error('❌ Invalid JSON:', text);
+          console.error('❌ Invalid JSON from server:', text);
           setStatusMessage('❌ Server error. Could not complete task.');
         }
       })
@@ -50,15 +52,16 @@ const MotivationDashboardPage = () => {
         setStatusMessage('❌ Network error. Try again later.');
       });
   }, []);
-  
 
   return (
-    <div style={{ padding: '2rem', color: 'white', fontFamily: 'Plus Jakarta Sans' }}>
-      <h2>🎯 Motivation Dashboard</h2>
-      <p style={{ marginBottom: '1rem' }}>{statusMessage}</p>
-
-      {isTaskComplete && userId && (
+    <div style={{ padding: '2rem', color: 'black' }}>
+      <h1>🎯 Motivation Dashboard</h1>
+      {!isTaskComplete ? (
+        <p style={{ fontSize: '18px', fontWeight: 600 }}>{statusMessage}</p>
+      ) : userId ? (
         <MotivationDashboard userId={userId} />
+      ) : (
+        <p>⚠️ Task complete, but no user ID found.</p>
       )}
     </div>
   );

@@ -7,8 +7,13 @@ const MotivationDashboardPage = () => {
   const [isTaskComplete, setIsTaskComplete] = useState(false);
 
   useEffect(() => {
+    if (!window.TrelloPowerUp || !window.TrelloPowerUp.iframe) {
+      console.warn("🚫 Not inside Trello iframe — skipping task completion.");
+      return;
+    }
+  
     const t = window.TrelloPowerUp.iframe();
-
+  
     Promise.all([
       t.card('id'),
       t.member('id', 'fullName', 'username')
@@ -19,9 +24,9 @@ const MotivationDashboardPage = () => {
           trello_username: member.username,
           task_id: card.id
         };
-
+  
         console.log('📤 Sending task completion:', payload);
-
+  
         return fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -32,12 +37,12 @@ const MotivationDashboardPage = () => {
         const text = await res.text();
         try {
           const data = JSON.parse(text);
-          setUserId(data.user_id || null); // optional: only if returned
+          setUserId(data.user_id || null);
           setStatusMessage(`✅ Task complete!\nXP: ${data.xp} | Streak: ${data.streak_count}`);
           setIsTaskComplete(true);
         } catch (e) {
-          console.error('❌ Invalid response:', text);
-          setStatusMessage('❌ Could not complete task.');
+          console.error('❌ Invalid JSON:', text);
+          setStatusMessage('❌ Server error. Could not complete task.');
         }
       })
       .catch(err => {
@@ -45,6 +50,7 @@ const MotivationDashboardPage = () => {
         setStatusMessage('❌ Network error. Try again later.');
       });
   }, []);
+  
 
   return (
     <div style={{ padding: '2rem', color: 'white', fontFamily: 'Plus Jakarta Sans' }}>

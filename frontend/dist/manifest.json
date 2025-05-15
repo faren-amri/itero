@@ -1,6 +1,6 @@
 {
   "name": "Itero Motivation Engine",
-  "description": "Track task XP, streaks, and progress in a fun dashboard.",
+  "description": "Track XP, streaks, and progress on Trello cards.",
   "permissions": ["read", "write"],
   "capabilities": {
     "card-buttons": [

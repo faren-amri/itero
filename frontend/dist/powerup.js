@@ -1,10 +1,10 @@
 window.TrelloPowerUp.initialize({
 
-  'board-buttons': function (t, opts) {
+  'board-buttons': function(t, opts) {
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
-      callback: function (t) {
+      callback: function(t) {
         return t.modal({
           url: './index.html#/dashboard',
           accentColor: '#0079BF',
@@ -16,10 +16,10 @@ window.TrelloPowerUp.initialize({
     }];
   },
 
-  'card-buttons': function (t, opts) {
+  'card-buttons': function(t, opts) {
     return [{
       text: 'Complete Task 🎯',
-      callback: function (t) {
+      callback: function(t) {
         return t.popup({
           title: "Complete Task",
           url: './index.html#/dashboard',

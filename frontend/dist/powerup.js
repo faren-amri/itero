@@ -12,7 +12,6 @@ window.TrelloPowerUp.initialize({
       }
     }];
   },
-
   'card-buttons': function (t) {
     return [{
       text: 'Complete Task 🎯',

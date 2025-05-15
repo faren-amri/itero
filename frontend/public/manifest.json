@@ -3,12 +3,7 @@
   "description": "Minimal working setup",
   "permissions": ["read", "write"],
   "capabilities": {
-    "card-buttons": [
-      {
-        "text": "Complete Task 🎯",
-        "callback": "onCompleteTask"
-      }
-    ]
+    "card-buttons": []
   },
   "author": "Farnoud Amiri",
   "icon": {

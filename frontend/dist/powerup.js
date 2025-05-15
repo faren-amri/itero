@@ -1,16 +1,15 @@
 window.TrelloPowerUp.initialize({
-    'board-buttons': function (t) {
-      return [{
-        icon: './icon.png',
-        text: 'Motivation Dashboard',
-        callback: function (t) {
-          return t.popup({
-            title: 'Motivation Dashboard',
-            url: 'https://itero-powerup.netlify.app/#/dashboard',
-            height: 600
-          });
-        }
-      }];
-    }
-  });
-  
+  'card-buttons': function (t) {
+    return [{
+      icon: 'https://itero-powerup.netlify.app/icon.png',
+      text: 'Complete Task 🎯',
+      callback: function (t) {
+        return t.popup({
+          title: "Motivation Dashboard",
+          url: './index.html',  // Trello iframe loads your React app here
+          height: 600
+        });
+      }
+    }];
+  }
+});

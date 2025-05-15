@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/MotivationDashboard.module.css';
-import { getXPData } from '../../services/analyticsService';
+import { getXPData } from '../../services/analyticsService.js';
 
 const XPProgress = ({ userId }) => {
   const [xp, setXp] = useState(0);

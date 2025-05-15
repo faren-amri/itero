@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/MotivationDashboard.module.css';
-import { getStreakData } from '../../services/analyticsService';
+import { getStreakData } from '../../services/analyticsService.js';
 
 const StreakTracker = ({ userId }) => {
   const [streak, setStreak] = useState(0);

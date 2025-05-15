@@ -4,7 +4,7 @@ import MotivationDashboard from '../components/MotivationDashboard/MotivationDas
 const MotivationDashboardPage = () => {
   const [userId, setUserId] = useState(null);
   const [statusMessage, setStatusMessage] = useState('Completing task...');
-  const [result, setResult] = useState(null);
+  const [isTaskComplete, setIsTaskComplete] = useState(false);
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
@@ -32,27 +32,28 @@ const MotivationDashboardPage = () => {
         const text = await res.text();
         try {
           const data = JSON.parse(text);
-          setUserId(data.user_id || null); // optional: set if needed
-          setResult(data);
-          setStatusMessage(`✅ Task complete! XP: ${data.xp} | Streak: ${data.streak_count}`);
+          setUserId(data.user_id || null); // optional: only if returned
+          setStatusMessage(`✅ Task complete!\nXP: ${data.xp} | Streak: ${data.streak_count}`);
+          setIsTaskComplete(true);
         } catch (e) {
-          console.error('❌ Response not JSON:', text);
-          setStatusMessage('❌ Server error. Could not complete task.');
+          console.error('❌ Invalid response:', text);
+          setStatusMessage('❌ Could not complete task.');
         }
       })
       .catch(err => {
         console.error('❌ Network error:', err);
-        setStatusMessage('❌ Network error. Could not reach server.');
+        setStatusMessage('❌ Network error. Try again later.');
       });
   }, []);
 
   return (
-    <div style={{ padding: '2rem', color: 'white' }}>
+    <div style={{ padding: '2rem', color: 'white', fontFamily: 'Plus Jakarta Sans' }}>
       <h2>🎯 Motivation Dashboard</h2>
-      <p>{statusMessage}</p>
+      <p style={{ marginBottom: '1rem' }}>{statusMessage}</p>
 
-      {/* Optional: show full dashboard if needed */}
-      {userId && <MotivationDashboard userId={userId} />}
+      {isTaskComplete && userId && (
+        <MotivationDashboard userId={userId} />
+      )}
     </div>
   );
 };

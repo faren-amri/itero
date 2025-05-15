@@ -6,7 +6,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: "Motivation Dashboard",
-          url: './index.html',  // Trello iframe loads your React app here
+          url: './index.html', // Trello iframe loads your React app here
           height: 600
         });
       }

@@ -1,12 +1,11 @@
 window.TrelloPowerUp.initialize({
-  'card-buttons': function (t) {
+  'card-buttons': function(t) {
     return [{
-      icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Complete Task 🎯',
-      callback: function (t) {
+      callback: function(t) {
         return t.popup({
           title: "Motivation Dashboard",
-          url: './index.html', // Trello iframe loads your React app here
+          url: './index.html#/dashboard',  // ✅ Trello loads this SPA route
           height: 600
         });
       }

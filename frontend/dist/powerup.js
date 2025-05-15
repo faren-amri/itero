@@ -1,32 +1,28 @@
 window.TrelloPowerUp.initialize({
-
-  'board-buttons': function(t, opts) {
+  'board-buttons': function (t) {
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
-      callback: function(t) {
-        return t.modal({
-          url: './index.html#/dashboard',
-          accentColor: '#0079BF',
-          height: 600,
-          fullscreen: false,
-          title: "Itero Motivation Dashboard"
+      callback: function (t) {
+        return t.popup({
+          title: 'Open Itero',
+          url: './popup.html',
+          height: 40
         });
       }
     }];
   },
 
-  'card-buttons': function(t, opts) {
+  'card-buttons': function (t) {
     return [{
       text: 'Complete Task 🎯',
-      callback: function(t) {
+      callback: function (t) {
         return t.popup({
-          title: "Complete Task",
-          url: './index.html#/dashboard',
-          height: 600
+          title: 'Complete Task',
+          url: './popup.html',
+          height: 40
         });
       }
     }];
   }
-
 });

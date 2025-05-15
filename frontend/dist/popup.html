@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Boot Itero</title><script src="https://p.trellocdn.com/power-up.min.js"></script></head>
+<body>
+  <script>
+    const t = TrelloPowerUp.iframe();
+    t.modal({
+      url: './index.html#/dashboard',
+      accentColor: '#0079BF',
+      height: 600,
+      fullscreen: false,
+      title: 'Itero Motivation Dashboard'
+    });
+    setTimeout(() => t.closePopup(), 500);
+  </script>
+</body>
+</html>

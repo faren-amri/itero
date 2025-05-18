@@ -1,3 +1,5 @@
+console.log("🔍 Is inside Trello iframe?", window.location !== window.parent ? "✅ Yes" : "❌ No");
+
 window.TrelloPowerUp.initialize({
   'board-buttons': function (t) {
     return [{
@@ -6,7 +8,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Open Itero',
-          url: './popup.html',
+          url: './dashboard-wrapper.html',
           height: 40
         });
       }
@@ -18,7 +20,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Complete Task',
-          url: './popup.html',
+          url: './dashboard-wrapper.html',
           height: 40
         });
       }

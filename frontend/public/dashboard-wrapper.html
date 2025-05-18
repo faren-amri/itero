@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Itero Power-Up Loader</title>
+    <title>Itero Modal Launcher</title>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
   </head>
   <body>
@@ -11,8 +11,11 @@
         url: './index.html#/dashboard',
         title: 'Motivation Dashboard',
         fullscreen: true
-      });
-      setTimeout(() => t.closePopup(), 500); // auto close the small popup
+      }).catch(err => console.error("Failed to open modal:", err));
+
+      setTimeout(() => {
+        t.closePopup().catch(err => console.error("Failed to close popup:", err));
+      }, 500);
     </script>
   </body>
 </html>

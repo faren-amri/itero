@@ -8,7 +8,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Open Itero',
-          url: './dashboard-wrapper.html', // ✅ new wrapper page
+          url: './dashboard-wrapper.html',
           height: 40
         });
       }
@@ -20,7 +20,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Complete Task',
-          url: './dashboard-wrapper.html', // ✅ same wrapper
+          url: './dashboard-wrapper.html',
           height: 40
         });
       }

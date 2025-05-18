@@ -17,6 +17,10 @@ export function useTrelloContext({ waitFor = ['card', 'member'] } = {}) {
       // Retry iframe context loading
       while (!tInstance && attempts < maxAttempts) {
         tInstance = window.TrelloPowerUp?.iframe?.();
+        console.log("📦 tInstance:", tInstance);
+        console.log("🧭 Is in iframe?", window !== window.parent);
+        console.log("🌐 Current URL:", window.location.href);
+
         if (!tInstance) {
           await new Promise(resolve => setTimeout(resolve, 300));
           attempts++;

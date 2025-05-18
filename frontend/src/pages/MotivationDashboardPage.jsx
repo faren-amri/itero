@@ -8,10 +8,20 @@ const MotivationDashboardPage = () => {
   const [statusMessage, setStatusMessage] = useState('Loading...');
   const [isTaskComplete, setIsTaskComplete] = useState(false);
 
+  // 🔍 Debug logs to trace Trello context
+  useEffect(() => {
+    console.log("🧩 useTrelloContext:");
+    console.log("t:", t);
+    console.log("card:", card);
+    console.log("member:", member);
+    console.log("isReady:", isReady);
+    console.log("loading:", loading);
+    console.log("error:", error);
+  }, [t, card, member, isReady, loading, error]);
+
   useEffect(() => {
     if (!isReady || !member || !t) return;
 
-    // 🔁 CASE 1: User launched from a CARD → complete the task
     if (card) {
       const payload = {
         trello_user_id: member.id,
@@ -39,9 +49,8 @@ const MotivationDashboardPage = () => {
           console.error("❌ Task completion error:", err);
           setStatusMessage('❌ Could not complete task.');
         });
-
     } else {
-      // 🔁 CASE 2: User launched from a BOARD → skip task, show dashboard
+      // Board-level launch
       setUserId(member.id);
       setIsTaskComplete(true);
       setStatusMessage("👤 Welcome! Loading your dashboard...");

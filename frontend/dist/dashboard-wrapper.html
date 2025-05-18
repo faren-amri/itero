@@ -6,9 +6,9 @@
       const t = TrelloPowerUp.iframe();
 
       t.modal({
-        url: './index.html#/dashboard', // ✅ your actual dashboard route
-        accentColor: '#4A90E2',
+        url: './index.html#/dashboard', // ✅ don't use external full URL
         fullscreen: true,
+        accentColor: '#4A90E2',
         title: 'Motivation Dashboard',
         callback: () => t.closePopup()
       });

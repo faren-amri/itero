@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Itero Power-Up Loader</title>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const t = TrelloPowerUp.iframe();
+      t.modal({
+        url: './index.html#/dashboard',
+        title: 'Motivation Dashboard',
+        fullscreen: true
+      });
+      setTimeout(() => t.closePopup(), 500); // auto close the small popup
+    </script>
+  </body>
+</html>

@@ -6,7 +6,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Open Itero',
-          url: './popup.html',
+          url: './dashboard-wrapper.html', // ✅ new wrapper page
           height: 40
         });
       }
@@ -18,7 +18,7 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Complete Task',
-          url: './popup.html',
+          url: './dashboard-wrapper.html', // ✅ same wrapper
           height: 40
         });
       }

@@ -1,3 +1,5 @@
+console.log("🔍 Is inside Trello iframe?", window.location !== window.parent ? "✅ Yes" : "❌ No");
+
 window.TrelloPowerUp.initialize({
   'board-buttons': function (t) {
     return [{

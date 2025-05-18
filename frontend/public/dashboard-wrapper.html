@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Itero Dashboard Modal</title>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
-  </head>
-  <body>
     <script>
       const t = TrelloPowerUp.iframe();
 
       t.modal({
-        url: './index.html#/dashboard',
+        url: './index.html#/dashboard', // ✅ your actual dashboard route
+        accentColor: '#4A90E2',
+        fullscreen: true,
         title: 'Motivation Dashboard',
-        fullscreen: true
-      }).catch(err => console.error('Failed to open modal:', err));
-
-      // ❌ Removed t.closePopup()
-      // Let the modal remain open so React can load
+        callback: () => t.closePopup()
+      });
     </script>
-  </body>
+  </head>
+  <body></body>
 </html>

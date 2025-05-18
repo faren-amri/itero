@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Itero Modal Launcher</title>
+    <title>Itero Dashboard Modal</title>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
   </head>
   <body>
     <script>
       const t = TrelloPowerUp.iframe();
+
       t.modal({
         url: './index.html#/dashboard',
         title: 'Motivation Dashboard',
         fullscreen: true
-      }).catch(err => console.error("Failed to open modal:", err));
+      }).catch(err => console.error('Failed to open modal:', err));
 
-      setTimeout(() => {
-        t.closePopup().catch(err => console.error("Failed to close popup:", err));
-      }, 500);
+      // ❌ Removed t.closePopup()
+      // Let the modal remain open so React can load
     </script>
   </body>
 </html>

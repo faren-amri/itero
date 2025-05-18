@@ -7,21 +7,22 @@ window.TrelloPowerUp.initialize({
       text: 'Open Itero',
       callback: function (t) {
         return t.popup({
-          title: 'Open Itero',
+          title: 'Launching Dashboard...',
           url: './dashboard-wrapper.html',
-          height: 40
+          height: 100  // Slightly taller to give buffer for iframe load
         });
       }
     }];
   },
+
   'card-buttons': function (t) {
     return [{
       text: 'Complete Task 🎯',
       callback: function (t) {
         return t.popup({
-          title: 'Complete Task',
+          title: 'Completing Task...',
           url: './dashboard-wrapper.html',
-          height: 40
+          height: 100
         });
       }
     }];

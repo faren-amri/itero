@@ -26,5 +26,13 @@
     "iframe": {
       "url": "https://itero-powerup.netlify.app/popup.html"
     }
+  },
+  "app": {
+    "iframe": {
+      "url": "https://itero-powerup.netlify.app/popup.html"
+    },
+    "originWhitelist": [
+      "https://itero-powerup.netlify.app"
+    ]
   }
 }

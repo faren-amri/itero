@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Itero Power-Up</title>
+    <title>Launching Dashboard...</title>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
-    <script src="./powerup.js"></script>
+    <script>
+      const t = TrelloPowerUp.iframe();
+
+      t.modal({
+        url: 'https://itero-powerup.netlify.app/index.html#/dashboard',
+        fullscreen: true,
+        title: 'Motivation Dashboard',
+        accentColor: '#4A90E2',
+        callback: () => t.closePopup()
+      });
+    </script>
   </head>
   <body>
-    <p>Itero Power-Up loaded...</p>
+    <p style="font-family: sans-serif; padding: 2rem;">Launching dashboard...</p>
   </body>
 </html>

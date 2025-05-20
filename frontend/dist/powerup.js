@@ -6,8 +6,8 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Launching Dashboard...',
-          url: './dashboard-wrapper.html',
-          height: 100  // Slightly taller to give buffer for iframe load
+          url: './popup.html',
+          height: 40
         });
       }
     }];
@@ -19,8 +19,8 @@ window.TrelloPowerUp.initialize({
       callback: function (t) {
         return t.popup({
           title: 'Completing Task...',
-          url: './dashboard-wrapper.html',
-          height: 100
+          url: './popup.html',
+          height: 40
         });
       }
     }];

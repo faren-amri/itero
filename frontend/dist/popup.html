@@ -7,8 +7,9 @@
   <body>
     <script>
       console.log('[popup.html] Loaded Trello SDK');
-      window.TrelloPowerUp.initialize({});
-      console.log('[popup.html] Called TrelloPowerUp.initialize');
     </script>
+
+    <!-- ✅ This is the missing piece -->
+    <script src="./powerup.js"></script>
   </body>
 </html>

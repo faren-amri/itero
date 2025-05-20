@@ -4,10 +4,11 @@ window.TrelloPowerUp.initialize({
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
       callback: function (t) {
-        return t.popup({
-          title: 'Launching Dashboard...',
-          url: './popup.html',
-          height: 40
+        return t.modal({
+          url: './index.html#/dashboard',
+          fullscreen: true,
+          title: 'Motivation Dashboard',
+          accentColor: '#4A90E2'
         });
       }
     }];
@@ -17,10 +18,11 @@ window.TrelloPowerUp.initialize({
     return [{
       text: 'Complete Task 🎯',
       callback: function (t) {
-        return t.popup({
-          title: 'Completing Task...',
-          url: './popup.html',
-          height: 40
+        return t.modal({
+          url: './index.html#/dashboard',
+          fullscreen: true,
+          title: 'Complete Task',
+          accentColor: '#4A90E2'
         });
       }
     }];

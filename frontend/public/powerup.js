@@ -5,7 +5,7 @@ window.TrelloPowerUp.initialize({
       text: 'Open Itero',
       callback: function (t) {
         return t.modal({
-          url: './index.html#/dashboard',
+          url: 'https://itero-powerup.netlify.app/#/dashboard',
           fullscreen: true,
           title: 'Motivation Dashboard',
           accentColor: '#4A90E2'
@@ -19,7 +19,7 @@ window.TrelloPowerUp.initialize({
       text: 'Complete Task 🎯',
       callback: function (t) {
         return t.modal({
-          url: './index.html#/dashboard',
+          url: 'https://itero-powerup.netlify.app/#/dashboard',
           fullscreen: true,
           title: 'Complete Task',
           accentColor: '#4A90E2'

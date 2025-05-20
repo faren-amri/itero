@@ -8,7 +8,12 @@ window.TrelloPowerUp.initialize({
           url: 'https://itero-powerup.netlify.app/#/dashboard',
           fullscreen: true,
           title: 'Motivation Dashboard',
-          accentColor: '#4A90E2'
+          accentColor: '#4A90E2',
+          args: {
+            secret: 'itero-beta-2025',
+            member: t.getContext().member,
+            card: t.getContext().card
+          }
         });
       }
     }];
@@ -22,7 +27,12 @@ window.TrelloPowerUp.initialize({
           url: 'https://itero-powerup.netlify.app/#/dashboard',
           fullscreen: true,
           title: 'Complete Task',
-          accentColor: '#4A90E2'
+          accentColor: '#4A90E2',
+          args: {
+            secret: 'itero-beta-2025',
+            member: t.getContext().member,
+            card: t.getContext().card
+          }
         });
       }
     }];

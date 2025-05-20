@@ -1,79 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { useTrelloContext } from '../hooks/useTrelloContext';
-import MotivationDashboard from '../components/MotivationDashboard/MotivationDashboard';
+import { useEffect, useState } from 'react';
 
-const MotivationDashboardPage = () => {
-  const { t, card, member, isReady, loading, error } = useTrelloContext();
-  const [userId, setUserId] = useState(null);
-  const [statusMessage, setStatusMessage] = useState('Loading...');
-  const [isTaskComplete, setIsTaskComplete] = useState(false);
-
-  // 🔍 Debug logs to trace Trello context
-  useEffect(() => {
-    console.log("🧩 useTrelloContext:");
-    console.log("t:", t);
-    console.log("card:", card);
-    console.log("member:", member);
-    console.log("isReady:", isReady);
-    console.log("loading:", loading);
-    console.log("error:", error);
-  }, [t, card, member, isReady, loading, error]);
+function MotivationDashboardPage() {
+  const [context, setContext] = useState({});
 
   useEffect(() => {
-    if (!isReady || !member || !t) return;
+    const t = window.TrelloPowerUp.iframe(); // Initialize iframe context
 
-    if (card) {
-      const payload = {
-        trello_user_id: member.id,
-        trello_username: member.username,
-        task_id: card.id
-      };
+    const fetchArgs = async () => {
+      try {
+        const card = await t.arg('card');
+        const member = await t.arg('member');
+        const secret = await t.arg('secret');
+        setContext({ card, member, secret });
+        console.log('Trello Context:', { card, member, secret });
+      } catch (error) {
+        console.error('Failed to load Trello context:', error);
+      }
+    };
 
-      fetch('https://itero-api.onrender.com/api/tasks/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(res => res.json())
-        .then(data => {
-          setUserId(data.user_id || null);
-          setStatusMessage(`✅ Task complete!\nXP: ${data.xp} | Streak: ${data.streak_count}`);
-          setIsTaskComplete(true);
-
-          t.showNotification({
-            message: `🎉 Task complete! +${data.xp} XP | Level ${data.level || '?'}`,
-            duration: 5
-          });
-        })
-        .catch(err => {
-          console.error("❌ Task completion error:", err);
-          setStatusMessage('❌ Could not complete task.');
-        });
-    } else {
-      // Board-level launch
-      setUserId(member.id);
-      setIsTaskComplete(true);
-      setStatusMessage("👤 Welcome! Loading your dashboard...");
-    }
-  }, [isReady, card, member, t]);
+    fetchArgs();
+  }, []);
 
   return (
-    <div style={{ padding: '2rem', color: 'black' }}>
-      <h1>🎯 Motivation Dashboard</h1>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {loading && <p>Loading Trello context...</p>}
-      {!loading && <p>{statusMessage}</p>}
-
-      {!loading && isTaskComplete && userId && (
-        <MotivationDashboard userId={userId} />
-      )}
-
-      {!loading && isTaskComplete && !userId && (
-        <p>⚠️ Task complete, but no user ID returned.</p>
-      )}
+    <div style={{ padding: '2rem', color: 'white', background: '#1c1c1c' }}>
+      <h1>Itero Motivation Dashboard</h1>
+      <p>This modal was opened from Trello.</p>
+      <h2>Context Data:</h2>
+      <pre style={{ background: '#2b2b2b', padding: '1rem' }}>
+        {JSON.stringify(context, null, 2)}
+      </pre>
     </div>
   );
-};
+}
 
 export default MotivationDashboardPage;

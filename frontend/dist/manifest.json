@@ -14,7 +14,9 @@
         "text": "Complete Task 🎯",
         "callback": "completeTask"
       }
-    ]
+    ],
+    "show-settings": true,
+    "authorization-status": true
   },
   "author": "Farnoud Amiri",
   "icon": {

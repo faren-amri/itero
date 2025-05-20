@@ -5,15 +5,14 @@
     <script>
       const t = TrelloPowerUp.iframe();
 
-      // Sign the dashboard modal URL
-      t.signUrl('./index.html#/dashboard').then((signedUrl) => {
-        t.modal({
-          url: signedUrl,
-          fullscreen: true,
-          title: 'Motivation Dashboard',
-          accentColor: '#4A90E2',
-          callback: () => t.closePopup()
-        });
+      const signedUrl = t.signUrl('./index.html#/dashboard');
+
+      t.modal({
+        url: signedUrl,
+        fullscreen: true,
+        title: 'Motivation Dashboard',
+        accentColor: '#4A90E2',
+        callback: () => t.closePopup()
       });
     </script>
   </head>

@@ -1,39 +1,34 @@
 console.log('[powerup.js] Loaded and running');
 
-// ✅ Define functions BEFORE initialize()
+// ✅ These functions must be defined before being used as callbacks
 function openDashboard(t) {
   console.log('[powerup.js] openDashboard called');
-  return t.signUrl('https://itero-powerup.netlify.app/#/dashboard')
-    .then((signedUrl) => {
-      return t.modal({
-        url: signedUrl,
-        fullscreen: true,
-        title: 'Motivation Dashboard',
-        accentColor: '#4A90E2'
-      });
-    });
+  return t.modal({
+    url: 'https://itero-powerup.netlify.app/#/dashboard',
+    fullscreen: true,
+    title: 'Motivation Dashboard',
+    accentColor: '#4A90E2'
+  });
 }
 
 function completeTask(t) {
   console.log('[powerup.js] completeTask called');
-  return t.signUrl('https://itero-powerup.netlify.app/#/dashboard')
-    .then((signedUrl) => {
-      return t.modal({
-        url: signedUrl,
-        fullscreen: true,
-        title: 'Complete Task',
-        accentColor: '#4A90E2'
-      });
-    });
+  return t.modal({
+    url: 'https://itero-powerup.netlify.app/#/dashboard',
+    fullscreen: true,
+    title: 'Complete Task',
+    accentColor: '#4A90E2'
+  });
 }
 
+// ✅ Declare Trello Power-Up capabilities
 window.TrelloPowerUp.initialize({
   'board-buttons': function () {
     console.log('[powerup.js] board-buttons callback triggered');
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
-      callback: openDashboard   // ✅ Now correctly in scope
+      callback: openDashboard
     }];
   },
   'card-buttons': function () {
@@ -43,6 +38,7 @@ window.TrelloPowerUp.initialize({
       callback: completeTask
     }];
   },
+  // Optional capabilities (NOOP handlers to prevent retain crash)
   'card-detail-badges': function () {
     return [];
   },

@@ -1,3 +1,5 @@
+console.log('[powerup.js] Loaded and running');
+
 window.openDashboard = async function (t) {
   const context = await t.getContext();
   const signedUrl = await t.signUrl('https://itero-powerup.netlify.app/#/dashboard');
@@ -32,6 +34,7 @@ window.completeTask = async function (t) {
 
 window.TrelloPowerUp.initialize({
   'board-buttons': function () {
+    console.log('[powerup.js] board-buttons callback triggered');
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',

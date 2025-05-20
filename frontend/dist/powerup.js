@@ -4,16 +4,15 @@ window.TrelloPowerUp.initialize({
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
-      callback: 'openDashboard'
+      callback: openDashboard
     }];
   },
   'card-buttons': function () {
     return [{
       text: 'Complete Task 🎯',
-      callback: 'completeTask'
+      callback: completeTask
     }];
   },
-  // ✅ Add these no-op handlers to silence Trello’s internal requests
   'card-detail-badges': function () {
     return [];
   },

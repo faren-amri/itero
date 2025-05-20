@@ -1,12 +1,7 @@
-window.TrelloPowerUp.initialize({
-  'board-buttons': function (t) {
-    return [{
-      icon: 'https://itero-powerup.netlify.app/icon.png',
-      text: 'Open Itero',
-      callback: async function (t) {
-        const signedUrl = await t.signUrl('https://itero-powerup.netlify.app/#/dashboard');
-        const context = await t.getContext(); // ✅ properly await this
-
+function openDashboard(t) {
+  return t.getContext().then(context =>
+    t.signUrl('https://itero-powerup.netlify.app/#/dashboard')
+      .then(signedUrl => {
         return t.modal({
           url: signedUrl,
           fullscreen: true,
@@ -18,17 +13,14 @@ window.TrelloPowerUp.initialize({
             card: context.card
           }
         });
-      }
-    }];
-  },
+      })
+  );
+}
 
-  'card-buttons': function (t) {
-    return [{
-      text: 'Complete Task 🎯',
-      callback: async function (t) {
-        const signedUrl = await t.signUrl('https://itero-powerup.netlify.app/#/dashboard');
-        const context = await t.getContext(); // ✅ properly await this
-
+function completeTask(t) {
+  return t.getContext().then(context =>
+    t.signUrl('https://itero-powerup.netlify.app/#/dashboard')
+      .then(signedUrl => {
         return t.modal({
           url: signedUrl,
           fullscreen: true,
@@ -40,7 +32,23 @@ window.TrelloPowerUp.initialize({
             card: context.card
           }
         });
-      }
+      })
+  );
+}
+
+window.TrelloPowerUp.initialize({
+  'board-buttons': function () {
+    return [{
+      icon: 'https://itero-powerup.netlify.app/icon.png',
+      text: 'Open Itero',
+      callback: openDashboard
+    }];
+  },
+
+  'card-buttons': function () {
+    return [{
+      text: 'Complete Task 🎯',
+      callback: completeTask
     }];
   }
 });

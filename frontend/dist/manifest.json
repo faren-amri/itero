@@ -15,8 +15,7 @@
         "callback": "completeTask"
       }
     ],
-    "show-settings": true,
-    "authorization-status": true
+    "show-settings": true
   },
   "author": "Farnoud Amiri",
   "icon": {
@@ -35,8 +34,8 @@
       "https://itero-powerup.netlify.app"
     ]
   },
-  "id": "com.itero.motivation",       
-  "version": "1.0.0",                 
+  "id": "com.itero.motivation",
+  "version": "1.0.0",
   "listing": {
     "overview": "Motivate your team with XP, streaks, and challenges!",
     "features": [

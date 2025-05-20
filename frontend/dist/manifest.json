@@ -22,7 +22,7 @@
   },
   "connectors": {
     "iframe": {
-      "url": "https://itero-powerup.netlify.app/powerup.js"
+      "url": "https://itero-powerup.netlify.app/popup.html"
     }
   }
 }

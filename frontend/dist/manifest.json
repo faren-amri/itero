@@ -34,5 +34,16 @@
     "originWhitelist": [
       "https://itero-powerup.netlify.app"
     ]
+  },
+  "id": "com.itero.motivation",       
+  "version": "1.0.0",                 
+  "listing": {
+    "overview": "Motivate your team with XP, streaks, and challenges!",
+    "features": [
+      "Gamified task tracking",
+      "XP and streak system",
+      "Motivation dashboard modal"
+    ],
+    "category": "Team Collaboration"
   }
 }

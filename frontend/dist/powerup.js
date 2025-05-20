@@ -1,8 +1,10 @@
 console.log('[powerup.js] Loaded and running');
 
 window.openDashboard = async function (t) {
+  console.log('[powerup.js] openDashboard called');
   const context = await t.getContext();
   const signedUrl = await t.signUrl('https://itero-powerup.netlify.app/#/dashboard');
+
   return t.modal({
     url: signedUrl,
     fullscreen: true,
@@ -17,8 +19,10 @@ window.openDashboard = async function (t) {
 };
 
 window.completeTask = async function (t) {
+  console.log('[powerup.js] completeTask called');
   const context = await t.getContext();
   const signedUrl = await t.signUrl('https://itero-powerup.netlify.app/#/dashboard');
+
   return t.modal({
     url: signedUrl,
     fullscreen: true,
@@ -38,10 +42,11 @@ window.TrelloPowerUp.initialize({
     return [{
       icon: 'https://itero-powerup.netlify.app/icon.png',
       text: 'Open Itero',
-      callback: 'openDashboard' // ✅ matches manifest
+      callback: 'openDashboard'
     }];
   },
   'card-buttons': function () {
+    console.log('[powerup.js] card-buttons callback triggered');
     return [{
       text: 'Complete Task 🎯',
       callback: 'completeTask'

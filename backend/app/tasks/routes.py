@@ -66,3 +66,15 @@ def complete_task():
     except Exception as e:
         logging.exception("❌ Server error while processing task completion")
         return jsonify({"error": "Internal server error"}), 500
+    
+@task_bp.route("/xp/<trello_user_id>", methods=["GET"])
+def get_xp(trello_user_id):
+    user = User.query.filter_by(trello_id=trello_user_id).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({
+        "xp": user.xp,
+        "level": user.level,
+        "next_level_xp": user.level * 100  # Example progression logic
+    }), 200

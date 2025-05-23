@@ -12,7 +12,7 @@ const MotivationDashboard = ({ userId }) => {
       <div className={styles.dashboard}>
         <h2 className={shared.heading}>Motivation Dashboard</h2>
         <div className={styles.grid}>
-          <XPProgress userId={userId} />
+          <XPProgress userId={context.member} />
           <StreakTracker userId={userId} />
           <ActiveChallenges userId={userId} />
           <MoodTrends />

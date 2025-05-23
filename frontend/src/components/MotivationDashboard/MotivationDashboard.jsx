@@ -8,18 +8,17 @@ import ActiveChallenges from './ActiveChallenges';
 
 
 const MotivationDashboard = ({ userId }) => {
-    return (
-      <div className={styles.dashboard}>
-        <h2 className={shared.heading}>Motivation Dashboard</h2>
-        <div className={styles.grid}>
-          <XPProgress userId={context.member} />
-          <StreakTracker userId={userId} />
-          <ActiveChallenges userId={userId} />
-          <MoodTrends />
-        </div>
+  return (
+    <div className={styles.dashboard}>
+      <h2 className={sharedStyles.heading}>Motivation Dashboard</h2>
+      <div className={styles.grid}>
+        <XPProgress userId={userId} />
+        <StreakTracker userId={userId} />
+        <ActiveChallenges userId={userId} />
+        <MoodTrends />
       </div>
-    );
-  };
-  
+    </div>
+  );
+};
 
 export default MotivationDashboard;

@@ -4,15 +4,11 @@ function MotivationDashboardPage() {
   const [context, setContext] = useState({});
 
   useEffect(() => {
-    const t = window.TrelloPowerUp.iframe(); // Initialize iframe context
+    const t = window.TrelloPowerUp.iframe();
 
-    try {
-      const { card, member, secret } = t.args || {};
-      setContext({ card, member, secret });
-      console.log('Trello Context:', { card, member, secret });
-    } catch (error) {
-      console.error('Failed to load Trello context:', error);
-    }
+    const args = t.args || {}; // ✅ Pull context from t.args directly
+    console.log('Trello Context:', args);
+    setContext(args);
   }, []);
 
   return (

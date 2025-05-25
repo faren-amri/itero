@@ -1,0 +1,3 @@
+curl -X POST https://itero-api.onrender.com/api/moods/log \
+  -H "Content-Type: application/json" \
+  -d '{"trello_member_id": "5caaf74254d0ef1db084970f", "mood": "Tired"}'

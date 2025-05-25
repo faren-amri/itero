@@ -6,19 +6,18 @@ import MoodInput from '../mood/MoodInput';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 
-
 const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // ✅ New state to trigger refresh
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
-    const context = t.args[1]; // Trello injects member ID here
+    const context = t.args[1];
 
     if (context?.member) {
       setUserId(context.member);
     }
   }, []);
-
 
   return (
     <div className={styles.dashboard}>
@@ -26,8 +25,11 @@ const MotivationDashboard = () => {
       <div className={styles.grid}>
         <XPProgress userId={userId} />
         <StreakTracker userId={userId} />
-        <MoodTrends userId={userId} />
-        <MoodInput userId={userId} onMoodLogged={() => console.log('Mood updated!')} />
+        <MoodTrends userId={userId} refreshKey={refreshKey} /> {/* ✅ Pass refreshKey */}
+        <MoodInput
+          userId={userId}
+          onMoodLogged={() => setRefreshKey(prev => prev + 1)} // ✅ Trigger refresh
+        />
       </div>
     </div>
   );

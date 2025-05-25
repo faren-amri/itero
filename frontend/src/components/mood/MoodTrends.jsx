@@ -7,24 +7,23 @@ import Card from '../common/Card';
 import styles from '../../styles/components/MoodTrends.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
-const MoodTrends = ({ userId }) => {
+const MoodTrends = ({ userId, refreshKey }) => {
   const [moodData, setMoodData] = useState([]);
+
+  const loadMoodData = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/moods/history?trello_member_id=${userId}`);
+      const data = await res.json();
+      setMoodData(data);
+    } catch (err) {
+      console.error('Failed to fetch mood history:', err);
+    }
+  };
 
   useEffect(() => {
     if (!userId) return;
-
-    const fetchMoodHistory = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/moods/history?trello_member_id=${userId}`);
-        const data = await res.json();
-        setMoodData(data);
-      } catch (err) {
-        console.error('Failed to fetch mood history:', err);
-      }
-    };
-
-    fetchMoodHistory();
-  }, [userId]);
+    loadMoodData();
+  }, [userId, refreshKey]);
 
   return (
     <Card title="Mood Trends">

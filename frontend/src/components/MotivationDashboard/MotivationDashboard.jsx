@@ -4,6 +4,7 @@ import StreakTracker from './StreakTracker';
 import MoodTrends from './MoodTrends';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
+import MoodInput from '../../styles/components/MoodInput.module.css';
 
 const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
@@ -25,6 +26,7 @@ const MotivationDashboard = () => {
         <XPProgress userId={userId} />
         <StreakTracker userId={userId} />
         <MoodTrends userId={userId} />
+        <MoodInput userId={userId} onMoodLogged={() => console.log('Mood updated!')} />
       </div>
     </div>
   );

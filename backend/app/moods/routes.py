@@ -3,7 +3,7 @@ from app.moods.models import MoodEntry
 from app.database.db import db
 from datetime import datetime
 
-mood_bp = Blueprint("mood", __name__)
+mood_bp = Blueprint("moods", __name__)
 
 # Mood string to score mapping
 MOOD_SCORES = {

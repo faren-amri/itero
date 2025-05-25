@@ -27,17 +27,15 @@ const MotivationDashboard = () => {
   }, []);
 
   return (
-    <div className={styles.dashboard}>
-      <h2 className={sharedStyles.heading}>Motivation Dashboard</h2>
-      <div className={styles.grid}>
-        <XPProgress userId={userId} />
-        <StreakTracker userId={userId} />
-        <MoodTrends userId={userId} refreshKey={refreshKey} />
-        <MoodInput
-          userId={userId}
-          onMoodLogged={() => setRefreshKey(prev => prev + 1)}
-        />
-      </div>
+    <div className={styles.grid}>
+      {userId && (
+        <>
+          <XPProgress userId={userId} />
+          <StreakTracker userId={userId} />
+          <MoodTrends userId={userId} refreshKey={refreshKey} />
+          <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+        </>
+      )}
     </div>
   );
 };

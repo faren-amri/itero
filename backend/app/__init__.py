@@ -8,7 +8,8 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
-    CORS(app, origins="https://itero-powerup.netlify.app")
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
     db.init_app(app)
     migrate.init_app(app, db)

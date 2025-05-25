@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/ActiveChallenges.module.css';
+import { API_BASE } from '../../services/analyticsService';
 
 const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -8,7 +9,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`https://itero-api.onrender.com/api/challenges/suggestions?trello_member_id=${userId}`)
+    fetch(`${API_BASE}/api/challenges/suggestions?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => setSuggestions(data || []))
       .catch(err => console.error('Failed to load challenge suggestions:', err));
@@ -16,7 +17,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
 
   const handleAcceptChallenge = async (templateId) => {
     try {
-      const res = await fetch(`https://itero-api.onrender.com/api/challenges/accept/${templateId}`, {
+      const res = await fetch(`${API_BASE}/api/challenges/accept/${templateId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ trello_member_id: userId })

@@ -2,13 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/ActiveChallenges.module.css';
+import { API_BASE } from '../../services/analyticsService';
 
 const ActiveChallenges = ({ userId }) => {
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-   fetch(`https://itero-api.onrender.com/api/challenges/active?trello_member_id=${userId}`)
+    if (!userId) return;
+
+    fetch(`${API_BASE}/api/challenges/active?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         setChallenges(data || []);
@@ -18,7 +21,7 @@ const ActiveChallenges = ({ userId }) => {
         console.error('Failed to load active challenges', err);
         setLoading(false);
       });
-  }, []);
+  }, [userId]);
 
   return (
     <Card title="Active Challenges">

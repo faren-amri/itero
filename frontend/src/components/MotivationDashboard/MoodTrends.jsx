@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import Card from '../common/Card';
 import styles from '../../styles/components/MoodTrends.module.css';
+import { API_BASE } from '../../services/analyticsService';
 
 const MoodTrends = ({ userId }) => {
   const [moodData, setMoodData] = useState([]);
@@ -14,7 +15,7 @@ const MoodTrends = ({ userId }) => {
 
     const fetchMoodHistory = async () => {
       try {
-        const res = await fetch(`https://itero-api.onrender.com/api/moods/history?trello_member_id=${userId}`);
+        const res = await fetch(`${API_BASE}/api/moods/history?trello_member_id=${userId}`);
         const data = await res.json();
         setMoodData(data);
       } catch (err) {

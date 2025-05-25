@@ -14,7 +14,7 @@ def register_routes(app):
     app.register_blueprint(challenge_bp, url_prefix="/api/challenges")
     app.register_blueprint(streak_bp, url_prefix="/api/streaks")
     app.register_blueprint(task_bp, url_prefix="/api/tasks")
-    app.register_blueprint(mood_bp, url_prefix="/api/mood")
+    app.register_blueprint(mood_bp, url_prefix="/api/moods")
     app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
     app.register_blueprint(user_bp, url_prefix="/api/users") 
 

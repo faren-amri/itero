@@ -5,6 +5,9 @@ import XPProgress from './XPProgress';
 import StreakTracker from './StreakTracker';
 import MoodTrends from './MoodTrends';
 import ActiveChallenges from './ActiveChallenges';
+import ChallengeSuggestions from './ChallengeSuggestions';
+
+
 
 const MotivationDashboard = ({ userId }) => {
   return (
@@ -14,8 +17,8 @@ const MotivationDashboard = ({ userId }) => {
         <XPProgress userId={userId} />
         <StreakTracker userId={userId} />
         <ActiveChallenges userId={userId} />
+        <ChallengeSuggestions userId={userId} onChallengeAccepted={() => window.location.reload()} />
         <MoodTrends userId={userId} />
-
       </div>
     </div>
   );

@@ -9,12 +9,14 @@ const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-  const t = window.TrelloPowerUp.iframe();
-  t.get("member", "id").then((memberId) => {
-    console.log("Trello Member ID:", memberId);
-    setUserId(memberId);
-  });
-}, []);
+    const t = window.TrelloPowerUp.iframe();
+    const context = t.args[1]; // Trello injects member ID here
+
+    if (context?.member) {
+      setUserId(context.member);
+    }
+  }, []);
+
 
   return (
     <div className={styles.dashboard}>

@@ -5,6 +5,15 @@ from datetime import datetime
 
 mood_bp = Blueprint("mood", __name__)
 
+# Mood string to score mapping
+MOOD_SCORES = {
+    "Burned Out": 1,
+    "Tired": 2,
+    "Neutral": 3,
+    "Energized": 4,
+    "Great": 5
+}
+
 @mood_bp.route("/log", methods=["POST"])
 def log_mood():
     data = request.get_json()

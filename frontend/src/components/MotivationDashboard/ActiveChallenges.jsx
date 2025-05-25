@@ -8,11 +8,7 @@ const ActiveChallenges = ({ userId }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`https://itero-api.onrender.com/api/challenges/active`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
+   fetch(`https://itero-api.onrender.com/api/challenges/active?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         setChallenges(data || []);

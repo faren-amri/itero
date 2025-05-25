@@ -14,7 +14,7 @@ const MoodTrends = ({ userId }) => {
 
     const fetchMoodHistory = async () => {
       try {
-        const res = await fetch(`/api/moods/history?trello_member_id=${userId}`);
+        const res = await fetch(`https://itero-api.onrender.com/api/moods/history?trello_member_id=${userId}`);
         const data = await res.json();
         setMoodData(data);
       } catch (err) {

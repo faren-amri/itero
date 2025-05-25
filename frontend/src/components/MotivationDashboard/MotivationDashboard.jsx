@@ -6,7 +6,6 @@ import StreakTracker from './StreakTracker';
 import MoodTrends from './MoodTrends';
 import ActiveChallenges from './ActiveChallenges';
 
-
 const MotivationDashboard = ({ userId }) => {
   return (
     <div className={styles.dashboard}>
@@ -15,7 +14,8 @@ const MotivationDashboard = ({ userId }) => {
         <XPProgress userId={userId} />
         <StreakTracker userId={userId} />
         <ActiveChallenges userId={userId} />
-        <MoodTrends />
+        <MoodTrends userId={userId} />
+
       </div>
     </div>
   );

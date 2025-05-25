@@ -4,6 +4,7 @@ from datetime import datetime
 class MoodEntry(db.Model):
     __tablename__ = 'mood_entry'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    mood = db.Column(db.String(20), nullable=False)  # e.g. "Tired", "Energized", "Neutral"
+    trello_member_id = db.Column(db.String(100), nullable=False)
+    mood = db.Column(db.String(20), nullable=False)
     logged_at = db.Column(db.DateTime, default=datetime.utcnow)
+

@@ -1,0 +1,44 @@
+/* src/components/mood/Mood.module.css */
+
+.moodInputContainer {
+  background-color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.title {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.moodButtonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.moodButton {
+  font-size: 1.8rem;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.moodButton:hover {
+  transform: scale(1.1);
+}
+
+.selected {
+  border-color: var(--progress-blue);
+}
+
+.thanksMessage {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-top: 0.5rem;
+}

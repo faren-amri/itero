@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import XPProgress from './XPProgress';
 import StreakTracker from './StreakTracker';
 import MoodTrends from './MoodTrends';
-import ActiveChallenges from './ActiveChallenges';
-import ChallengeSuggestions from './ChallengeSuggestions';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 
@@ -11,11 +9,9 @@ const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const t = window.TrelloPowerUp.iframe();
-    t.getContext().then(ctx => {
-      console.log("Loaded Trello context:", ctx);
-      setUserId(ctx.member); // 👈 Trello member ID becomes our userId
-    });
+    const context = window.TrelloPowerUp.iframe();
+    console.log("Trello context loaded:", context);
+    setUserId(context.member);
   }, []);
 
   return (
@@ -25,8 +21,6 @@ const MotivationDashboard = () => {
         <XPProgress userId={userId} />
         <StreakTracker userId={userId} />
         <MoodTrends userId={userId} />
-        <ActiveChallenges userId={userId} />
-        <ChallengeSuggestions userId={userId} />
       </div>
     </div>
   );

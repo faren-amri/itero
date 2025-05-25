@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import XPProgress from './XPProgress';
 import StreakTracker from './StreakTracker';
-import MoodTrends from './MoodTrends';
+import MoodTrends from '../mood/MoodTrends';
+import MoodInput from '../mood/MoodInput';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
-import MoodInput from '../../styles/components/MoodInput.module.css';
+
 
 const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);

@@ -36,3 +36,14 @@ def update_streak():
         streak.last_updated = today
         db.session.commit()
         return jsonify({"message": "Streak reset", "count": 1}), 200
+
+@streak_bp.route("/<int:user_id>/streak", methods=["GET"])
+def get_streak(user_id):
+    streak = Streak.query.filter_by(user_id=user_id, streak_type='daily').first()
+    if not streak:
+        return jsonify({"count": 0, "message": "No streak yet"}), 200
+    
+    return jsonify({
+        "count": streak.count,
+        "last_updated": streak.last_updated.strftime("%Y-%m-%d")
+    }), 200

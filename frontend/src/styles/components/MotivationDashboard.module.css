@@ -3,23 +3,41 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: var(--ds-surface, #f4f5f7);
   color: var(--gray-light);
+  max-width: 1080px;
+  margin: 0 auto;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-auto-rows: auto;
+  gap: 16px;
+  padding: 16px;
+  box-sizing: border-box;
   align-items: start;
 }
 
 /* Trello-style card container */
 .card {
-  background-color: var(--ds-surface-raised, #fff);
+  background: var(--white, #fff);
+  border: 1px solid #dfe1e6;
   border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.15);
-  border: 1px solid rgba(223, 225, 230, 0.8);
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: 16px;
+  color: #172b4d;
+  margin-bottom: 8px;
+}
+
+.cardBody {
+  flex-grow: 1;
 }
 
 .card:hover {

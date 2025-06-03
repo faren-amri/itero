@@ -23,7 +23,6 @@ def complete_task():
             logging.warning("❌ Missing required fields in request")
             return jsonify({"error": "Missing required fields"}), 400
 
-        # Get or create the user based on Trello ID
         user = User.query.filter_by(trello_id=trello_user_id).first()
         if not user:
             user = User(trello_id=trello_user_id, username=trello_username, xp=0, level=1)
@@ -31,7 +30,7 @@ def complete_task():
             db.session.commit()
             logging.info(f"🆕 Created new user: {trello_username} ({trello_user_id})")
 
-        # Reward XP
+        # Award XP
         user.xp += XP_PER_TASK
         if user.xp >= user.level * 100:
             user.level += 1
@@ -45,13 +44,44 @@ def complete_task():
         else:
             last = streak.last_updated.date()
             if last == today:
-                pass  # Already updated today
+                pass
             elif last == today - timedelta(days=1):
                 streak.count += 1
                 streak.last_updated = today
             else:
                 streak.count = 1
                 streak.last_updated = today
+
+        # ✅ CHALLENGE PROGRESS LOGIC
+        from app.challenges.models import UserChallenge, ChallengeTemplate  # adjust path if needed
+
+        user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
+
+        for uc in user_challenges:
+            template = uc.template
+
+            if uc.deadline and datetime.utcnow() > uc.deadline:
+                uc.status = 'failed'
+                continue
+
+            if template.type == 'count':
+                uc.progress += 1
+                if uc.progress >= template.goal:
+                    uc.status = 'completed'
+
+            elif template.type == 'streak':
+                if uc.last_activity_date == today:
+                    continue  # already counted today
+
+                if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
+                    uc.status = 'failed'
+                    continue
+
+                uc.streak += 1
+                uc.last_activity_date = today
+
+                if uc.streak >= template.goal:
+                    uc.status = 'completed'
 
         db.session.commit()
         logging.info(f"✅ Task complete: XP={user.xp}, Streak={streak.count}")
@@ -66,6 +96,7 @@ def complete_task():
     except Exception as e:
         logging.exception("❌ Server error while processing task completion")
         return jsonify({"error": "Internal server error"}), 500
+
     
 @task_bp.route("/xp/<trello_user_id>", methods=["GET"])
 def get_xp(trello_user_id):

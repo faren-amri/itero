@@ -2,13 +2,15 @@ from flask import Blueprint, request, jsonify
 from app.tasks.models import TaskCompletion
 from app.streaks.models import Streak
 from app.users.models import User
-from app.database.db import db
-from datetime import datetime, timedelta
 from app.challenges.models import UserChallenge, ChallengeTemplate
+from app.database.db import db
+from datetime import datetime
+from app.utils.progress_utils import update_streak_and_xp
 import logging
 
 task_bp = Blueprint("tasks", __name__)
 XP_PER_TASK = 10
+XP_PER_CHALLENGE_COMPLETION = 20
 
 @task_bp.route("/complete", methods=["POST"])
 def complete_task():
@@ -24,7 +26,6 @@ def complete_task():
             logging.warning("❌ Missing required fields in request")
             return jsonify({"error": "Missing required fields"}), 400
 
-        # Fetch or create user
         user = User.query.filter_by(trello_id=trello_user_id).first()
         if not user:
             user = User(trello_id=trello_user_id, username=trello_username, xp=0, level=1)
@@ -32,32 +33,18 @@ def complete_task():
             db.session.commit()
             logging.info(f"🆕 Created new user: {trello_username} ({trello_user_id})")
 
-        # Award XP
-        user.xp += XP_PER_TASK
-        if user.xp >= user.level * 100:
-            user.level += 1
+        total_xp_earned = 0
 
-        # Handle streak
+        # ✅ Task XP + daily streak
+        streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db)
+        total_xp_earned += XP_PER_TASK
+
+        # 🏆 Challenge progress
         today = datetime.utcnow().date()
-        streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
-        if not streak:
-            streak = Streak(user_id=user.id, count=1, streak_type='daily', last_updated=today)
-            db.session.add(streak)
-        else:
-            last = streak.last_updated.date()
-            if last == today:
-                pass  # Already updated today
-            elif last == today - timedelta(days=1):
-                streak.count += 1
-                streak.last_updated = today
-            else:
-                streak.count = 1
-                streak.last_updated = today
-
-        # Challenge progress
         user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
         for uc in user_challenges:
             template = uc.template
+
             if uc.deadline and datetime.utcnow() > uc.deadline:
                 uc.status = 'failed'
                 continue
@@ -66,6 +53,8 @@ def complete_task():
                 uc.progress += 1
                 if uc.progress >= template.goal:
                     uc.status = 'completed'
+                    user.xp += XP_PER_CHALLENGE_COMPLETION
+                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
             elif template.type == 'streak':
                 if uc.last_activity_date == today:
@@ -77,15 +66,22 @@ def complete_task():
                 uc.last_activity_date = today
                 if uc.streak >= template.goal:
                     uc.status = 'completed'
+                    user.xp += XP_PER_CHALLENGE_COMPLETION
+                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
+
+        # 🆙 Level-up check
+        while user.xp >= user.level * 100:
+            user.level += 1
 
         db.session.commit()
-        logging.info(f"✅ Task complete: XP={user.xp}, Level={user.level}, Streak={streak.count}")
+        logging.info(f"✅ Task complete: XP+{total_xp_earned} | XP={user.xp} | Level={user.level} | Streak={streak_count}")
 
         return jsonify({
-            "message": "Task completed. Streak and XP updated.",
-            "streak_count": streak.count,
-            "xp": user.xp,
-            "level": user.level
+            "message": "Task completed. XP, streak, and challenges updated.",
+            "xp_gained": total_xp_earned,
+            "total_xp": user.xp,
+            "level": user.level,
+            "streak_count": streak_count
         }), 200
 
     except Exception as e:

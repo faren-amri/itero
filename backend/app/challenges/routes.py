@@ -3,9 +3,11 @@ from app.challenges.models import ChallengeTemplate, UserChallenge
 from app.users.models import User
 from datetime import datetime, timedelta
 from app.database.db import db
-
+from app.utils.progress_utils import update_streak_and_xp
 
 challenge_bp = Blueprint("challenges", __name__)
+
+XP_FOR_CHALLENGE_ACCEPT = 8  # Custom XP for accepting a challenge
 
 @challenge_bp.route("/active", methods=["GET"])
 def get_active_challenges():
@@ -39,6 +41,7 @@ def get_active_challenges():
         traceback.print_exc()
         return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
+
 @challenge_bp.route("/accept/<int:template_id>", methods=["POST"])
 def accept_challenge(template_id):
     data = request.get_json()
@@ -55,7 +58,6 @@ def accept_challenge(template_id):
     if not template:
         return jsonify({"error": "Challenge template not found"}), 404
 
-    # Check if already accepted
     existing = UserChallenge.query.filter_by(user_id=user.id, template_id=template.id, status='active').first()
     if existing:
         return jsonify({"error": "Challenge already accepted"}), 400
@@ -75,6 +77,10 @@ def accept_challenge(template_id):
     )
 
     db.session.add(user_challenge)
+
+    # ✅ Award XP and streak for accepting a challenge
+    streak_count = update_streak_and_xp(user, XP_FOR_CHALLENGE_ACCEPT, 'challenge', db)
+
     db.session.commit()
 
     return jsonify({
@@ -83,8 +89,12 @@ def accept_challenge(template_id):
         "title": template.title,
         "goal": template.goal,
         "type": template.type,
-        "deadline": deadline.isoformat()
+        "deadline": deadline.isoformat(),
+        "xp": user.xp,
+        "level": user.level,
+        "streak_count": streak_count
     }), 200
+
 
 @challenge_bp.route("/suggestions", methods=["GET"])
 def get_suggestions():
@@ -97,13 +107,11 @@ def get_suggestions():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        # Find template IDs already accepted by the user
         active_template_ids = db.session.query(UserChallenge.template_id).filter_by(
             user_id=user.id, status='active'
         ).all()
         accepted_ids = [t[0] for t in active_template_ids]
 
-        # Suggest challenges not yet accepted
         suggestions = ChallengeTemplate.query.filter(~ChallengeTemplate.id.in_(accepted_ids)).all()
 
         return jsonify([{
@@ -119,6 +127,7 @@ def get_suggestions():
         import traceback
         traceback.print_exc()
         return jsonify({"error": "Internal server error", "detail": str(e)}), 500
+
 
 @challenge_bp.route("/completed", methods=["GET"])
 def get_completed_challenges():
@@ -146,5 +155,3 @@ def get_completed_challenges():
         }
 
     return jsonify([format_challenge(uc) for uc in completed]), 200
-
-

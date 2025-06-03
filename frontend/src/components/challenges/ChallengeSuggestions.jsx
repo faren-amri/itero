@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
-import styles from '../../styles/components/ActiveChallenges.module.css';
+import styles from '../../styles/components/ChallengeSuggestions.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
 const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
@@ -26,7 +26,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
       const data = await res.json();
       if (res.ok) {
         setSuggestions(prev => prev.filter(t => t.id !== templateId));
-        if (onChallengeAccepted) onChallengeAccepted(); // optional
+        if (onChallengeAccepted) onChallengeAccepted();
       } else {
         console.warn('Failed to accept challenge:', data.message || data.error);
       }
@@ -39,17 +39,20 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
 
   return (
     <Card title="Suggested Challenges">
-      <ul className={styles.challengeList}>
+      <div className={styles.suggestionGrid}>
         {suggestions.map((template) => (
-          <li key={template.id} className={styles.challengeItem}>
-            <div className={styles.challengeTitle}>{template.title}</div>
-            <p>{template.description}</p>
-            <button onClick={() => handleAcceptChallenge(template.id)}>
+          <div key={template.id} className={styles.card}>
+            <div className={styles.title}>{template.title}</div>
+            <div className={styles.description}>{template.description}</div>
+            <button
+              className={styles.button}
+              onClick={() => handleAcceptChallenge(template.id)}
+            >
               Accept Challenge
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </Card>
   );
 };

@@ -1,0 +1,56 @@
+.challengeList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.challengeItem {
+  background: #f4f5f7;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.1);
+  transition: background 0.2s;
+}
+
+.challengeItem:hover {
+  background: #ebecf0;
+}
+
+.challengeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.challengeTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #172b4d;
+  margin: 0;
+}
+
+.progressText,
+.completedLabel {
+  font-size: 0.75rem;
+  color: #5e6c84;
+}
+
+.progressBar {
+  background: #dfe1e6;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  background: #0079bf;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.placeholder {
+  font-style: italic;
+  color: #5e6c84;
+}

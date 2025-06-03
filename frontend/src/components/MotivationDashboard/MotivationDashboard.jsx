@@ -34,14 +34,36 @@ const MotivationDashboard = () => {
     <div className={styles.grid}>
       {userId && (
         <>
-          <XPProgress userId={userId} />
-          <StreakTracker userId={userId} />
-          <MoodTrends userId={userId} refreshKey={refreshKey} />
-          <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>XP Progress</h2>
+            <XPProgress userId={userId} />
+          </div>
 
-          <ChallengeSuggestions userId={userId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
-          <ActiveChallenges userId={userId} />
-          <CompletedChallenges userId={userId} />
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>Daily Streak</h2>
+            <StreakTracker userId={userId} />
+          </div>
+
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>Mood Tracker</h2>
+            <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+            <MoodTrends userId={userId} refreshKey={refreshKey} />
+          </div>
+
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>Suggested Challenges</h2>
+            <ChallengeSuggestions userId={userId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
+          </div>
+
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>Active Challenges</h2>
+            <ActiveChallenges userId={userId} />
+          </div>
+
+          <div className={sharedStyles.card}>
+            <h2 className={sharedStyles.cardTitle}>Completed Challenges</h2>
+            <CompletedChallenges userId={userId} />
+          </div>
         </>
       )}
     </div>

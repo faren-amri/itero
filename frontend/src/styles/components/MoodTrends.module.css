@@ -42,3 +42,15 @@
   color: var(--text-light);
   margin-top: 0.5rem;
 }
+
+.chartWrapper {
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+

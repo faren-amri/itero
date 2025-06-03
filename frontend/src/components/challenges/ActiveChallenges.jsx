@@ -26,21 +26,23 @@ const ActiveChallenges = ({ userId }) => {
   return (
     <Card title="Active Challenges">
       {loading ? (
-        <p>Loading challenges...</p>
+        <p className={styles.placeholder}>Loading...</p>
       ) : challenges.length === 0 ? (
-        <p>No active challenges</p>
+        <p className={styles.placeholder}>No active challenges</p>
       ) : (
         <ul className={styles.challengeList}>
           {challenges.map(ch => (
             <li key={ch.id} className={styles.challengeItem}>
-              <div className={styles.challengeTitle}>{ch.title}</div>
+              <div className={styles.challengeHeader}>
+                <h4 className={styles.challengeTitle}>{ch.title}</h4>
+                <span className={styles.progressText}>{ch.progress}%</span>
+              </div>
               <div className={styles.progressBar}>
                 <div
                   className={styles.progressFill}
                   style={{ width: `${ch.progress}%` }}
-                ></div>
+                />
               </div>
-              <span className={styles.progressText}>{ch.progress}% complete</span>
             </li>
           ))}
         </ul>

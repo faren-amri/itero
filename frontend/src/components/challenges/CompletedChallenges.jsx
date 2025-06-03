@@ -1,3 +1,4 @@
+// src/components/dashboard/CompletedChallenges.jsx
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/ActiveChallenges.module.css';
@@ -22,11 +23,13 @@ const CompletedChallenges = ({ userId }) => {
       <ul className={styles.challengeList}>
         {challenges.map(ch => (
           <li key={ch.id} className={styles.challengeItem}>
-            <div className={styles.challengeTitle}>{ch.title}</div>
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill} style={{ width: `100%` }}></div>
+            <div className={styles.challengeHeader}>
+              <h4 className={styles.challengeTitle}>{ch.title}</h4>
+              <span className={styles.completedLabel}>✓ Completed</span>
             </div>
-            <span className={styles.progressText}>Completed</span>
+            <div className={styles.progressBar}>
+              <div className={styles.progressFill} style={{ width: '100%' }} />
+            </div>
           </li>
         ))}
       </ul>

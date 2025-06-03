@@ -1,43 +1,66 @@
 .dashboard {
-    padding: 2rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: var(--gray-light);
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .progressBarContainer {
-    background: var(--gray-medium);
-    height: 14px;
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .progressBar {
-    background: var(--progress-blue);
-    height: 100%;
-    transition: width 0.4s ease;
-  }
-  
-  .progressLabel {
-    margin-top: 0.5rem;
-    display: block;
-    font-size: 0.875rem;
-    text-align: right;
-  }
-  
-  .streakValue {
-    font-size: 1.5rem;
-    color: var(--progress-blue);
-  }
-  
-  .placeholder {
-    font-style: italic;
-    color: var(--gray-light);
-  }
-  
+  padding: 1.5rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--ds-surface, #f4f5f7);
+  color: var(--gray-light);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Trello-style card container */
+.card {
+  background-color: var(--ds-surface-raised, #fff);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.15);
+  border: 1px solid rgba(223, 225, 230, 0.8);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(9, 30, 66, 0.2);
+}
+
+/* Progress bar container */
+.progressBarContainer {
+  background: var(--gray-medium);
+  height: 14px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.progressBar {
+  background: var(--progress-blue);
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+/* Label */
+.progressLabel {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--gray-light);
+}
+
+/* Streak */
+.streakValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--progress-blue);
+}
+
+/* Empty state */
+.placeholder {
+  font-style: italic;
+  color: var(--gray-light);
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 1rem;
+}

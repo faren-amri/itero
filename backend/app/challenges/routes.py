@@ -88,26 +88,37 @@ def accept_challenge(template_id):
 
 @challenge_bp.route("/suggestions", methods=["GET"])
 def get_suggestions():
-    trello_member_id = request.args.get("trello_member_id")
-    if not trello_member_id:
-        return jsonify({"error": "Missing trello_member_id"}), 400
+    try:
+        trello_member_id = request.args.get("trello_member_id")
+        if not trello_member_id:
+            return jsonify({"error": "Missing trello_member_id"}), 400
 
-    # Find template IDs already accepted by the user
-    active_template_ids = db.session.query(UserChallenge.template_id).filter_by(
-        trello_member_id=trello_member_id, status='active'
-    ).subquery()
+        user = User.query.filter_by(trello_id=trello_member_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
 
-    # Suggest challenges not yet accepted
-    suggestions = ChallengeTemplate.query.filter(
-        ~ChallengeTemplate.id.in_(active_template_ids)
-    ).all()
+        # Find template IDs already accepted by the user
+        active_template_ids = db.session.query(UserChallenge.template_id).filter_by(
+            user_id=user.id, status='active'
+        ).all()
+        accepted_ids = [t[0] for t in active_template_ids]
 
-    return jsonify([{
-        "id": t.id,
-        "title": t.title,
-        "description": t.description
-    } for t in suggestions])
+        # Suggest challenges not yet accepted
+        suggestions = ChallengeTemplate.query.filter(~ChallengeTemplate.id.in_(accepted_ids)).all()
 
+        return jsonify([{
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+            "type": t.type,
+            "goal": t.goal,
+            "duration_days": t.duration_days
+        } for t in suggestions]), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
 @challenge_bp.route("/completed", methods=["GET"])
 def get_completed_challenges():

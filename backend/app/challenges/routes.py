@@ -9,16 +9,35 @@ challenge_bp = Blueprint("challenges", __name__)
 
 @challenge_bp.route("/active", methods=["GET"])
 def get_active_challenges():
-    trello_member_id = request.args.get("trello_member_id")
-    if not trello_member_id:
-        return jsonify({"error": "Missing trello_member_id"}), 400
+    try:
+        trello_member_id = request.args.get("trello_member_id")
+        if not trello_member_id:
+            return jsonify({"error": "Missing trello_member_id"}), 400
 
-    challenges = UserChallenge.query.filter_by(
-        trello_member_id=trello_member_id,
-        status='active'
-    ).all()
+        user = User.query.filter_by(trello_id=trello_member_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
 
-    return jsonify([ch.serialize() for ch in challenges])
+        active_challenges = UserChallenge.query.filter_by(user_id=user.id, status="active").all()
+
+        def format_challenge(uc):
+            template = uc.template
+            progress_percent = (
+                (uc.streak / template.goal * 100) if template.type == "streak"
+                else (uc.progress / template.goal * 100)
+            )
+            return {
+                "id": uc.id,
+                "title": template.title,
+                "progress": round(progress_percent),
+                "status": uc.status,
+            }
+
+        return jsonify([format_challenge(uc) for uc in active_challenges]), 200
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
 @challenge_bp.route("/accept/<int:template_id>", methods=["POST"])
 def accept_challenge(template_id):

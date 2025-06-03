@@ -2,33 +2,17 @@ console.log('[powerup.js] Loaded and running');
 
 function completeTask(t) {
   console.log('[powerup.js] completeTask called');
-
-  const context = t.getContext(); // ✅ This is synchronous
-  const cardId = context.card;
-  const memberId = context.member;
-
-  return fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      trello_user_id: memberId,
-      task_id: cardId
-    })
-  }).then(response => {
-    if (response.ok) {
-      console.log('✅ Task completed successfully');
-      return t.closePopup();
-    } else {
-      return response.json().then(err => {
-        console.error('❌ Task completion failed:', err);
-        alert('Task completion failed.');
-      });
+  return t.modal({
+    url: 'https://itero-powerup.netlify.app/#/task-complete',
+    fullscreen: false,
+    height: 200,
+    title: 'Task Completed!',
+    accentColor: '#4A90E2',
+    args: {
+      cardId: t.getContext().card,
+      memberId: t.getContext().member,
+      secret: 'itero-beta-2025'
     }
-  }).catch(err => {
-    console.error('❌ Network error:', err);
-    alert('Network error while completing the task.');
   });
 }
 

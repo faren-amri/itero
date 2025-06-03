@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const TaskCompleteModal = () => {
+  const [status, setStatus] = useState('⏳ Completing task...');
+
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
     const context = t.getContext();
@@ -15,28 +17,31 @@ const TaskCompleteModal = () => {
       task_id: cardId
     })
     .then(() => {
-      toast.success("🎉 Task completed! XP + Challenge updated!");
-      setTimeout(() => {
-        t.closeModal(); // Auto-close after 2.5s
-      }, 2500);
+      toast.success("🎉 XP gained and challenge updated!", { autoClose: 2500 });
+      setStatus('✅ Task completed!');
+      setTimeout(() => t.closeModal(), 2600);
     })
     .catch(err => {
       console.error(err);
       toast.error("❌ Failed to complete task.");
+      setStatus('❌ Task failed.');
     });
   }, []);
 
   return (
-    <>
+    <div style={{
+      textAlign: 'center',
+      padding: '20px',
+      fontWeight: 'bold',
+      fontSize: '18px'
+    }}>
+      <p>{status}</p>
       <ToastContainer
         position="top-center"
-        autoClose={2500}
         theme="dark"
-        hideProgressBar={false}
-        pauseOnHover
-        draggable
+        autoClose={2500}
       />
-    </>
+    </div>
   );
 };
 

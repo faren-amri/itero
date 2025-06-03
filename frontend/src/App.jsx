@@ -20,10 +20,11 @@ function App() {
       />
 
       <Routes>
+
         <Route path="/dashboard" element={<MotivationDashboardPage />} />
         <Route path="/task-complete" element={<TaskCompleteModal />} />
-        {/* Catch-all: redirect any unmatched route to /dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
       </Routes>
     </>
   );

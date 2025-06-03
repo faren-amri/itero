@@ -1,7 +1,7 @@
-// src/pages/TaskCompleteModal.jsx
 import { useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TaskCompleteModal = () => {
   useEffect(() => {
@@ -14,9 +14,11 @@ const TaskCompleteModal = () => {
       trello_user_id: memberId,
       task_id: cardId
     })
-    .then(res => {
+    .then(() => {
       toast.success("🎉 Task completed! XP + Challenge updated!");
-      setTimeout(() => t.closeModal(), 2500); // Auto-close after toast
+      setTimeout(() => {
+        t.closeModal(); // Auto-close after 2.5s
+      }, 2500);
     })
     .catch(err => {
       console.error(err);
@@ -24,7 +26,18 @@ const TaskCompleteModal = () => {
     });
   }, []);
 
-  return null; // optional: show loading spinner or animation
+  return (
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={2500}
+        theme="dark"
+        hideProgressBar={false}
+        pauseOnHover
+        draggable
+      />
+    </>
+  );
 };
 
 export default TaskCompleteModal;

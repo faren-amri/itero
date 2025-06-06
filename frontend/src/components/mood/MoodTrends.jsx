@@ -64,7 +64,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
   return (
     <Card>
       <div className={styles.chartWrapper}>
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="225px" height={220}>
           <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
             <XAxis

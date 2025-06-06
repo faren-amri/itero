@@ -55,7 +55,7 @@ const MotivationDashboard = () => {
             <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
             <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
           </div>
-          <div className={styles.subGrid}>
+          <div className={styles.card}>
             <h2 className={sharedStyles.cardTitle}>🙂 Mood Trends</h2>
               <MoodTrends userId={userId} refreshKey={refreshKey} />
           </div>

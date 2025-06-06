@@ -8,16 +8,22 @@ const TaskCompleteModal = () => {
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
-    const context = t.getContext();
-    const cardId = context.card;
-    const memberId = context.member;
+    const { cardId, memberId } = t.args[1] || t.args.context || {};
+
+    if (!cardId || !memberId) {
+      setStatus('❌ Missing card or member info.');
+      return;
+    }
 
     axios.post('https://itero-api-fme7.onrender.com/api/tasks/complete', {
       trello_user_id: memberId,
       task_id: cardId
     })
-    .then(() => {
-      toast.success("🎉 XP gained and challenge updated!", { autoClose: 2500 });
+    .then(res => {
+      const data = res.data;
+      toast.success(`🎉 +${data.xp_gained} XP · Level ${data.level} · 🔥 ${data.streak_count}-day streak`, {
+        autoClose: 2500
+      });
       setStatus('✅ Task completed!');
       setTimeout(() => t.closeModal(), 2600);
     })
@@ -36,11 +42,7 @@ const TaskCompleteModal = () => {
       fontSize: '18px'
     }}>
       <p>{status}</p>
-      <ToastContainer
-        position="top-center"
-        theme="dark"
-        autoClose={2500}
-      />
+      <ToastContainer position="top-center" theme="dark" autoClose={2500} />
     </div>
   );
 };

@@ -85,11 +85,6 @@
   }
 }
 
-.subGrid > * {
-  flex: 1 1 300px;
-  min-width: 0;
-}
-
 
 .sectionHeading {
   font-size: 1.25rem;

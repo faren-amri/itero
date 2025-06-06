@@ -24,7 +24,7 @@ const XPProgress = ({ userId }) => {
   const progressPercent = Math.min((xp / nextLevel) * 100, 100);
 
   return (
-    <Card title="XP Progress">
+    <Card>
       <div className={styles.progressBarContainer}>
         <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
         <span className={styles.progressLabel}>{xp} / {nextLevel} XP</span>

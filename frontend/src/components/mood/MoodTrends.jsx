@@ -26,7 +26,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
   }, [userId, refreshKey]);
 
   return (
-    <Card title="Mood Trends">
+    <Card>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={moodData}>

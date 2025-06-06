@@ -50,12 +50,13 @@
 
 
 .dashboard {
-  padding: 1.5rem;
+  padding: 2rem 1rem;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--ds-surface, #f4f5f7);
+  background: rgba(20, 20, 25, 0.95);
   color: var(--gray-light);
   max-width: 1080px;
   margin: 0 auto;
+  border-radius: 12px;
 }
 
 .dashboard {
@@ -82,6 +83,10 @@
   .subGrid {
     grid-template-columns: 1fr;
   }
+}
+
+.subGrid > * {
+  max-width: 100%; /* Enforce fit inside */
 }
 
 /* Trello-style card container */

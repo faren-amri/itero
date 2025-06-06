@@ -46,6 +46,8 @@
 .chartWrapper {
   margin-top: 0.5rem;
   padding-bottom: 0.5rem;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .grid {
@@ -53,4 +55,6 @@
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
 }
+
+
 

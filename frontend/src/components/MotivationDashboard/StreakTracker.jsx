@@ -20,7 +20,7 @@ const StreakTracker = ({ userId }) => {
   }, [userId]);
 
   return (
-    <Card title="Streak Tracker">
+    <Card>
       <p className={styles.streakValue}>🔥 {streak}-day streak</p>
     </Card>
   );

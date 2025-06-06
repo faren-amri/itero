@@ -19,7 +19,7 @@ const CompletedChallenges = ({ userId }) => {
   if (challenges.length === 0) return null;
 
   return (
-    <Card title="Completed Challenges">
+    <Card>
       <ul className={styles.challengeList}>
         {challenges.map(ch => (
           <li key={ch.id} className={styles.challengeItem}>

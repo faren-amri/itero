@@ -49,14 +49,15 @@ const MotivationDashboard = () => {
             <StreakTracker userId={userId} />
           </div>
 
-          <h3 className={styles.sectionHeading}>💚 Wellbeing</h3>
+          <h3 className={styles.sectionHeading}>💚 Mood Tracker</h3>
 
           <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>🙂 Mood Tracker</h2>
-            <div className={styles.subGrid}>
-              <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+            <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
+            <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+          </div>
+          <div className={styles.subGrid}>
+            <h2 className={sharedStyles.cardTitle}>🙂 Mood Trends</h2>
               <MoodTrends userId={userId} refreshKey={refreshKey} />
-            </div>
           </div>
 
           <h3 className={styles.sectionHeading}>🏆 Progress & Challenges</h3>

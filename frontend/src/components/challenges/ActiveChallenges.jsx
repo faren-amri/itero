@@ -24,7 +24,7 @@ const ActiveChallenges = ({ userId }) => {
   }, [userId]);
 
   return (
-    <Card title="Active Challenges">
+    <Card>
       {loading ? (
         <p className={styles.placeholder}>Loading...</p>
       ) : challenges.length === 0 ? (

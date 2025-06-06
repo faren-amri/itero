@@ -38,7 +38,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   if (suggestions.length === 0) return null;
 
   return (
-    <Card title="Suggested Challenges">
+    <Card>
       <div className={styles.suggestionGrid}>
         {suggestions.map((template) => (
           <div key={template.id} className={styles.card}>

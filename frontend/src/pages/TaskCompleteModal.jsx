@@ -8,10 +8,17 @@ const TaskCompleteModal = () => {
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
-    const { cardId, memberId } = t.args[1] || t.args.context || {};
+    const isDev = window.location.hostname.includes('localhost') || window.location.search.includes('debug');
+
+    const args = t.args[1] || t.args.context || {};
+    const cardId = isDev ? 'mock-card-id' : args.cardId || args.card;
+    const memberId = isDev ? 'mock-member-id' : args.memberId || args.member;
+
+    console.log('[TaskCompleteModal] Context:', { cardId, memberId });
 
     if (!cardId || !memberId) {
-      setStatus('❌ Missing card or member info.');
+      toast.error("❌ Missing Trello card or user info.");
+      setStatus('❌ Missing task info.');
       return;
     }
 
@@ -19,27 +26,33 @@ const TaskCompleteModal = () => {
       trello_user_id: memberId,
       task_id: cardId
     })
-    .then(res => {
-      const data = res.data;
-      toast.success(`🎉 +${data.xp_gained} XP · Level ${data.level} · 🔥 ${data.streak_count}-day streak`, {
-        autoClose: 2500
+      .then(res => {
+        const data = res.data;
+        const xp = data?.xp_gained ?? 10;
+        const lvl = data?.level ?? '✓';
+        const streak = data?.streak_count ?? 0;
+
+        toast.success(`🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`, {
+          autoClose: 2500
+        });
+
+        setStatus(`✅ XP: ${xp} | Level: ${lvl} | 🔥 Streak: ${streak}`);
+        setTimeout(() => t.closeModal(), 2600);
+      })
+      .catch(err => {
+        console.error("❌ Task completion failed:", err);
+        toast.error("❌ Failed to complete task.");
+        setStatus('❌ Could not complete task.');
       });
-      setStatus('✅ Task completed!');
-      setTimeout(() => t.closeModal(), 2600);
-    })
-    .catch(err => {
-      console.error(err);
-      toast.error("❌ Failed to complete task.");
-      setStatus('❌ Task failed.');
-    });
   }, []);
 
   return (
     <div style={{
       textAlign: 'center',
-      padding: '20px',
+      padding: '24px',
       fontWeight: 'bold',
-      fontSize: '18px'
+      fontSize: '18px',
+      color: 'var(--text-main)',
     }}>
       <p>{status}</p>
       <ToastContainer position="top-center" theme="dark" autoClose={2500} />

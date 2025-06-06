@@ -43,8 +43,11 @@
   color: var(--section-heading);
 }
 
-.sectionHeading {
-  color: var(--section-heading);
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--section-heading); 
+  margin-bottom: 0.75rem;
 }
 
 

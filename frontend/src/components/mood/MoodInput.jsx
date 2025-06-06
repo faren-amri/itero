@@ -9,11 +9,8 @@ const MoodInput = ({ userId, onMoodLogged }) => {
   const [submitting, setSubmitting] = useState(false);
   const [loggedMood, setLoggedMood] = useState(null);
 
-  console.log("🧠 MoodInput loaded with userId:", userId);
-
 
   const handleMoodSelect = async (mood) => {
-    console.log("💬 Mood button clicked:", mood, "| userId:", userId);
 
     if (!userId || submitting) return;
     setSubmitting(true);

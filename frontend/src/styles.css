@@ -12,13 +12,27 @@ body {
 :root {
   --card-bg: #ffffff;
   --text-main: #172b4d;
+  --text-light: #5e6c84;
+  --text-muted: #8993a4;
+
   --section-heading: #172b4d;
   --progress-blue: #0079bf;
+
+  --button-bg: #e4f0f6;
+  --button-bg-hover: #cce4f6;
+  --button-text: #0079bf;
 }
 
 [data-theme='dark'] {
   --card-bg: #1e1f26;
   --text-main: #f4f5f7;
+  --text-light: #cbd2d9;
+  --text-muted: #aab8c2;
+
   --section-heading: #cbd2d9;
   --progress-blue: #61dafb;
+
+  --button-bg: #1f3b4d;
+  --button-bg-hover: #2b4a63;
+  --button-text: #61dafb;
 }

@@ -7,4 +7,6 @@ PyMySQL==1.1.1
 gunicorn==21.2.0
 pymysql
 python-dotenv
+psycopg2-binary
+
 

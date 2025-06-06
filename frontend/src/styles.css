@@ -1,4 +1,5 @@
 /* style.css */
+
 body {
   background: linear-gradient(145deg, rgba(18, 19, 22, 0.95), rgba(28, 30, 35, 0.95));
   color: var(--text-main);
@@ -15,10 +16,9 @@ body {
   --progress-blue: #0079bf;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --card-bg: #1e1f26;
   --text-main: #f4f5f7;
   --section-heading: #cbd2d9;
   --progress-blue: #61dafb;
 }
-

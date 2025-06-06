@@ -90,6 +90,16 @@
   min-width: 0;
 }
 
+
+.sectionHeading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--section-heading);
+  grid-column: 1 / -1;
+  margin-top: 1.5rem;
+}
+
+
 /* Trello-style card container */
 .card {
   background: var(--white, #fff);

@@ -4,6 +4,7 @@
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(9, 30, 66, 0.15);
   border: 1px solid rgba(223, 225, 230, 0.8);
+  width: 100%;
 }
 
 .moodInput h3 {

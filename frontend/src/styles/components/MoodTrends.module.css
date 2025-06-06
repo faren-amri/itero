@@ -8,6 +8,10 @@
   text-align: center;
 }
 
+.moodInput {
+  width: 100%;
+}
+
 .title {
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
@@ -46,7 +50,6 @@
 .chartWrapper {
   width: 100%;
   max-width: 100%;
-  overflow-x: auto;
 }
 
 .grid {

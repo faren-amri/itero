@@ -39,9 +39,14 @@
   color: var(--text-main);
 }
 
-.cardTitle, .sectionHeading {
+.cardTitle {
   color: var(--section-heading);
 }
+
+.sectionHeading {
+  color: var(--section-heading);
+}
+
 
 .cardBody {
   font-size: 0.875rem;

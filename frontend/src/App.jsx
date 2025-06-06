@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MotivationDashboardPage from './pages/MotivationDashboardPage';
 import TaskCompleteModal from './pages/TaskCompleteModal';
+import './styles.css';
 
 function App() {
   return (

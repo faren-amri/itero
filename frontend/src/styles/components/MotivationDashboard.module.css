@@ -114,9 +114,14 @@
   color: var(--text-main);
 }
 
-.cardTitle, .sectionHeading {
+.cardTitle {
   color: var(--section-heading);
 }
+
+.sectionHeading {
+  color: var(--section-heading);
+}
+
 
 .cardBody {
   flex-grow: 1;

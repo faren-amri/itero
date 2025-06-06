@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
+import './styles.css';
 import { HashRouter } from 'react-router-dom';
 
 const APP_KEY = '0f004da5af110390ba7fe702b6c995cb'; // ← replace this with your actual key from trello.com/app-key

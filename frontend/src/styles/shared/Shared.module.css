@@ -34,6 +34,15 @@
   margin-bottom: 0.75rem;
 }
 
+.card {
+  background: var(--card-bg);
+  color: var(--text-main);
+}
+
+.cardTitle, .sectionHeading {
+  color: var(--section-heading);
+}
+
 .cardBody {
   font-size: 0.875rem;
   line-height: 1.5;

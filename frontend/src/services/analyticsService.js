@@ -9,7 +9,7 @@ export const getXPData = async (userId) => {
 };
 
 export const getStreakData = async (userId) => {
-  const res = await axios.get(`${API_BASE}/streaks/${userId}/streak`);
+  const res = await axios.get(`${API_BASE}/api/streaks/${userId}/streak`);
   return res.data;
 };
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 export const API_BASE = import.meta.env.VITE_API_URL || 'https://itero-api-fme7.onrender.com';
 
 export const getXPData = async (userId) => {
-  const res = await axios.get(`${API_BASE}/xp/${userId}`);
+  const res = await axios.get(`${API_BASE}/api/tasks/xp/${userId}`);
   return res.data;
 };
 

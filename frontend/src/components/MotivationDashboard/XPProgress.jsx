@@ -5,14 +5,14 @@ import { getXPData } from '../../services/analyticsService.js';
 
 const XPProgress = ({ userId }) => {
   const [xp, setXp] = useState(0);
-  const [nextLevel, setNextLevel] = useState(1000);
+  const [nextLevel, setNextLevel] = useState(100); // Default fallback
 
   useEffect(() => {
     const fetchXP = async () => {
       try {
         const data = await getXPData(userId);
         setXp(data.xp);
-        setNextLevel(data.next_level);
+        setNextLevel(data.next_level_xp); // ✅ corrected key
       } catch (err) {
         console.error('Failed to load XP data:', err);
       }

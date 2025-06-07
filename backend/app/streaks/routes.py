@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.streaks.models import Streak
+from app.users.models import User
 from app.database.db import db
 from datetime import datetime, timedelta
 
@@ -8,16 +9,20 @@ streak_bp = Blueprint("streaks", __name__)
 @streak_bp.route("/update", methods=["POST"])
 def update_streak():
     data = request.get_json()
-    user_id = data.get("user_id")
+    trello_id = data.get("trello_id")
 
-    if not user_id:
-        return jsonify({"error": "Missing user_id"}), 400
+    if not trello_id:
+        return jsonify({"error": "Missing trello_id"}), 400
+
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
     today = datetime.utcnow().date()
-    streak = Streak.query.filter_by(user_id=user_id, streak_type='daily').first()
+    streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
 
     if not streak:
-        new_streak = Streak(user_id=user_id, count=1, streak_type='daily', last_updated=today)
+        new_streak = Streak(user_id=user.id, count=1, streak_type='daily', last_updated=today)
         db.session.add(new_streak)
         db.session.commit()
         return jsonify({"message": "Streak started", "count": 1}), 200
@@ -36,11 +41,14 @@ def update_streak():
         streak.last_updated = today
         db.session.commit()
         return jsonify({"message": "Streak reset", "count": 1}), 200
+    
+@streak_bp.route("/<string:trello_id>/streak", methods=["GET"])
+def get_streak(trello_id):
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-@streak_bp.route("/<string:user_id>/streak", methods=["GET"])
-def get_streak(user_id):
-    streak = Streak.query.filter_by(user_id=user_id, streak_type='daily').first()
-    if streak:
-        return jsonify({"count": streak.count})
-    return jsonify({"count": 0}), 200
+    streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
+    return jsonify({"count": streak.count if streak else 0}), 200
+
 

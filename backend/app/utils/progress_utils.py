@@ -10,11 +10,9 @@ def update_streak_and_xp(user, base_xp, streak_type, db):
     total_xp = base_xp
     user.xp += base_xp
 
-    # Fetch any streak (daily) regardless of type
     streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
 
     if not streak:
-        # First streak entry
         streak = Streak(user_id=user.id, streak_type='daily', count=1, last_updated=today)
         db.session.add(streak)
         total_xp += XP_PER_STREAK_DAY
@@ -22,7 +20,7 @@ def update_streak_and_xp(user, base_xp, streak_type, db):
     else:
         last = streak.last_updated.date()
         if last == today:
-            # Already updated today, don't increment or add XP again
+            # Already updated today
             pass
         elif last == today - timedelta(days=1):
             streak.count += 1
@@ -30,15 +28,14 @@ def update_streak_and_xp(user, base_xp, streak_type, db):
             total_xp += XP_PER_STREAK_DAY
             user.xp += XP_PER_STREAK_DAY
         else:
-            # Missed a day, reset
             streak.count = 1
             streak.last_updated = today
             total_xp += XP_PER_STREAK_DAY
             user.xp += XP_PER_STREAK_DAY
 
-    # Level-up logic
+    # Level-up
     while user.xp >= user.level * 100:
         user.level += 1
 
     db.session.commit()
-    return streak.count
+    return streak.count if streak else 0

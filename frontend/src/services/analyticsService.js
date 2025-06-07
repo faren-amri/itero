@@ -9,9 +9,10 @@ export const getXPData = async (userId) => {
 };
 
 export const getStreakData = async (userId) => {
-  const res = await axios.get(`/api/streaks/${userId}/streak`);
+  const res = await axios.get(`${API_BASE}/streaks/${userId}/streak`);
   return res.data;
 };
+
 
 export const getMoodData = async (userId) => {
   const res = await axios.get(`${API_BASE}/user/${userId}/mood`);

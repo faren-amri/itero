@@ -54,3 +54,17 @@
   font-style: italic;
   color: #5e6c84;
 }
+
+
+.challengeDescription {
+  font-size: 14px;
+  color: var(--text-light);
+  margin: 6px 0 12px;
+  line-height: 1.4;
+}
+
+.completedLabel {
+  color: var(--success-green);
+  font-weight: bold;
+  font-size: 14px;
+}

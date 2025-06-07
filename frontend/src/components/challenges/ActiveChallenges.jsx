@@ -1,16 +1,16 @@
-// src/components/dashboard/ActiveChallenges.jsx
 import React, { useEffect, useState } from 'react';
 import Card from '../common/Card';
 import styles from '../../styles/components/ActiveChallenges.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
-const ActiveChallenges = ({ userId }) => {
+const ActiveChallenges = ({ userId, refreshKey }) => {
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) return;
 
+    setLoading(true);
     fetch(`${API_BASE}/api/challenges/active?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => {
@@ -21,12 +21,12 @@ const ActiveChallenges = ({ userId }) => {
         console.error('Failed to load active challenges', err);
         setLoading(false);
       });
-  }, [userId]);
+  }, [userId, refreshKey]);
 
   return (
     <Card>
       {loading ? (
-        <p className={styles.placeholder}>Loading...</p>
+        <p className={styles.placeholder}>🔄 Syncing challenges...</p>
       ) : challenges.length === 0 ? (
         <p className={styles.placeholder}>No active challenges</p>
       ) : (
@@ -37,6 +37,7 @@ const ActiveChallenges = ({ userId }) => {
                 <h4 className={styles.challengeTitle}>{ch.title}</h4>
                 <span className={styles.progressText}>{ch.progress}%</span>
               </div>
+              <p className={styles.challengeDescription}>{ch.description}</p>
               <div className={styles.progressBar}>
                 <div
                   className={styles.progressFill}

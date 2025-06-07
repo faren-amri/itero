@@ -22,6 +22,15 @@ const MotivationDashboard = () => {
     const memberId = context.member || context.memberId || null;
 
     if (memberId) setUserId(memberId);
+
+    // Refresh dashboard if refresh flag is set
+    t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
+      if (shouldRefresh) {
+        console.log('[Dashboard] Refresh triggered from task completion.');
+        setRefreshKey(prev => prev + 1);
+        t.set('member', 'shared', 'refresh', false); // clear flag
+      }
+    });
   }, []);
 
   const toggleTheme = () => {
@@ -41,12 +50,12 @@ const MotivationDashboard = () => {
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
-            <XPProgress userId={userId} />
+            <XPProgress userId={userId} refreshKey={refreshKey} />
           </div>
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>🔥 Daily Streak</h2>
-            <StreakTracker userId={userId} />
+            <StreakTracker userId={userId} refreshKey={refreshKey} />
           </div>
 
           <h3 className={styles.sectionHeading}>💚 Mood Tracker</h3>
@@ -55,9 +64,10 @@ const MotivationDashboard = () => {
             <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
             <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
           </div>
+
           <div className={styles.card}>
             <h2 className={sharedStyles.cardTitle}>🙂 Mood Trends</h2>
-              <MoodTrends userId={userId} refreshKey={refreshKey} />
+            <MoodTrends userId={userId} refreshKey={refreshKey} />
           </div>
 
           <h3 className={styles.sectionHeading}>🏆 Progress & Challenges</h3>
@@ -69,12 +79,12 @@ const MotivationDashboard = () => {
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
-            <ActiveChallenges userId={userId} />
+            <ActiveChallenges userId={userId} refreshKey={refreshKey} />
           </div>
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
-            <CompletedChallenges userId={userId} />
+            <CompletedChallenges userId={userId} refreshKey={refreshKey} />
           </div>
         </div>
       )}

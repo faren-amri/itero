@@ -10,7 +10,7 @@ const StreakTracker = ({ userId }) => {
     const fetchStreak = async () => {
       try {
         const data = await getStreakData(userId);
-        setStreak(data.streak);
+        setStreak(data.count);
       } catch (err) {
         console.error('Failed to load streak data:', err);
       }

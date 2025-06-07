@@ -43,17 +43,8 @@ def update_streak():
         return jsonify({"message": "Streak reset", "count": 1}), 200
     
 @streak_bp.route("/<string:trello_id>/streak", methods=["GET"])
-def get_streak(trello_id):
+def get_all_streaks(trello_id):
     user = User.query.filter_by(trello_id=trello_id).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-    streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
-    return jsonify({"count": streak.count if streak else 0}), 200
-
-@streak_bp.route("/<string:user_id>/streak", methods=["GET"])
-def get_all_streaks(user_id):
-    user = User.query.filter_by(trello_id=user_id).first()
     if not user:
         return jsonify({"error": "User not found"}), 404
 
@@ -69,6 +60,3 @@ def get_all_streaks(user_id):
             for s in streaks
         ]
     }), 200
-
-
-

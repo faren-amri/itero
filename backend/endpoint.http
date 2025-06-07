@@ -1,3 +1,6 @@
-curl -X POST https://itero-api.onrender.com/api/moods/log \
-  -H "Content-Type: application/json" \
-  -d '{"trello_member_id": "5caaf74254d0ef1db084970f", "mood": "Tired"}'
+//curl -X POST https://itero-api.onrender.com/api/moods/log \
+//  -H "Content-Type: application/json" \
+//  -d '{"trello_member_id": "5caaf74254d0ef1db084970f", "mood": "Tired"}'
+
+
+curl -X GET "https://itero-api-fme7.onrender.com/api/streaks/5caaf74254d0ef1db084970f/streak"

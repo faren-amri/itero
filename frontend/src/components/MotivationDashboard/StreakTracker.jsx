@@ -21,14 +21,14 @@ const StreakTracker = ({ userId }) => {
 
   return (
     <Card>
-      {streaks.length > 0 ? (
-        streaks.map((streak) => (
-          <p key={streak.type} className={styles.streakValue}>
-            🔥 {streak.count}-day <strong>{streak.type}</strong> streak
+      {streaks.length === 0 ? (
+        <p className={styles.streakValue}>No streaks yet</p>
+      ) : (
+        streaks.map((s, i) => (
+          <p key={i} className={styles.streakValue}>
+            🔥 {s.count}-day <strong>{s.type}</strong> streak
           </p>
         ))
-      ) : (
-        <p className={styles.streakValue}>No streaks yet</p>
       )}
     </Card>
   );

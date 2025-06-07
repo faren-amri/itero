@@ -38,7 +38,7 @@ const StreakTracker = ({ userId }) => {
       ) : (
         streaks.map((s, i) => (
           <p key={i} className={styles.streakValue}>
-            🔥 {s.count}-day <strong>{s.type}</strong> streak
+            🔥 {s.count}-day streak
           </p>
         ))
       )}

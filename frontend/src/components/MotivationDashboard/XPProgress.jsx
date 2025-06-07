@@ -25,7 +25,6 @@ const XPProgress = ({ userId }) => {
 
   return (
     <Card>
-      <h3 className={styles.sectionTitle}>💡 XP Progress</h3>
       <div className={styles.progressBarContainer}>
         <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
         <span className={styles.progressText}>{xp} / {nextLevel} XP</span>

@@ -5,14 +5,14 @@ import { getXPData } from '../../services/analyticsService.js';
 
 const XPProgress = ({ userId }) => {
   const [xp, setXp] = useState(0);
-  const [nextLevel, setNextLevel] = useState(100); // Default fallback
+  const [nextLevel, setNextLevel] = useState(100);
 
   useEffect(() => {
     const fetchXP = async () => {
       try {
         const data = await getXPData(userId);
         setXp(data.xp);
-        setNextLevel(data.next_level_xp); // ✅ corrected key
+        setNextLevel(data.next_level_xp);
       } catch (err) {
         console.error('Failed to load XP data:', err);
       }
@@ -25,9 +25,10 @@ const XPProgress = ({ userId }) => {
 
   return (
     <Card>
+      <h3 className={styles.sectionTitle}>💡 XP Progress</h3>
       <div className={styles.progressBarContainer}>
         <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
-        <span className={styles.progressLabel}>{xp} / {nextLevel} XP</span>
+        <span className={styles.progressText}>{xp} / {nextLevel} XP</span>
       </div>
     </Card>
   );

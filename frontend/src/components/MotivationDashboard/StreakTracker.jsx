@@ -4,44 +4,39 @@ import styles from '../../styles/components/MotivationDashboard.module.css';
 import { getStreakData } from '../../services/analyticsService.js';
 
 const StreakTracker = ({ userId }) => {
-  const [streaks, setStreaks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [streak, setStreak] = useState(null);
 
   useEffect(() => {
-    const fetchStreaks = async () => {
+    const fetchStreak = async () => {
       try {
         const data = await getStreakData(userId);
-        console.log('Fetched streaks:', data); // 🔍 DEBUG
-
-        if (data && Array.isArray(data.streaks)) {
-          setStreaks(data.streaks);
-        } else {
-          setStreaks([]); // fallback
+        // Show only the latest streak (e.g. first one in the array)
+        if (data.streaks && data.streaks.length > 0) {
+          const sorted = [...data.streaks].sort((a, b) =>
+            new Date(b.last_updated) - new Date(a.last_updated)
+          );
+          setStreak(sorted[0]); // show the latest streak
         }
       } catch (err) {
         console.error('Failed to load streak data:', err);
-        setStreaks([]); // fallback on error
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchStreaks();
+    fetchStreak();
   }, [userId]);
-
-  if (loading) return <Card><p>Loading streaks...</p></Card>;
 
   return (
     <Card>
-      {streaks.length === 0 ? (
-        <p className={styles.streakValue}>No streaks yet</p>
-      ) : (
-        streaks.map((s, i) => (
-          <p key={i} className={styles.streakValue}>
-            🔥 {s.count} day streak
+      <h3 className={styles.sectionTitle}>🔥 Daily Streak</h3>
+      <div className={styles.streakList}>
+        {streak ? (
+          <p className={styles.streakValue}>
+            🔥 <strong>{streak.count}</strong> day streak
           </p>
-        ))
-      )}
+        ) : (
+          <p>No streak yet</p>
+        )}
+      </div>
     </Card>
   );
 };

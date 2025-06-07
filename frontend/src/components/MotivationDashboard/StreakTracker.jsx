@@ -4,24 +4,32 @@ import styles from '../../styles/components/MotivationDashboard.module.css';
 import { getStreakData } from '../../services/analyticsService.js';
 
 const StreakTracker = ({ userId }) => {
-  const [streak, setStreak] = useState(0);
+  const [streaks, setStreaks] = useState([]);
 
   useEffect(() => {
-    const fetchStreak = async () => {
+    const fetchStreaks = async () => {
       try {
         const data = await getStreakData(userId);
-        setStreak(data.count);
+        setStreaks(data.streaks || []);
       } catch (err) {
         console.error('Failed to load streak data:', err);
       }
     };
 
-    fetchStreak();
+    fetchStreaks();
   }, [userId]);
 
   return (
     <Card>
-      <p className={styles.streakValue}>🔥 {streak}-day streak</p>
+      {streaks.length > 0 ? (
+        streaks.map((streak) => (
+          <p key={streak.type} className={styles.streakValue}>
+            🔥 {streak.count}-day <strong>{streak.type}</strong> streak
+          </p>
+        ))
+      ) : (
+        <p className={styles.streakValue}>No streaks yet</p>
+      )}
     </Card>
   );
 };

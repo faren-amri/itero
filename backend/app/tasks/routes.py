@@ -4,7 +4,7 @@ from app.streaks.models import Streak
 from app.users.models import User
 from app.challenges.models import UserChallenge
 from app.database.db import db
-from datetime import datetime
+from datetime import datetime, timezone
 from app.utils.progress_utils import update_streak_and_xp
 from sqlalchemy.orm import joinedload
 import logging
@@ -62,7 +62,7 @@ def complete_task():
 
                 logging.info(f"⏳ Evaluating challenge: {template.title} (type={template.type})")
 
-                if uc.deadline and datetime.utcnow() > uc.deadline:
+                if uc.deadline and datetime.now(timezone.utc) > uc.deadline:
                     uc.status = 'failed'
                     db.session.add(uc)
                     continue

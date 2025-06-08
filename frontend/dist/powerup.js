@@ -1,23 +1,24 @@
 console.log('[powerup.js] Loaded and running');
 
-// ✅ Define completeTask without async — just return the async function
+// ✅ Fixed: no async/await on t.getContext
 function completeTask(t) {
   console.log('[powerup.js] completeTask called');
 
-  return t.getContext().then(async context => {
+  const context = t.getContext();
+  const cardId = context.card;
+  const memberId = context.member;
+
+  // ✅ MUST return a promise
+  return t.get('card', 'shared', 'taskCompleted').then(async (alreadyDone) => {
+    if (!cardId || !memberId) {
+      return t.alert({ message: '❌ Missing card or member info.' });
+    }
+
+    if (alreadyDone) {
+      return t.alert({ message: '✅ Task already completed.' });
+    }
+
     try {
-      const cardId = context.card;
-      const memberId = context.member;
-
-      if (!cardId || !memberId) {
-        return t.alert({ message: "❌ Missing card or member info." });
-      }
-
-      const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
-      if (alreadyDone) {
-        return t.alert({ message: '✅ Task already completed.' });
-      }
-
       const response = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,8 +59,8 @@ function completeTask(t) {
   });
 }
 
-// ✅ Optional: still working correctly
 function openDashboard(t) {
+  const context = t.getContext();
   return t.modal({
     url: 'https://itero-powerup.netlify.app/#/dashboard',
     fullscreen: true,
@@ -67,17 +68,16 @@ function openDashboard(t) {
     accentColor: '#4A90E2',
     args: {
       secret: 'itero-beta-2025',
-      member: t.getContext().member
+      member: context.member
     }
   });
 }
 
-// ✅ Register button callbacks as Promises
 window.TrelloPowerUp.initialize({
   'card-buttons': function () {
     return [{
       text: 'Complete Task 🎯',
-      callback: completeTask  // MUST return a Promise!
+      callback: completeTask
     }];
   },
   'board-buttons': function () {

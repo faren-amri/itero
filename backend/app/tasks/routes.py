@@ -43,15 +43,12 @@ def complete_task():
         db.session.add(TaskCompletion(user_id=user.id, task_id=task_id))
 
         total_xp_earned = 0
-
-        # Add task XP + streak logic
         streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db) or 0
         total_xp_earned += XP_PER_TASK
 
-        # Challenge progress
         today = datetime.utcnow().date()
         user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
-        completed_challenges = []
+        updated_challenges = []
 
         for uc in user_challenges:
             template = uc.template
@@ -60,20 +57,22 @@ def complete_task():
                 uc.status = 'failed'
                 continue
 
+            challenge_data = {
+                "id": uc.id,
+                "title": template.title,
+                "type": template.type,
+                "goal": template.goal,
+                "status": uc.status
+            }
+
             if template.type == 'count':
                 uc.progress += 1
+                challenge_data["progress"] = uc.progress
+
                 if uc.progress >= template.goal:
                     uc.status = 'completed'
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
-                    completed_challenges.append({
-                        "id": uc.id,
-                        "title": template.title,
-                        "type": template.type,
-                        "goal": template.goal,
-                        "progress": uc.progress,
-                        "status": uc.status
-                    })
 
             elif template.type == 'streak':
                 if uc.last_activity_date == today:
@@ -81,20 +80,17 @@ def complete_task():
                 if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
                     uc.status = 'failed'
                     continue
+
                 uc.streak += 1
                 uc.last_activity_date = today
+                challenge_data["streak"] = uc.streak
+
                 if uc.streak >= template.goal:
                     uc.status = 'completed'
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
-                    completed_challenges.append({
-                        "id": uc.id,
-                        "title": template.title,
-                        "type": template.type,
-                        "goal": template.goal,
-                        "streak": uc.streak,
-                        "status": uc.status
-                    })
+
+            updated_challenges.append(challenge_data)
 
         # Level-up check
         while user.xp >= user.level * 100:
@@ -109,15 +105,12 @@ def complete_task():
             "total_xp": user.xp,
             "level": user.level,
             "streak_count": streak_count,
-            "completed_challenges": completed_challenges
+            "updated_challenges": updated_challenges
         }), 200
 
     except Exception as e:
         logging.exception("❌ Server error while processing task completion")
         return jsonify({"error": "Internal server error"}), 500
-
-
-
 
 @task_bp.route("/xp/<trello_user_id>", methods=["GET"])
 def get_xp(trello_user_id):

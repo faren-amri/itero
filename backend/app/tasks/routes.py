@@ -43,18 +43,23 @@ def complete_task():
         db.session.add(TaskCompletion(user_id=user.id, task_id=task_id))
 
         total_xp_earned = 0
+        today = datetime.utcnow().date()
+
+        # Update streak & add base XP
         streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db) or 0
         total_xp_earned += XP_PER_TASK
 
-        today = datetime.utcnow().date()
+        # Challenge updates
         user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
         updated_challenges = []
 
         for uc in user_challenges:
             template = uc.template
 
+            # Deadline check
             if uc.deadline and datetime.utcnow() > uc.deadline:
                 uc.status = 'failed'
+                db.session.add(uc)
                 continue
 
             challenge_data = {
@@ -65,6 +70,7 @@ def complete_task():
                 "status": uc.status
             }
 
+            # Count-based challenge logic
             if template.type == 'count':
                 uc.progress += 1
                 challenge_data["progress"] = uc.progress
@@ -74,11 +80,15 @@ def complete_task():
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
+                db.session.add(uc)  # ✅ Required to persist change
+
+            # Streak-based challenge logic
             elif template.type == 'streak':
                 if uc.last_activity_date == today:
-                    continue
+                    continue  # already updated today
                 if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
                     uc.status = 'failed'
+                    db.session.add(uc)
                     continue
 
                 uc.streak += 1
@@ -90,9 +100,11 @@ def complete_task():
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
+                db.session.add(uc)  # ✅ Required to persist change
+
             updated_challenges.append(challenge_data)
 
-        # Level-up check
+        # Level-up logic
         while user.xp >= user.level * 100:
             user.level += 1
 
@@ -111,6 +123,7 @@ def complete_task():
     except Exception as e:
         logging.exception("❌ Server error while processing task completion")
         return jsonify({"error": "Internal server error"}), 500
+
 
 @task_bp.route("/xp/<trello_user_id>", methods=["GET"])
 def get_xp(trello_user_id):

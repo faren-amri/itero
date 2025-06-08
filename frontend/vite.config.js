@@ -7,9 +7,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
     rollupOptions: {
-      input: './index.html' // ✅ only React/Vite entry here
+      input: './index.html' // ONLY React app entry
     }
   }
 });

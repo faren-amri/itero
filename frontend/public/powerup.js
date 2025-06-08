@@ -1,24 +1,21 @@
-async function completeTask(t) {
+console.log('[powerup.js] Loaded and running');
+
+function completeTask(t) {
   console.log('[powerup.js] completeTask called');
 
-  try {
-    const context = await t.getContext();
+  return t.getContext().then(async context => {
     const cardId = context.card;
     const memberId = context.member;
 
     if (!cardId || !memberId) {
-      t.alert({ message: "❌ Missing card or member info." });
-      return;
+      return t.alert({ message: "❌ Missing card or member info." });
     }
 
-    // Prevent duplicate completions
     const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
     if (alreadyDone) {
-      t.alert({ message: '✅ Task already completed.' });
-      return;
+      return t.alert({ message: '✅ Task already completed.' });
     }
 
-    // Call backend API
     const response = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -29,37 +26,52 @@ async function completeTask(t) {
     });
 
     if (!response.ok) {
-      throw new Error('API call failed');
+      return t.alert({ message: '❌ Task completion failed.' });
     }
 
     const data = await response.json();
 
-    // Extract data
-    const xp = data?.xp_gained ?? 10;
-    const level = data?.level ?? '?';
-    const streak = data?.streak_count ?? 0;
-    const completed = data?.completed_challenges?.length ?? 0;
-
-    // Save completion flag and refresh trigger
     await t.set('card', 'shared', 'taskCompleted', true);
     await t.set('member', 'shared', 'refresh', true);
 
-    // Build toast message
-    let message = `🎉 +${xp} XP · Level ${level} · 🔥 ${streak}-day streak`;
+    const xp = data?.xp_gained ?? 10;
+    const lvl = data?.level ?? '?';
+    const streak = data?.streak_count ?? 0;
+    const completed = data?.completed_challenges?.length ?? 0;
+
+    let message = `🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`;
     if (completed > 0) {
-      message += ` · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed!`;
+      message += ` · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed`;
     }
 
-    t.alert({
-      message,
-      duration: 5
-    });
-
-  } catch (err) {
-    console.error('[powerup.js] Task completion error:', err);
-    t.alert({
-      message: '❌ Failed to complete task.',
-      duration: 4
-    });
-  }
+    return t.alert({ message, duration: 5 });
+  });
 }
+
+function openDashboard(t) {
+  return t.modal({
+    url: 'https://itero-powerup.netlify.app/#/dashboard',
+    fullscreen: true,
+    title: 'Motivation Dashboard',
+    accentColor: '#4A90E2',
+    args: {
+      secret: 'itero-beta-2025',
+      member: t.getContext().member
+    }
+  });
+}
+
+window.TrelloPowerUp.initialize({
+  'board-buttons': function () {
+    return [{
+      text: 'Open Itero',
+      callback: openDashboard
+    }];
+  },
+  'card-buttons': function () {
+    return [{
+      text: 'Complete Task 🎯',
+      callback: completeTask
+    }];
+  }
+});

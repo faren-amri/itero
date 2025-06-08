@@ -6,6 +6,7 @@ from app.challenges.models import UserChallenge
 from app.database.db import db
 from datetime import datetime
 from app.utils.progress_utils import update_streak_and_xp
+from sqlalchemy.orm import joinedload
 import logging
 
 task_bp = Blueprint("tasks", __name__)
@@ -49,14 +50,21 @@ def complete_task():
         streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db) or 0
         total_xp_earned += XP_PER_TASK
 
-        # Challenge updates
-        user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
+        # Load active challenges with their templates
+        user_challenges = UserChallenge.query.options(joinedload(UserChallenge.template)) \
+            .filter_by(user_id=user.id, status='active').all()
+
         updated_challenges = []
 
         for uc in user_challenges:
             template = uc.template
 
-            # Deadline check
+            if not template or not template.type:
+                logging.warning(f"⚠️ Challenge template missing or invalid: {uc}")
+                continue
+
+            logging.info(f"⏳ Checking challenge: {template.title} (type={template.type})")
+
             if uc.deadline and datetime.utcnow() > uc.deadline:
                 uc.status = 'failed'
                 db.session.add(uc)
@@ -70,7 +78,7 @@ def complete_task():
                 "status": uc.status
             }
 
-            # Count-based challenge logic
+            # Count-based challenges
             if template.type == 'count':
                 uc.progress += 1
                 challenge_data["progress"] = uc.progress
@@ -80,12 +88,12 @@ def complete_task():
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
-                db.session.add(uc)  # ✅ Required to persist change
+                db.session.add(uc)
 
-            # Streak-based challenge logic
+            # Streak-based challenges
             elif template.type == 'streak':
                 if uc.last_activity_date == today:
-                    continue  # already updated today
+                    continue
                 if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
                     uc.status = 'failed'
                     db.session.add(uc)
@@ -100,7 +108,7 @@ def complete_task():
                     user.xp += XP_PER_CHALLENGE_COMPLETION
                     total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
-                db.session.add(uc)  # ✅ Required to persist change
+                db.session.add(uc)
 
             updated_challenges.append(challenge_data)
 

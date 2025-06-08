@@ -19,10 +19,7 @@ function completeTask(t) {
     const response = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        trello_user_id: memberId,
-        task_id: cardId
-      }),
+      body: JSON.stringify({ trello_user_id: memberId, task_id: cardId }),
     });
 
     if (!response.ok) {
@@ -47,6 +44,7 @@ function completeTask(t) {
     return t.alert({ message, duration: 5 });
   });
 }
+
 
 function openDashboard(t) {
   return t.modal({

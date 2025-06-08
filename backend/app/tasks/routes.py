@@ -34,90 +34,88 @@ def complete_task():
             db.session.commit()
             logging.info(f"🆕 Created new user: {trello_username} ({trello_user_id})")
 
-        # Prevent duplicate completions
         existing = TaskCompletion.query.filter_by(user_id=user.id, task_id=task_id).first()
         if existing:
             logging.info("⚠️ Task already marked complete — skipping XP update.")
             return jsonify({"message": "Task already completed."}), 200
 
-        # Log task completion
         db.session.add(TaskCompletion(user_id=user.id, task_id=task_id))
 
         total_xp_earned = 0
         today = datetime.utcnow().date()
-
-        # Update streak & add base XP
         streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db) or 0
         total_xp_earned += XP_PER_TASK
 
-        # Load active challenges with their templates
         user_challenges = UserChallenge.query.options(joinedload(UserChallenge.template)) \
             .filter_by(user_id=user.id, status='active').all()
+
+        logging.info(f"🧩 Processing {len(user_challenges)} challenges...")
 
         updated_challenges = []
 
         for uc in user_challenges:
-            template = uc.template
-
-            if not template or not template.type:
-                logging.warning(f"⚠️ Challenge template missing or invalid: {uc}")
-                continue
-
-            logging.info(f"⏳ Checking challenge: {template.title} (type={template.type})")
-
-            if uc.deadline and datetime.utcnow() > uc.deadline:
-                uc.status = 'failed'
-                db.session.add(uc)
-                continue
-
-            challenge_data = {
-                "id": uc.id,
-                "title": template.title,
-                "type": template.type,
-                "goal": template.goal,
-                "status": uc.status
-            }
-
-            # Count-based challenges
-            if template.type == 'count':
-                uc.progress += 1
-                challenge_data["progress"] = uc.progress
-
-                if uc.progress >= template.goal:
-                    uc.status = 'completed'
-                    user.xp += XP_PER_CHALLENGE_COMPLETION
-                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
-
-                db.session.add(uc)
-
-            # Streak-based challenges
-            elif template.type == 'streak':
-                if uc.last_activity_date == today:
+            try:
+                template = uc.template
+                if not template or not template.type:
+                    logging.warning(f"⚠️ Missing template data for challenge {uc.id}")
                     continue
-                if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
+
+                logging.info(f"⏳ Evaluating challenge: {template.title} (type={template.type})")
+
+                if uc.deadline and datetime.utcnow() > uc.deadline:
                     uc.status = 'failed'
                     db.session.add(uc)
                     continue
 
-                uc.streak += 1
-                uc.last_activity_date = today
-                challenge_data["streak"] = uc.streak
+                challenge_data = {
+                    "id": uc.id,
+                    "title": template.title,
+                    "type": template.type,
+                    "goal": template.goal,
+                    "status": uc.status
+                }
 
-                if uc.streak >= template.goal:
-                    uc.status = 'completed'
-                    user.xp += XP_PER_CHALLENGE_COMPLETION
-                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
+                if template.type == 'count':
+                    uc.progress += 1
+                    challenge_data["progress"] = uc.progress
 
-                db.session.add(uc)
+                    if uc.progress >= template.goal:
+                        uc.status = 'completed'
+                        user.xp += XP_PER_CHALLENGE_COMPLETION
+                        total_xp_earned += XP_PER_CHALLENGE_COMPLETION
 
-            updated_challenges.append(challenge_data)
+                    db.session.add(uc)
 
-        # Level-up logic
+                elif template.type == 'streak':
+                    if uc.last_activity_date == today:
+                        continue
+                    if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
+                        uc.status = 'failed'
+                        db.session.add(uc)
+                        continue
+
+                    uc.streak += 1
+                    uc.last_activity_date = today
+                    challenge_data["streak"] = uc.streak
+
+                    if uc.streak >= template.goal:
+                        uc.status = 'completed'
+                        user.xp += XP_PER_CHALLENGE_COMPLETION
+                        total_xp_earned += XP_PER_CHALLENGE_COMPLETION
+
+                    db.session.add(uc)
+
+                updated_challenges.append(challenge_data)
+
+            except Exception as challenge_err:
+                logging.exception(f"❌ Error updating challenge {uc.id}: {challenge_err}")
+                continue
+
         while user.xp >= user.level * 100:
             user.level += 1
 
         db.session.commit()
-        logging.info(f"✅ Task complete: XP+{total_xp_earned} | XP={user.xp} | Level={user.level} | Streak={streak_count}")
+        logging.info(f"✅ Task complete: XP+{total_xp_earned} | Level {user.level} | Streak {streak_count}")
 
         return jsonify({
             "message": "Task completed. XP, streak, and challenges updated.",

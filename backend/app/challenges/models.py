@@ -10,6 +10,7 @@ class ChallengeTemplate(db.Model):
 
     type = db.Column(db.String(50), nullable=False)  # "count" or "streak"
     goal = db.Column(db.Integer, nullable=False)
+    source = db.Column(db.String(20), default="task")  # ✅ Add this line
     duration_days = db.Column(db.Integer, nullable=False)
 
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)

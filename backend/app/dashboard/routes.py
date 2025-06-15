@@ -4,7 +4,8 @@ from app.streaks.models import Streak
 from app.moods.models import MoodEntry
 from app.challenges.models import UserChallenge
 from app.database.db import db
-from datetime import datetime, timedelta
+from datetime import timedelta
+from app.utils.time_utils import get_current_utc, normalize_to_utc  # ✅ UTC-safe
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -18,12 +19,14 @@ def get_dashboard(user_id):
     xp = user.xp
     level = user.level
 
-    # Streak
+    # Streak (daily)
     streak = Streak.query.filter_by(user_id=user_id, streak_type='daily').first()
     streak_count = streak.count if streak else 0
 
-    # Mood trend (last 7 days)
-    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    # Mood trend (last 7 days, UTC safe)
+    now = get_current_utc()
+    seven_days_ago = now - timedelta(days=7)
+
     moods = MoodEntry.query.filter(
         MoodEntry.user_id == user_id,
         MoodEntry.logged_at >= seven_days_ago
@@ -32,17 +35,17 @@ def get_dashboard(user_id):
     mood_data = [
         {
             "mood": m.mood,
-            "logged_at": m.logged_at.strftime("%Y-%m-%d")
+            "logged_at": normalize_to_utc(m.logged_at).strftime("%Y-%m-%d")
         } for m in moods
     ]
 
-    # Active challenges (placeholder)
+    # Active challenges
     active_challenges = UserChallenge.query.filter_by(user_id=user_id, status="active").all()
     challenge_data = [
         {
             "template_id": c.template_id,
             "progress": c.progress,
-            "deadline": c.deadline.strftime("%Y-%m-%d")
+            "deadline": normalize_to_utc(c.deadline).strftime("%Y-%m-%d")
         } for c in active_challenges
     ]
 

@@ -2,7 +2,8 @@ from flask import Blueprint, request, jsonify
 from app.streaks.models import Streak
 from app.users.models import User
 from app.database.db import db
-from datetime import datetime, timedelta
+from datetime import timedelta
+from app.utils.time_utils import get_current_utc, normalize_to_utc, is_same_day_utc, days_between_utc
 
 streak_bp = Blueprint("streaks", __name__)
 
@@ -18,30 +19,35 @@ def update_streak():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    today = datetime.utcnow().date()
+    now_utc = get_current_utc()
+    today_utc = now_utc.date()
+
     streak = Streak.query.filter_by(user_id=user.id, streak_type='daily').first()
 
     if not streak:
-        new_streak = Streak(user_id=user.id, count=1, streak_type='daily', last_updated=today)
+        # Start new streak
+        new_streak = Streak(user_id=user.id, count=1, streak_type='daily', last_updated=now_utc)
         db.session.add(new_streak)
         db.session.commit()
         return jsonify({"message": "Streak started", "count": 1}), 200
 
-    last_updated = streak.last_updated.date()
+    last_updated = normalize_to_utc(streak.last_updated).date()
 
-    if last_updated == today:
+    if last_updated == today_utc:
         return jsonify({"message": "Streak already updated today", "count": streak.count}), 200
-    elif last_updated == today - timedelta(days=1):
+    elif (today_utc - last_updated).days == 1:
+        # Continue streak
         streak.count += 1
-        streak.last_updated = today
+        streak.last_updated = now_utc
         db.session.commit()
         return jsonify({"message": "Streak continued!", "count": streak.count}), 200
     else:
+        # Streak broken, reset
         streak.count = 1
-        streak.last_updated = today
+        streak.last_updated = now_utc
         db.session.commit()
         return jsonify({"message": "Streak reset", "count": 1}), 200
-    
+
 @streak_bp.route("/<string:trello_id>/streak", methods=["GET"])
 def get_all_streaks(trello_id):
     user = User.query.filter_by(trello_id=trello_id).first()
@@ -55,7 +61,7 @@ def get_all_streaks(trello_id):
             {
                 "type": s.streak_type,
                 "count": s.count,
-                "last_updated": s.last_updated.isoformat()
+                "last_updated": normalize_to_utc(s.last_updated).isoformat()
             }
             for s in streaks
         ]

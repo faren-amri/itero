@@ -4,11 +4,12 @@ from app.streaks.models import Streak
 from app.users.models import User
 from app.challenges.models import UserChallenge
 from app.database.db import db
-from datetime import datetime
 from app.utils.progress_utils import update_streak_and_xp
+from app.utils.time_utils import get_current_utc, normalize_to_utc, is_same_day_utc, days_between_utc
 import logging
 
 task_bp = Blueprint("tasks", __name__)
+
 XP_PER_TASK = 10
 XP_PER_CHALLENGE_COMPLETION = 20
 
@@ -21,7 +22,7 @@ def complete_task():
         trello_user_id = data.get("trello_user_id")
         trello_username = data.get("trello_username", "Anonymous")
         task_id = data.get("task_id")
-        source = data.get("source", "task")  # ✅ Only update relevant challenges
+        source = data.get("source", "task")
 
         if not trello_user_id or not task_id:
             logging.warning("❌ Missing required fields in request")
@@ -41,33 +42,27 @@ def complete_task():
             return jsonify({"message": "Task already completed."}), 200
 
         # Log task completion
-        db.session.add(TaskCompletion(user_id=user.id, task_id=task_id))
+        now_utc = get_current_utc()
+        db.session.add(TaskCompletion(user_id=user.id, task_id=task_id, completed_at=now_utc))
 
         total_xp_earned = 0
         streak_count = update_streak_and_xp(user, XP_PER_TASK, 'daily', db) or 0
         total_xp_earned += XP_PER_TASK
 
         # ✅ Challenge progress (filtered by source)
-        today = datetime.utcnow().date()
         user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
         completed_challenges = []
 
         for uc in user_challenges:
             template = uc.template
 
-            # ✅ Skip unrelated source challenges
             if template.source != source:
                 continue
 
-            # Handle timezone mismatch
-            if uc.deadline:
-                try:
-                    if datetime.utcnow() > uc.deadline.replace(tzinfo=None):
-                        uc.status = 'failed'
-                        continue
-                except Exception as e:
-                    logging.error(f"❌ Error comparing deadline: {e}")
-                    continue
+            # Deadline safety
+            if uc.deadline and get_current_utc() > normalize_to_utc(uc.deadline):
+                uc.status = 'failed'
+                continue
 
             if template.type == 'count':
                 uc.progress += 1
@@ -85,13 +80,18 @@ def complete_task():
                     })
 
             elif template.type == 'streak':
-                if uc.last_activity_date == today:
-                    continue
-                if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
+                last_activity = uc.last_activity_date
+
+                if last_activity and is_same_day_utc(last_activity, now_utc):
+                    continue  # already updated today
+
+                if last_activity and days_between_utc(last_activity, now_utc) > 1:
                     uc.status = 'failed'
                     continue
+
                 uc.streak += 1
-                uc.last_activity_date = today
+                uc.last_activity_date = now_utc
+
                 if uc.streak >= template.goal:
                     uc.status = 'completed'
                     user.xp += XP_PER_CHALLENGE_COMPLETION
@@ -124,7 +124,6 @@ def complete_task():
     except Exception as e:
         logging.exception("❌ Server error while processing task completion")
         return jsonify({"error": "Internal server error"}), 500
-
 
 @task_bp.route("/xp/<trello_user_id>", methods=["GET"])
 def get_xp(trello_user_id):

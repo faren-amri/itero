@@ -3,8 +3,8 @@ from app.moods.models import MoodEntry
 from app.users.models import User
 from app.challenges.models import UserChallenge
 from app.database.db import db
-from datetime import datetime
 from app.utils.progress_utils import update_streak_and_xp
+from app.utils.time_utils import get_current_utc, normalize_to_utc, is_same_day_utc, days_between_utc
 import logging
 
 mood_bp = Blueprint("moods", __name__)
@@ -30,11 +30,12 @@ def log_mood():
         if not trello_member_id or not mood:
             return jsonify({"error": "Missing Trello member ID or mood"}), 400
 
-        today = datetime.utcnow().date()
+        now_utc = get_current_utc()
+        today_utc = now_utc.date()
 
-        # Prevent double mood log per day
+        # Prevent double mood log for today
         existing = MoodEntry.query.filter(
-            db.func.date(MoodEntry.logged_at) == today,
+            db.func.date(MoodEntry.logged_at) == today_utc,
             MoodEntry.trello_member_id == trello_member_id
         ).first()
 
@@ -42,7 +43,7 @@ def log_mood():
             return jsonify({"message": "Mood already logged today", "mood": existing.mood}), 200
 
         # Save mood entry
-        entry = MoodEntry(trello_member_id=trello_member_id, mood=mood)
+        entry = MoodEntry(trello_member_id=trello_member_id, mood=mood, logged_at=now_utc)
         db.session.add(entry)
 
         # Award XP and streak
@@ -55,7 +56,6 @@ def log_mood():
             total_xp_earned += XP_FOR_MOOD_LOG
 
             # Challenge updates (only mood source)
-            today = datetime.utcnow().date()
             user_challenges = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
             completed_challenges = []
 
@@ -81,13 +81,18 @@ def log_mood():
                         })
 
                 elif template.type == 'streak':
-                    if uc.last_activity_date == today:
-                        continue
-                    if uc.last_activity_date and (today - uc.last_activity_date).days > 1:
+                    last_activity = uc.last_activity_date
+
+                    if last_activity and is_same_day_utc(last_activity, now_utc):
+                        continue  # already updated today
+
+                    if last_activity and days_between_utc(last_activity, now_utc) > 1:
                         uc.status = 'failed'
                         continue
+
                     uc.streak += 1
-                    uc.last_activity_date = today
+                    uc.last_activity_date = now_utc
+
                     if uc.streak >= template.goal:
                         uc.status = 'completed'
                         user.xp += XP_FOR_CHALLENGE_COMPLETE
@@ -137,7 +142,7 @@ def mood_history():
 
     history = [
         {
-            "day": entry.logged_at.strftime("%a"),
+            "day": normalize_to_utc(entry.logged_at).strftime("%a"),
             "mood": MOOD_SCORES.get(entry.mood, 3)
         }
         for entry in reversed(entries)

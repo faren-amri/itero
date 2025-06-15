@@ -1,5 +1,3 @@
-console.log('[powerup.js] Loaded and running');
-
 // ✅ Fixed: no async/await on t.getContext
 function completeTask(t) {
   console.log('[powerup.js] completeTask called');

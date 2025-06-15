@@ -3,7 +3,8 @@ from app.challenges.models import ChallengeTemplate, UserChallenge
 from app.users.models import User
 from app.database.db import db
 from app.utils.progress_utils import update_streak_and_xp
-from app.utils.time_utils import get_current_utc  # ✅ Use UTC-safe time
+from app.utils.time_utils import get_current_utc 
+from datetime import timedelta
 
 challenge_bp = Blueprint("challenges", __name__)
 

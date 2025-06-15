@@ -25,7 +25,7 @@ const MoodInput = ({ userId, onMoodLogged }) => {
       const data = await res.json();
       if (res.ok) {
         setLoggedMood(data.mood);
-        if (onMoodLogged) onMoodLogged(); // to refresh MoodTrends if needed
+        if (onMoodLogged) onMoodLogged();
       } else {
         console.warn(data.message || data.error);
       }

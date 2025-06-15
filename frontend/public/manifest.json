@@ -1,7 +1,19 @@
 {
+  "id": "com.itero.motivation",
   "name": "Itero Motivation Engine",
-  "description": "Track XP, streaks, and goals on Trello cards.",
-  "permissions": ["read", "write"],
+  "description": "Gamify your team's productivity directly inside Trello — streaks, challenges, mood tracking, and XP-powered motivation.",
+  "author": "Farnoud Amiri",
+  "version": "1.0.0",
+  "icon": {
+    "url": "https://itero-powerup.netlify.app/itero-icon-144.png"
+  },
+  "permissions": [
+    "read",
+    "write",
+    "account",
+    "card-buttons",
+    "board-buttons"
+  ],
   "capabilities": {
     "board-buttons": [
       {
@@ -17,32 +29,25 @@
     ],
     "show-settings": true
   },
-  "author": "Farnoud Amiri",
-  "icon": {
-    "url": "https://itero-powerup.netlify.app/icon.png"
-  },
   "connectors": {
     "iframe": {
-      "url": "https://itero-powerup.netlify.app/popup.html"
+      "url": "https://itero-powerup.netlify.app/popup.html",
+      "originWhitelist": [
+        "https://itero-powerup.netlify.app"
+      ]
     }
   },
-  "app": {
-    "iframe": {
-      "url": "https://itero-powerup.netlify.app/popup.html"
-    },
-    "originWhitelist": [
-      "https://itero-powerup.netlify.app"
-    ]
-  },
-  "id": "com.itero.motivation",
-  "version": "1.0.0",
   "listing": {
-    "overview": "Motivate your team with XP, streaks, and challenges!",
+    "overview": "Motivate your team with XP, streaks, mood tracking, and personal challenges right inside Trello.",
     "features": [
       "Gamified task tracking",
       "XP and streak system",
-      "Motivation dashboard modal"
+      "Mood logging & challenges",
+      "Motivation dashboard inside Trello"
     ],
     "category": "Team Collaboration"
-  }
+  },
+  "privacyUrl": "https://itero-powerup.netlify.app/privacy-policy",
+  "termsUrl": "https://itero-powerup.netlify.app/terms-of-service",
+  "supportUrl": "mailto:support@itero-powerup.netlify.app"
 }

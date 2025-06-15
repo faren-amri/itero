@@ -1,4 +1,3 @@
-// src/components/mood/MoodTrends.jsx
 import React, { useEffect, useState } from 'react';
 import {
   LineChart,

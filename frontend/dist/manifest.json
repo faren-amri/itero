@@ -5,7 +5,7 @@
   "author": "Farnoud Amiri",
   "version": "1.0.0",
   "icon": {
-    "url": "https://itero-powerup.netlify.app/assets/itero-icon-144.png"
+    "url": "https://itero-powerup.netlify.app/itero-icon-144.png"
   },
   "permissions": [
     "read",

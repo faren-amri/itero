@@ -1,6 +1,5 @@
 // ✅ Fixed: no async/await on t.getContext
 function completeTask(t) {
-  console.log('[powerup.js] completeTask called');
 
   const context = t.getContext();
   const cardId = context.card;
@@ -80,7 +79,7 @@ window.TrelloPowerUp.initialize({
   },
   'board-buttons': function () {
     return [{
-      icon: 'https://itero-powerup.netlify.app/icon.png',
+      icon: 'https://itero-powerup.netlify.app/assets/itero-icon-144.png',
       text: 'Itero',
       callback: openDashboard
     }];

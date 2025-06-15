@@ -1,11 +1,8 @@
-// ✅ Fixed: no async/await on t.getContext
 function completeTask(t) {
-
   const context = t.getContext();
   const cardId = context.card;
   const memberId = context.member;
 
-  // ✅ MUST return a promise
   return t.get('card', 'shared', 'taskCompleted').then(async (alreadyDone) => {
     if (!cardId || !memberId) {
       return t.alert({ message: '❌ Missing card or member info.' });

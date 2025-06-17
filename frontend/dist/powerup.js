@@ -76,7 +76,7 @@ window.TrelloPowerUp.initialize({
   },
   'board-buttons': function () {
     return [{
-      icon: 'https://itero-powerup.netlify.app/assets/itero-icon-144.png',
+      icon: 'https://itero-powerup.netlify.app/assets/itero-icon-b-32.png',
       text: 'Itero',
       callback: openDashboard
     }];

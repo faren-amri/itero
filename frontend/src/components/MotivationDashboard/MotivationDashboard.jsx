@@ -47,7 +47,7 @@ const MotivationDashboard = () => {
 
       {userId && (
         <>
-          <h3 className={sharedStyles.cardTitle}>🎮 Gamification</h3>
+          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🎮 Gamification</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
@@ -59,7 +59,7 @@ const MotivationDashboard = () => {
             </div>
           </div>
 
-          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>💚 Mood Tracker</h3>
+          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>💚 Mood Tracker</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
@@ -71,7 +71,7 @@ const MotivationDashboard = () => {
             </div>
           </div>
 
-          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>🏆 Progress & Challenges</h3>
+          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🏆 Progress & Challenges</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>

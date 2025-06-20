@@ -4,23 +4,34 @@
   --trello-gray: #5E6C84;
   --trello-shadow: 0 1px 2px rgba(9, 30, 66, 0.25);
   --trello-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --section-heading: #172B4D;   /* dark blue-gray for light mode */
+  --card-bg: #ffffff;
+  --text-main: #172B4D;
+}
+
+body[data-theme='dark'] {
+  --section-heading: #F4F5F7;  /* light text for dark backgrounds */
+  --card-bg: #1D2125;
+  --text-main: #F4F5F7;
 }
 
 .heading {
   font-family: var(--trello-font);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--trello-gray);
+  color: var(--section-heading); /* Use theme-aware variable */
   margin-bottom: 1rem;
 }
 
 .card {
-  background: var(--white, #fff);
+  background: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   padding: 1.25rem 1.5rem;
   font-family: var(--trello-font);
   transition: transform 0.2s ease, background-color 0.2s ease;
+  color: var(--text-main);
 }
 
 .card:hover {
@@ -30,29 +41,11 @@
 .cardTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--gray-dark, #172b4d);
-  margin-bottom: 0.75rem;
-}
-
-.card {
-  background: var(--card-bg);
-  color: var(--text-main);
-}
-
-.cardTitle {
   color: var(--section-heading);
-}
-
-.cardTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--section-heading); 
   margin-bottom: 0.75rem;
 }
-
 
 .cardBody {
   font-size: 0.875rem;
   line-height: 1.5;
 }
-

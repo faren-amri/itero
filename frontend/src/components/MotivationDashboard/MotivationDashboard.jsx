@@ -36,7 +36,7 @@ const MotivationDashboard = () => {
   const toggleTheme = () => {
     const newTheme = isDark ? "light" : "dark";
     setIsDark(!isDark);
-    document.body.setAttribute("data-theme", newTheme); // ✅ ensure correct theming
+    document.body.setAttribute("data-theme", newTheme); // ✅ Fixes dark/light styles
   };
 
   return (
@@ -46,50 +46,50 @@ const MotivationDashboard = () => {
       </button>
 
       {userId && (
-        <div className={styles.grid}>
+        <>
+          {/* 🎮 Gamification Section */}
           <h3 className={sharedStyles.heading}>🎮 Gamification</h3>
-
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
-            <XPProgress userId={userId} refreshKey={refreshKey} />
+          <div className={styles.subGrid}>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
+              <XPProgress userId={userId} refreshKey={refreshKey} />
+            </div>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>🔥 Daily Streak</h2>
+              <StreakTracker userId={userId} refreshKey={refreshKey} />
+            </div>
           </div>
 
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>🔥 Daily Streak</h2>
-            <StreakTracker userId={userId} refreshKey={refreshKey} />
-          </div>
-
+          {/* 💚 Mood Section */}
           <h3 className={sharedStyles.heading}>💚 Mood Tracker</h3>
-
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
               <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
             </div>
-
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>📈 Mood Trends</h2>
               <MoodTrends userId={userId} refreshKey={refreshKey} />
             </div>
           </div>
 
+          {/* 🏆 Challenge Section */}
           <h3 className={sharedStyles.heading}>🏆 Progress & Challenges</h3>
-
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>
-            <ChallengeSuggestions userId={userId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
+          <div className={styles.subGrid}>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>
+              <ChallengeSuggestions userId={userId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
+            </div>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
+              <ActiveChallenges userId={userId} refreshKey={refreshKey} />
+            </div>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
+              <CompletedChallenges userId={userId} refreshKey={refreshKey} />
+            </div>
           </div>
-
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
-            <ActiveChallenges userId={userId} refreshKey={refreshKey} />
-          </div>
-
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
-            <CompletedChallenges userId={userId} refreshKey={refreshKey} />
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

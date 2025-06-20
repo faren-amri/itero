@@ -1,9 +1,54 @@
+:root[data-theme='dark'] {
+  --card-bg: #1e1f26;
+  --text-main: #f4f5f7;
+  --progress-blue: #61dafb;
+  --gray-dark: #cbd2d9;
+  --white: #25262b;
+  --ds-surface: #1e1f26;
+}
+
+.dashboard {
+  padding: 2rem 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--ds-surface, rgba(20, 20, 25, 0.95));
+  color: var(--text-main);
+  max-width: 1080px;
+  margin: 0 auto;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Reusable grid layout for grouped cards */
+.subGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  box-sizing: border-box;
+  align-items: start;
+  padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .subGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .sectionHeading {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #172b4d;
+  color: var(--section-heading);
+  margin-bottom: 1rem;
   grid-column: 1 / -1;
-  margin-top: 1.5rem;
 }
 
 .themeToggle {
@@ -22,84 +67,10 @@
   background: #026aa7;
 }
 
-/* Dark theme support */
-:root[data-theme='dark'] {
-  --card-bg: #1e1f26;
-  --text-main: #f4f5f7;
-  --progress-blue: #61dafb;
-  --gray-dark: #cbd2d9;
-  --white: #25262b;
-  --ds-surface: #1e1f26;
-}
-
-.dark {
-  background-color: var(--ds-surface);
-  color: var(--text-main);
-}
-
-.dark h2,
-.dark h3,
-.dark .cardTitle {
-  color: var(--text-main);
-}
-
-.light {
-  background-color: var(--ds-surface, #f4f5f7);
-  color: #172b4d;
-}
-
-
-.dashboard {
-  padding: 2rem 1rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: rgba(20, 20, 25, 0.95);
-  color: var(--gray-light);
-  max-width: 1080px;
-  margin: 0 auto;
-  border-radius: 12px;
-}
-
-.dashboard {
-  max-width: 1000px;
-  padding: 2rem 1rem;
-  margin: 0 auto;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  box-sizing: border-box;
-  align-items: start;
-}
-
-.subGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-}
-@media (max-width: 768px) {
-  .subGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-.sectionHeading {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--section-heading);
-  grid-column: 1 / -1;
-  margin-top: 1.5rem;
-}
-
-
-
-/* Trello-style card container */
+/* Card */
 .card {
-  background: var(--white, #fff);
+  background: var(--card-bg);
+  color: var(--text-main);
   border: 1px solid #dfe1e6;
   border-radius: 8px;
   box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
@@ -107,77 +78,25 @@
   display: flex;
   flex-direction: column;
   min-height: 120px;
-}
-
-.cardTitle {
-  font-weight: 600;
-  font-size: 16px;
-  color: #172b4d;
-  margin-bottom: 8px;
-}
-
-.card {
-  background: var(--card-bg);
-  color: var(--text-main);
-}
-
-.cardTitle {
-  color: var(--section-heading);
-}
-
-.sectionHeading {
-  color: var(--section-heading);
-}
-
-
-.cardBody {
-  flex-grow: 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .card:hover {
   box-shadow: 0 4px 8px rgba(9, 30, 66, 0.2);
 }
 
-/* Progress bar container */
-.progressBarContainer {
-  background: var(--gray-medium);
-  height: 14px;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progressBar {
-  background: var(--progress-blue);
-  height: 100%;
-  transition: width 0.4s ease;
-}
-
-/* Label */
-.progressLabel {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  text-align: right;
-  color: var(--gray-light);
-}
-
-/* Streak */
-.streakValue {
-  font-size: 1.5rem;
+.cardTitle {
   font-weight: 600;
-  color: var(--progress-blue);
+  font-size: 16px;
+  color: var(--section-heading);
+  margin-bottom: 8px;
 }
 
-/* Empty state */
-.placeholder {
-  font-style: italic;
-  color: var(--gray-light);
-  font-size: 0.875rem;
-  text-align: center;
-  margin-top: 1rem;
+.cardBody {
+  flex-grow: 1;
 }
 
-
+/* Progress bar styles */
 .progressBarContainer {
   position: relative;
   width: 100%;
@@ -205,13 +124,34 @@
   align-items: center;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-main);
 }
 
+.progressLabel {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--text-main);
+}
+
+/* Other */
+.streakValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--progress-blue);
+}
+
+.placeholder {
+  font-style: italic;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 1rem;
+}
 
 .syncText {
   font-size: 14px;
   text-align: center;
   padding: 8px 0;
-  color: var(--text-light);
+  color: var(--text-main);
 }

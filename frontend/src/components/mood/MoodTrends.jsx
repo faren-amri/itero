@@ -59,19 +59,21 @@ const MoodTrends = ({ userId, refreshKey }) => {
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(200, 200, 200, 0.3)" />
             <XAxis
               dataKey="day"
               stroke="var(--text-main)"
-              fontSize={12}
+              tickLine={{ stroke: "var(--text-main)" }}
               tick={{ fill: 'var(--text-main)' }}
+              fontSize={12}
             />
             <YAxis
               domain={[1, 5]}
               ticks={[1, 2, 3, 4, 5]}
-              stroke="var(--text-main)"
+              stroke="var(--text-main)"                    // axis line
+              tickLine={{ stroke: "var(--text-main)" }}    // tick marks
+              tick={{ fill: 'var(--text-main)' }}          // label color
               fontSize={12}
-              tick={{ fill: 'var(--text-main)' }}
               tickFormatter={moodLabel}
             />
             <Tooltip content={<CustomTooltip />} />

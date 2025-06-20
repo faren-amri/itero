@@ -34,8 +34,9 @@ const MotivationDashboard = () => {
   }, []);
 
   const toggleTheme = () => {
+    const newTheme = isDark ? "light" : "dark";
     setIsDark(!isDark);
-    document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+    document.body.setAttribute("data-theme", newTheme); // ✅ ensure correct theming
   };
 
   return (
@@ -60,14 +61,16 @@ const MotivationDashboard = () => {
 
           <h3 className={sharedStyles.heading}>💚 Mood Tracker</h3>
 
-          <div className={sharedStyles.card}>
-            <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
-            <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
-          </div>
+          <div className={styles.subGrid}>
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
+              <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+            </div>
 
-          <div className={styles.card}>
-            <h2 className={sharedStyles.cardTitle}>🙂 Mood Trends</h2>
-            <MoodTrends userId={userId} refreshKey={refreshKey} />
+            <div className={sharedStyles.card}>
+              <h2 className={sharedStyles.cardTitle}>📈 Mood Trends</h2>
+              <MoodTrends userId={userId} refreshKey={refreshKey} />
+            </div>
           </div>
 
           <h3 className={sharedStyles.heading}>🏆 Progress & Challenges</h3>

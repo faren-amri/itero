@@ -45,13 +45,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
     if (active && payload && payload.length) {
       const mood = moodLabel(payload[0].value);
       return (
-        <div style={{
-          background: '#fff',
-          border: '1px solid #ccc',
-          padding: '0.5rem',
-          borderRadius: '8px',
-          fontSize: '0.85rem'
-        }}>
+        <div className={styles.tooltip}>
           <strong>{label}</strong><br />
           Mood: {mood}
         </div>
@@ -68,18 +62,19 @@ const MoodTrends = ({ userId, refreshKey }) => {
             <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
             <XAxis
               dataKey="day"
-              stroke="#aaa"
+              stroke="var(--text-main)"
               fontSize={12}
-              tick={{ fill: '#aaa' }}
+              tick={{ fill: 'var(--text-main)' }}
             />
             <YAxis
               domain={[1, 5]}
               ticks={[1, 2, 3, 4, 5]}
-              stroke="#aaa"
+              stroke="var(--text-main)"
               fontSize={12}
+              tick={{ fill: 'var(--text-main)' }}
               tickFormatter={moodLabel}
             />
-            <Tooltip content={CustomTooltip} />
+            <Tooltip content={<CustomTooltip />} />
             <defs>
               <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--progress-blue)" stopOpacity={0.4} />

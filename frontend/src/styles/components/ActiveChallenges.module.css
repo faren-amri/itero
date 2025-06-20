@@ -5,16 +5,17 @@
 }
 
 .challengeItem {
-  background: #f4f5f7;
-  border-radius: 6px;
+  background: var(--card-bg); /* theme-aware background */
+  color: var(--text-main);    /* theme-aware text */
+  border-radius: 8px;
   padding: 0.75rem 1rem;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 2px rgba(9, 30, 66, 0.1);
-  transition: background 0.2s;
+  transition: background 0.2s ease;
 }
 
 .challengeItem:hover {
-  background: #ebecf0;
+  background: rgba(255, 255, 255, 0.05); /* subtle hover */
 }
 
 .challengeHeader {
@@ -27,44 +28,47 @@
 .challengeTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #172b4d;
+  color: var(--section-heading); /* consistent with headings */
   margin: 0;
 }
 
 .progressText,
 .completedLabel {
   font-size: 0.75rem;
-  color: #5e6c84;
+  color: var(--text-main); /* theme-adaptive */
 }
 
 .progressBar {
-  background: #dfe1e6;
+  background: rgba(255, 255, 255, 0.15); /* neutral for all themes */
   height: 8px;
   border-radius: 4px;
   overflow: hidden;
+  margin-top: 0.4rem;
 }
 
 .progressFill {
-  background: #0079bf;
+  background: var(--progress-blue, #0079bf);
   height: 100%;
   transition: width 0.3s ease;
 }
 
 .placeholder {
   font-style: italic;
-  color: #5e6c84;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 1rem;
 }
-
 
 .challengeDescription {
   font-size: 14px;
-  color: var(--text-light);
+  color: var(--text-main);
   margin: 6px 0 12px;
   line-height: 1.4;
 }
 
 .completedLabel {
-  color: var(--success-green);
+  color: var(--progress-blue);
   font-weight: bold;
   font-size: 14px;
 }

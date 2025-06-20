@@ -155,3 +155,11 @@
   padding: 8px 0;
   color: var(--text-main);
 }
+
+
+.innerCard {
+  background-color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}

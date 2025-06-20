@@ -9,13 +9,13 @@ import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
 
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
-import useCSSVariable from '../../hooks/useCSSvariable'; // ✅ import the hook
+import useCSSVariable from '../../hooks/useCSSvariable';
 
 const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
-  const headingColor = useCSSVariable('--section-heading', '#172b4d'); // ✅ use the hook
+  const headingColor = useCSSVariable('--section-heading', '#172b4d');
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
@@ -51,11 +51,15 @@ const MotivationDashboard = () => {
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
-              <XPProgress userId={userId} refreshKey={refreshKey} />
+              <div className={styles.innerCard}>
+                <XPProgress userId={userId} refreshKey={refreshKey} />
+              </div>
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🔥 Daily Streak</h2>
-              <StreakTracker userId={userId} refreshKey={refreshKey} />
+              <div className={styles.innerCard}>
+                <StreakTracker userId={userId} refreshKey={refreshKey} />
+              </div>
             </div>
           </div>
 

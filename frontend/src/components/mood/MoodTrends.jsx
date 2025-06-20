@@ -8,12 +8,25 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import Card from '../common/Card';
 import styles from '../../styles/components/MoodTrends.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
 const MoodTrends = ({ userId, refreshKey }) => {
   const [moodData, setMoodData] = useState([]);
+  const [textColor, setTextColor] = useState('#172b4d');
+
+  useEffect(() => {
+    const updateColor = () => {
+      const computed = getComputedStyle(document.body).getPropertyValue('--text-main');
+      setTextColor(computed?.trim() || '#f4f5f7');
+    };
+    updateColor();
+
+    const observer = new MutationObserver(updateColor);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+
+    return () => observer.disconnect();
+  }, []);
 
   const loadMoodData = async () => {
     try {
@@ -26,8 +39,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
   };
 
   useEffect(() => {
-    if (!userId) return;
-    loadMoodData();
+    if (userId) loadMoodData();
   }, [userId, refreshKey]);
 
   const moodLabel = (value) => {
@@ -54,48 +66,37 @@ const MoodTrends = ({ userId, refreshKey }) => {
     return null;
   };
 
-  const dynamicTextColor = getComputedStyle(document.body).getPropertyValue('--text-main') || '#f4f5f7';
-
   return (
-    <Card>
-      <div className={styles.chartWrapper}>
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-            <XAxis
-              dataKey="day"
-              stroke={dynamicTextColor}
-              tickLine={{ stroke: dynamicTextColor }}
-              tick={{ fill: dynamicTextColor, fontSize: 12 }}
-            />
-            <YAxis
-              domain={[1, 5]}
-              ticks={[1, 2, 3, 4, 5]}
-              stroke={dynamicTextColor}
-              tickLine={{ stroke: dynamicTextColor }}
-              tick={{ fill: dynamicTextColor, fontSize: 12 }}
-              tickFormatter={moodLabel}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <defs>
-              <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--progress-blue)" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="var(--progress-blue)" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <Line
-              type="monotone"
-              dataKey="mood"
-              stroke="var(--progress-blue)"
-              strokeWidth={2}
-              fill="url(#moodGradient)"
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </Card>
+    <div className={styles.chartWrapper}>
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+          <XAxis
+            dataKey="day"
+            stroke={textColor}
+            tickLine={{ stroke: textColor }}
+            tick={{ fill: textColor, fontSize: 12 }}
+          />
+          <YAxis
+            domain={[1, 5]}
+            ticks={[1, 2, 3, 4, 5]}
+            stroke={textColor}
+            tickLine={{ stroke: textColor }}
+            tick={{ fill: textColor, fontSize: 12 }}
+            tickFormatter={moodLabel}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Line
+            type="monotone"
+            dataKey="mood"
+            stroke="var(--progress-blue)"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

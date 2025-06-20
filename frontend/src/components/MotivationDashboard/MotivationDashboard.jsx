@@ -14,6 +14,7 @@ const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
+  const [headingColor, setHeadingColor] = useState('#172b4d');
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
@@ -23,23 +24,32 @@ const MotivationDashboard = () => {
 
     if (memberId) setUserId(memberId);
 
-    // Refresh dashboard if refresh flag is set
     t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
       if (shouldRefresh) {
-        console.log('[Dashboard] Refresh triggered from task completion.');
         setRefreshKey(prev => prev + 1);
-        t.set('member', 'shared', 'refresh', false); // clear flag
+        t.set('member', 'shared', 'refresh', false);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    const updateColor = () => {
+      const computed = getComputedStyle(document.body).getPropertyValue('--section-heading');
+      setHeadingColor(computed?.trim() || '#f4f5f7');
+    };
+    updateColor();
+
+    const observer = new MutationObserver(updateColor);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+
+    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = () => {
     const newTheme = isDark ? "light" : "dark";
     setIsDark(!isDark);
-    document.body.setAttribute("data-theme", newTheme); // ✅ Ensure theme applies to variables
+    document.body.setAttribute("data-theme", newTheme);
   };
-
-  const headingColor = getComputedStyle(document.body).getPropertyValue('--section-heading') || '#f4f5f7';
 
   return (
     <div className={`${styles.dashboard} ${isDark ? styles.dark : styles.light}`}>

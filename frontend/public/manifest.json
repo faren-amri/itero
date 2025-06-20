@@ -42,12 +42,12 @@
     "features": [
       "Gamified task tracking",
       "XP and streak system",
-      "Mood logging & challenges",
-      "Motivation dashboard inside Trello"
+      "Mood logging & personal challenges",
+      "Motivation dashboard directly in Trello"
     ],
     "category": "Team Collaboration"
   },
   "privacyUrl": "https://itero-powerup.netlify.app/privacy-policy",
   "termsUrl": "https://itero-powerup.netlify.app/terms-of-service",
-  "supportUrl": "mailto:support@itero-powerup.netlify.app"
+  "supportUrl": "mailto:support@iterohq.com"
 }

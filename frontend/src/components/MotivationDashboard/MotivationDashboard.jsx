@@ -9,12 +9,13 @@ import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
 
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
+import useCSSVariable from '../../hooks/useCSSvariable'; // ✅ import the hook
 
 const MotivationDashboard = () => {
   const [userId, setUserId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
-  const [headingColor, setHeadingColor] = useState('#172b4d');
+  const headingColor = useCSSVariable('--section-heading', '#172b4d'); // ✅ use the hook
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
@@ -30,19 +31,6 @@ const MotivationDashboard = () => {
         t.set('member', 'shared', 'refresh', false);
       }
     });
-  }, []);
-
-  useEffect(() => {
-    const updateColor = () => {
-      const computed = getComputedStyle(document.body).getPropertyValue('--section-heading');
-      setHeadingColor(computed?.trim() || '#f4f5f7');
-    };
-    updateColor();
-
-    const observer = new MutationObserver(updateColor);
-    observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
-
-    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = () => {

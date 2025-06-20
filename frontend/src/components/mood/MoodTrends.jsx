@@ -60,12 +60,22 @@ const MoodTrends = ({ userId, refreshKey }) => {
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(200, 200, 200, 0.3)" />
-            <XAxis
-              dataKey="day"
+            <YAxis
+              domain={[1, 5]}
+              ticks={[1, 2, 3, 4, 5]}
               stroke="var(--text-main)"
               tickLine={{ stroke: "var(--text-main)" }}
-              tick={{ fill: 'var(--text-main)' }}
-              fontSize={12}
+              tick={({ x, y, payload }) => (
+                <text
+                  x={x}
+                  y={y + 4}
+                  textAnchor="end"
+                  fill={getComputedStyle(document.body).getPropertyValue('--text-main')}
+                  fontSize={12}
+                >
+                  {moodLabel(payload.value)}
+                </text>
+              )}
             />
             <YAxis
               domain={[1, 5]}

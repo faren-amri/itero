@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Card from '../common/Card';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import { getStreakData } from '../../services/analyticsService.js';
 
@@ -29,7 +28,7 @@ const StreakTracker = ({ userId, refreshKey }) => {
   }, [userId, refreshKey]);
 
   return (
-    <Card>
+    <div className={styles.innerCard}>
       <div className={styles.streakList}>
         {loading ? (
           <p className={styles.syncText}>🔄 Syncing streak...</p>
@@ -41,7 +40,7 @@ const StreakTracker = ({ userId, refreshKey }) => {
           <p>No streak yet</p>
         )}
       </div>
-    </Card>
+    </div>
   );
 };
 

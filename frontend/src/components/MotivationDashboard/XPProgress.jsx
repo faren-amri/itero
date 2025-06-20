@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Card from '../common/Card';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import { getXPData } from '../../services/analyticsService.js';
 
@@ -28,7 +27,7 @@ const XPProgress = ({ userId, refreshKey }) => {
   const progressPercent = Math.min((xp / nextLevel) * 100, 100);
 
   return (
-    <Card>
+    <div className={styles.innerCard}>
       {loading ? (
         <p className={styles.syncText}>🔄 Syncing XP...</p>
       ) : (
@@ -37,7 +36,7 @@ const XPProgress = ({ userId, refreshKey }) => {
           <span className={styles.progressText}>{xp} / {nextLevel} XP</span>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 

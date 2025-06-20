@@ -47,7 +47,7 @@ const MotivationDashboard = () => {
 
       {userId && (
         <>
-          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>🎮 Gamification</h3>
+          <h3 className={sharedStyles.cardTitle}>🎮 Gamification</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>

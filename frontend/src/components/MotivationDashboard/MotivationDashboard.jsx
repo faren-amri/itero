@@ -46,7 +46,7 @@ const MotivationDashboard = () => {
 
       {userId && (
         <div className={styles.grid}>
-          <h3 className={styles.sectionHeading}>🎮 Gamification</h3>
+          <h3 className={sharedStyles.heading}>🎮 Gamification</h3>
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
@@ -58,7 +58,7 @@ const MotivationDashboard = () => {
             <StreakTracker userId={userId} refreshKey={refreshKey} />
           </div>
 
-          <h3 className={styles.sectionHeading}>💚 Mood Tracker</h3>
+          <h3 className={sharedStyles.heading}>💚 Mood Tracker</h3>
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
@@ -70,7 +70,7 @@ const MotivationDashboard = () => {
             <MoodTrends userId={userId} refreshKey={refreshKey} />
           </div>
 
-          <h3 className={styles.sectionHeading}>🏆 Progress & Challenges</h3>
+          <h3 className={sharedStyles.heading}>🏆 Progress & Challenges</h3>
 
           <div className={sharedStyles.card}>
             <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>

@@ -54,36 +54,26 @@ const MoodTrends = ({ userId, refreshKey }) => {
     return null;
   };
 
+  const dynamicTextColor = getComputedStyle(document.body).getPropertyValue('--text-main') || '#f4f5f7';
+
   return (
     <Card>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(200, 200, 200, 0.3)" />
-            <YAxis
-              domain={[1, 5]}
-              ticks={[1, 2, 3, 4, 5]}
-              stroke="var(--text-main)"
-              tickLine={{ stroke: "var(--text-main)" }}
-              tick={({ x, y, payload }) => (
-                <text
-                  x={x}
-                  y={y + 4}
-                  textAnchor="end"
-                  fill={getComputedStyle(document.body).getPropertyValue('--text-main')}
-                  fontSize={12}
-                >
-                  {moodLabel(payload.value)}
-                </text>
-              )}
+            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+            <XAxis
+              dataKey="day"
+              stroke={dynamicTextColor}
+              tickLine={{ stroke: dynamicTextColor }}
+              tick={{ fill: dynamicTextColor, fontSize: 12 }}
             />
             <YAxis
               domain={[1, 5]}
               ticks={[1, 2, 3, 4, 5]}
-              stroke="var(--text-main)"                    // axis line
-              tickLine={{ stroke: "var(--text-main)" }}    // tick marks
-              tick={{ fill: 'var(--text-main)' }}          // label color
-              fontSize={12}
+              stroke={dynamicTextColor}
+              tickLine={{ stroke: dynamicTextColor }}
+              tick={{ fill: dynamicTextColor, fontSize: 12 }}
               tickFormatter={moodLabel}
             />
             <Tooltip content={<CustomTooltip />} />

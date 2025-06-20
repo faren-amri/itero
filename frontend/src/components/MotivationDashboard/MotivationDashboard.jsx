@@ -36,8 +36,10 @@ const MotivationDashboard = () => {
   const toggleTheme = () => {
     const newTheme = isDark ? "light" : "dark";
     setIsDark(!isDark);
-    document.body.setAttribute("data-theme", newTheme); // ✅ Fixes dark/light styles
+    document.body.setAttribute("data-theme", newTheme); // ✅ Ensure theme applies to variables
   };
+
+  const headingColor = getComputedStyle(document.body).getPropertyValue('--section-heading') || '#f4f5f7';
 
   return (
     <div className={`${styles.dashboard} ${isDark ? styles.dark : styles.light}`}>
@@ -47,8 +49,7 @@ const MotivationDashboard = () => {
 
       {userId && (
         <>
-          {/* 🎮 Gamification Section */}
-          <h3 className={sharedStyles.heading}>🎮 Gamification</h3>
+          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>🎮 Gamification</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
@@ -60,8 +61,7 @@ const MotivationDashboard = () => {
             </div>
           </div>
 
-          {/* 💚 Mood Section */}
-          <h3 className={sharedStyles.heading}>💚 Mood Tracker</h3>
+          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>💚 Mood Tracker</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
@@ -73,8 +73,7 @@ const MotivationDashboard = () => {
             </div>
           </div>
 
-          {/* 🏆 Challenge Section */}
-          <h3 className={sharedStyles.heading}>🏆 Progress & Challenges</h3>
+          <h3 className={sharedStyles.heading} style={{ color: headingColor }}>🏆 Progress & Challenges</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>

@@ -1,14 +1,5 @@
-const showWelcomeModal = (t) => {
-  return t.modal({
-    url: './welcome.html',
-    fullscreen: false,
-    title: 'Welcome to Itero Motivation Engine',
-    height: 300
-  });
-};
-
 function completeTask(t) {
-  const context = t.getContext(); // ✅ sync
+  const context = t.getContext();
   const cardId = context.card;
   const memberId = context.member;
 
@@ -45,9 +36,9 @@ function completeTask(t) {
       const streak = data?.streak_count ?? 0;
       const completed = data?.completed_challenges?.length ?? 0;
 
-      let message = `🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`;
+      let message = 🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak;
       if (completed > 0) {
-        message += ` · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed`;
+        message +=  · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed;
       }
 
       return t.alert({ message, duration: 5 });
@@ -63,7 +54,7 @@ function completeTask(t) {
 }
 
 function openDashboard(t) {
-  const context = t.getContext(); // ✅ FIXED: use as sync
+  const context = t.getContext();
   return t.modal({
     url: 'https://itero-powerup.netlify.app/#/dashboard',
     fullscreen: true,
@@ -77,15 +68,12 @@ function openDashboard(t) {
 }
 
 window.TrelloPowerUp.initialize({
-  'on-enable': showWelcomeModal,
-
   'card-buttons': function () {
     return [{
       text: 'Complete Task 🎯',
       callback: completeTask
     }];
   },
-
   'board-buttons': function () {
     return [{
       icon: 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png',

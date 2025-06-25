@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to Itero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem;
+      background-color: #f4f5f7;
+      color: #172b4d;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #0079bf;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #026aa7;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: #5e6c84;
+    }
+  </style>
+</head>
+<body>
+  <h1>👋 Welcome to Itero</h1>
+  <p>Thank you for enabling the Itero Motivation Engine! Start tracking XP, streaks, and mood — all from your Trello board.</p>
+
+  <button onclick="openDashboard()">Open Motivation Dashboard</button>
+
+  <div class="footer">Need help? Contact <a href="mailto:support@iterohq.com">support@iterohq.com</a></div>
+
+  <script>
+    const t = window.TrelloPowerUp.iframe();
+
+    function openDashboard() {
+      t.modal({
+        url: 'https://itero-powerup.netlify.app/#/dashboard',
+        fullscreen: true,
+        title: 'Motivation Dashboard',
+        accentColor: '#4A90E2',
+        args: {
+          fromWelcome: true
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,9 +1,18 @@
-function completeTask(t) {
-  const context = t.getContext();
-  const cardId = context.card;
-  const memberId = context.member;
+const showWelcomeModal = (t) => {
+  return t.modal({
+    url: './welcome.html',
+    fullscreen: false,
+    title: 'Welcome to Itero Motivation Engine',
+    height: 300
+  });
+};
 
-  return t.get('card', 'shared', 'taskCompleted').then(async (alreadyDone) => {
+function completeTask(t) {
+  return t.getContext().then(async (context) => {
+    const cardId = context.card;
+    const memberId = context.member;
+
+    const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
     if (!cardId || !memberId) {
       return t.alert({ message: '❌ Missing card or member info.' });
     }
@@ -54,20 +63,22 @@ function completeTask(t) {
 }
 
 function openDashboard(t) {
-  const context = t.getContext();
-  return t.modal({
-    url: 'https://itero-powerup.netlify.app/#/dashboard',
-    fullscreen: true,
-    title: 'Motivation Dashboard',
-    accentColor: '#4A90E2',
-    args: {
-      secret: 'itero-beta-2025',
-      member: context.member
-    }
+  return t.getContext().then((context) => {
+    return t.modal({
+      url: 'https://itero-powerup.netlify.app/#/dashboard',
+      fullscreen: true,
+      title: 'Motivation Dashboard',
+      accentColor: '#4A90E2',
+      args: {
+        secret: 'itero-beta-2025',
+        member: context.member
+      }
+    });
   });
 }
 
 window.TrelloPowerUp.initialize({
+  'on-enable': showWelcomeModal,
   'card-buttons': function () {
     return [{
       text: 'Complete Task 🎯',

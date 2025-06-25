@@ -7,7 +7,6 @@ const showWelcomeModal = (t) => {
   });
 };
 
-function completeTask(t) {
   function completeTask(t) {
     const context = t.getContext();
     const cardId = context.card;
@@ -62,7 +61,6 @@ function completeTask(t) {
       }
     });
   };
-}
 
 function openDashboard(t) {
   return t.getContext().then((context) => {

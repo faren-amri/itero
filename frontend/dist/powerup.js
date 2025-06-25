@@ -8,7 +8,8 @@ const showWelcomeModal = (t) => {
 };
 
 function completeTask(t) {
-  return t.getContext().then((context) => {
+  function completeTask(t) {
+    const context = t.getContext();
     const cardId = context.card;
     const memberId = context.member;
 
@@ -60,7 +61,7 @@ function completeTask(t) {
         });
       }
     });
-  });
+  };
 }
 
 function openDashboard(t) {

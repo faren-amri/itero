@@ -3,4 +3,5 @@
 //  -d '{"trello_member_id": "5caaf74254d0ef1db084970f", "mood": "Tired"}'
 
 
-curl -X GET "https://itero-api-fme7.onrender.com/api/streaks/5caaf74254d0ef1db084970f/streak"
+//curl -X GET "https://itero-api-fme7.onrender.com/api/streaks/5caaf74254d0ef1db084970f/streak"
+curl https://itero-api-fme7.onrender.com/api/users/lookup/somefakeid

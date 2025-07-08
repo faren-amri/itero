@@ -21,9 +21,22 @@ const MotivationDashboard = () => {
     const t = window.TrelloPowerUp.iframe();
     const args = t.args;
     const context = args?.[1] || args?.context || {};
-    const memberId = context.member || context.memberId || null;
+    const trelloId = context.member || context.memberId || null;
 
-    if (memberId) setUserId(memberId);
+    if (trelloId) {
+      fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
+        .then(res => res.json())
+        .then(user => {
+          if (user?.id) {
+            setUserId(user.id); // ✅ Use backend user ID
+          } else {
+            console.error("User lookup failed:", user);
+          }
+        })
+        .catch(err => {
+          console.error("Failed to fetch or create Trello user:", err);
+        });
+    }
 
     t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
       if (shouldRefresh) {

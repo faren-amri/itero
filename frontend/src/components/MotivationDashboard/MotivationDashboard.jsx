@@ -18,40 +18,39 @@ const MotivationDashboard = () => {
   const headingColor = useCSSVariable('--section-heading', '#172b4d');
 
   useEffect(() => {
-    const t = window.TrelloPowerUp.iframe();
+  const t = window.TrelloPowerUp.iframe();
+  const context = t.getContext(); // ✅ synchronous
 
-    // ✅ Use reliable t.getContext() to access member info
-    t.getContext().then((context) => {
-      const trelloId = context?.member?.id || context?.memberId;
+  const trelloId = context?.member || context?.memberId;
 
-      if (trelloId) {
-        fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
-          .then(res => {
-            if (!res.ok) throw new Error(`API error ${res.status}`);
-            return res.json();
-          })
-          .then(user => {
-            if (user?.id) {
-              setUserId(user.id); // Use backend user ID
-            } else {
-              console.error("User lookup failed:", user);
-            }
-          })
-          .catch(err => {
-            console.error("❌ Failed to fetch or create Trello user:", err.message);
-          });
-      } else {
-        console.error("❌ Trello member ID not found in context:", context);
-      }
-    });
+  if (trelloId) {
+    fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        return res.json();
+      })
+      .then(user => {
+        if (user?.id) {
+          setUserId(user.id);
+        } else {
+          console.error("User lookup failed:", user);
+        }
+      })
+      .catch(err => {
+        console.error("❌ Failed to fetch or create Trello user:", err.message);
+      });
+  } else {
+    console.error("❌ Trello member ID not found in context:", context);
+  }
 
-    t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
-      if (shouldRefresh) {
-        setRefreshKey(prev => prev + 1);
-        t.set('member', 'shared', 'refresh', false);
-      }
-    });
-  }, []);
+  t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
+    if (shouldRefresh) {
+      setRefreshKey(prev => prev + 1);
+      t.set('member', 'shared', 'refresh', false);
+    }
+  });
+}, []);
+
 
   const toggleTheme = () => {
     const newTheme = isDark ? "light" : "dark";

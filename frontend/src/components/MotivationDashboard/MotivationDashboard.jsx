@@ -19,24 +19,31 @@ const MotivationDashboard = () => {
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
-    const args = t.args;
-    const context = args?.[1] || args?.context || {};
-    const trelloId = context.member || context.memberId || null;
 
-    if (trelloId) {
-      fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
-        .then(res => res.json())
-        .then(user => {
-          if (user?.id) {
-            setUserId(user.id); // ✅ Use backend user ID
-          } else {
-            console.error("User lookup failed:", user);
-          }
-        })
-        .catch(err => {
-          console.error("Failed to fetch or create Trello user:", err);
-        });
-    }
+    // ✅ Use reliable t.getContext() to access member info
+    t.getContext().then((context) => {
+      const trelloId = context?.member?.id || context?.memberId;
+
+      if (trelloId) {
+        fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
+          .then(res => {
+            if (!res.ok) throw new Error(`API error ${res.status}`);
+            return res.json();
+          })
+          .then(user => {
+            if (user?.id) {
+              setUserId(user.id); // Use backend user ID
+            } else {
+              console.error("User lookup failed:", user);
+            }
+          })
+          .catch(err => {
+            console.error("❌ Failed to fetch or create Trello user:", err.message);
+          });
+      } else {
+        console.error("❌ Trello member ID not found in context:", context);
+      }
+    });
 
     t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
       if (shouldRefresh) {

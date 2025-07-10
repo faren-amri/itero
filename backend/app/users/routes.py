@@ -10,11 +10,10 @@ def lookup_user(trello_id):
         user = User.query.filter_by(trello_id=trello_id).first()
 
         if not user:
-            # Create a basic new user with defaults
+            # Create new user with safe defaults
             user = User(
                 trello_id=trello_id,
-                username=f"user_{trello_id[:6]}",  # Safe fallback
-                email=None,  # If email is optional
+                username=f"user_{trello_id[:6]}",  # Fallback name
                 xp=0,
                 level=1,
                 streak=0

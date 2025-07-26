@@ -6,14 +6,11 @@ function MotivationDashboardPage() {
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
+    const args = t.args || {};
+    const memberId = args.member || args.context?.member || null;
 
-    t.get('args').then((args) => {
-      const memberId = args?.member;
-      console.log('Resolved Trello member ID:', memberId);
-      setContext({ memberId });
-    }).catch((err) => {
-      console.error('Failed to get Trello args:', err);
-    });
+    console.log('Resolved Trello member ID:', memberId);
+    setContext({ memberId });
   }, []);
 
   if (!context?.memberId) {

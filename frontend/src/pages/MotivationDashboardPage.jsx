@@ -5,21 +5,16 @@ function MotivationDashboardPage() {
   const [context, setContext] = useState(null);
 
   useEffect(() => {
-  const t = window.TrelloPowerUp.iframe();
+    const t = window.TrelloPowerUp.iframe();
 
-  const loadContext = async () => {
-    await t.render(); // ✅ wait for Trello to inject args
+    t.render(() => {
+      const args = t.args || {};
+      const memberId = args.member || null;
 
-    const args = await t.arg('member'); // ← Trello guarantees this resolves correctly
-    const memberId = args || null;
-
-    console.log('Resolved Trello member ID:', memberId);
-    setContext({ memberId });
-  };
-
-  loadContext();
-}, []);
-
+      console.log('✅ Resolved Trello member ID:', memberId);
+      setContext({ memberId });
+    });
+  }, []);
 
   if (!context?.memberId) {
     return <div style={{ padding: '2rem', color: 'white' }}>Loading Trello context...</div>;

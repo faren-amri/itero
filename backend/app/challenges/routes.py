@@ -119,3 +119,32 @@ def get_active_challenges():
         "progress": uc.progress,
         "status": uc.status
     } for uc in active]), 200
+
+
+@challenge_bp.route("/suggestions", methods=["GET"])
+def get_suggestions():
+    trello_id = request.args.get("trello_member_id")
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if not user:
+        return jsonify([])
+    templates = ChallengeTemplate.query.all()
+    return jsonify([t.to_dict() for t in templates])
+
+
+@challenge_bp.route("/active", methods=["GET"])
+def get_active_challenges():
+    trello_id = request.args.get("trello_member_id")
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if not user:
+        return jsonify([])
+    challenges = UserChallenge.query.filter_by(user_id=user.id, status="active").all()
+    return jsonify([c.to_dict() for c in challenges])
+
+@challenge_bp.route("/completed", methods=["GET"])
+def get_completed_challenges():
+    trello_id = request.args.get("trello_member_id")
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if not user:
+        return jsonify([])
+    challenges = UserChallenge.query.filter_by(user_id=user.id, status="completed").all()
+    return jsonify([c.to_dict() for c in challenges])

@@ -9,5 +9,15 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True)
     xp = db.Column(db.Integer, default=0)
     level = db.Column(db.Integer, default=1)
-    streak = db.Column(db.Integer, default=0)  # ✅ ADD THIS LINE
+    streak = db.Column(db.Integer, default=0)
 
+def to_dict(self):
+    return {
+        "id": self.id,
+        "trello_id": self.trello_id,
+        "username": self.username,
+        "email": self.email,
+        "xp": self.xp,
+        "level": self.level,
+        "streak": self.streak
+    }

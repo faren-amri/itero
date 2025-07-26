@@ -112,3 +112,12 @@ def get_xp(trello_user_id):
         "level": user.level,
         "next_level_xp": user.level * 100
     }), 200
+
+@task_bp.route("/xp/<int:user_id>", methods=["GET"])
+def get_user_xp(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    xp = user.xp
+    next_level_xp = (user.level + 1) * 100
+    return jsonify({"xp": xp, "next_level_xp": next_level_xp})

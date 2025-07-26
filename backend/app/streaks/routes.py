@@ -20,3 +20,8 @@ def get_all_streaks(trello_id):
             "last_updated": normalize_to_utc(s.last_updated).isoformat()
         } for s in streaks]
     }), 200
+
+@streak_bp.route("/<int:user_id>/streak", methods=["GET"])
+def get_user_streak(user_id):
+    streaks = Streak.query.filter_by(user_id=user_id).all()
+    return jsonify({"streaks": [s.to_dict() for s in streaks]})

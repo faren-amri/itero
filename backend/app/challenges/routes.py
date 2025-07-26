@@ -10,8 +10,9 @@ challenge_bp = Blueprint("challenges", __name__)
 XP_FOR_CHALLENGE_ACCEPT = 8
 XP_FOR_CHALLENGE_COMPLETE = 20
 
-@challenge_bp.route("/suggestions", methods=["GET"])
-def get_suggestions():
+
+@challenge_bp.route("/suggestions", methods=["GET"], endpoint="challenge_suggestions")
+def challenge_suggestions():
     trello_member_id = request.args.get("trello_member_id")
     if not trello_member_id:
         return jsonify({"error": "Missing trello_member_id"}), 400
@@ -24,7 +25,9 @@ def get_suggestions():
         user_id=user.id, status='active'
     ).all()
 
-    suggestions = ChallengeTemplate.query.filter(~ChallengeTemplate.id.in_([x[0] for x in active_ids])).all()
+    suggestions = ChallengeTemplate.query.filter(
+        ~ChallengeTemplate.id.in_([x[0] for x in active_ids])
+    ).all()
 
     return jsonify([{
         "id": t.id,
@@ -35,7 +38,8 @@ def get_suggestions():
         "duration_days": t.duration_days
     } for t in suggestions]), 200
 
-@challenge_bp.route("/accept/<int:template_id>", methods=["POST"])
+
+@challenge_bp.route("/accept/<int:template_id>", methods=["POST"], endpoint="accept_challenge")
 def accept_challenge(template_id):
     data = request.get_json()
     trello_member_id = data.get("trello_member_id")
@@ -79,8 +83,9 @@ def accept_challenge(template_id):
         "streak_count": streak_count
     }), 200
 
-@challenge_bp.route("/completed", methods=["GET"])
-def get_completed_challenges():
+
+@challenge_bp.route("/active", methods=["GET"], endpoint="active_challenges")
+def active_challenges():
     trello_member_id = request.args.get("trello_member_id")
     if not trello_member_id:
         return jsonify({"error": "Missing trello_member_id"}), 400
@@ -89,62 +94,36 @@ def get_completed_challenges():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    completed = UserChallenge.query.filter_by(user_id=user.id, status='completed').all()
-    return jsonify([{
-        "id": uc.id,
-        "title": uc.template.title,
-        "type": uc.template.type,
-        "goal": uc.template.goal,
-        "progress": uc.progress,
-        "streak": uc.streak,
-        "deadline": uc.deadline.isoformat(),
-        "accepted_at": uc.accepted_at.isoformat(),
-        "status": uc.status
-    } for uc in completed]), 200
-
-@challenge_bp.route("/active", methods=["GET"])
-def get_active_challenges():
-    trello_member_id = request.args.get("trello_member_id")
-    if not trello_member_id:
-        return jsonify({"error": "Missing trello_member_id"}), 400
-
-    user = User.query.filter_by(trello_id=trello_member_id).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-    active = UserChallenge.query.filter_by(user_id=user.id, status='active').all()
-    return jsonify([{
-        "id": uc.id,
-        "title": uc.template.title,
-        "progress": uc.progress,
-        "status": uc.status
-    } for uc in active]), 200
-
-
-@challenge_bp.route("/suggestions", methods=["GET"])
-def get_suggestions():
-    trello_id = request.args.get("trello_member_id")
-    user = User.query.filter_by(trello_id=trello_id).first()
-    if not user:
-        return jsonify([])
-    templates = ChallengeTemplate.query.all()
-    return jsonify([t.to_dict() for t in templates])
-
-
-@challenge_bp.route("/active", methods=["GET"])
-def get_active_challenges():
-    trello_id = request.args.get("trello_member_id")
-    user = User.query.filter_by(trello_id=trello_id).first()
-    if not user:
-        return jsonify([])
     challenges = UserChallenge.query.filter_by(user_id=user.id, status="active").all()
-    return jsonify([c.to_dict() for c in challenges])
 
-@challenge_bp.route("/completed", methods=["GET"])
-def get_completed_challenges():
-    trello_id = request.args.get("trello_member_id")
-    user = User.query.filter_by(trello_id=trello_id).first()
+    return jsonify([{
+        "id": c.id,
+        "title": c.template.title,
+        "progress": c.progress,
+        "status": c.status
+    } for c in challenges]), 200
+
+
+@challenge_bp.route("/completed", methods=["GET"], endpoint="completed_challenges")
+def completed_challenges():
+    trello_member_id = request.args.get("trello_member_id")
+    if not trello_member_id:
+        return jsonify({"error": "Missing trello_member_id"}), 400
+
+    user = User.query.filter_by(trello_id=trello_member_id).first()
     if not user:
-        return jsonify([])
+        return jsonify({"error": "User not found"}), 404
+
     challenges = UserChallenge.query.filter_by(user_id=user.id, status="completed").all()
-    return jsonify([c.to_dict() for c in challenges])
+
+    return jsonify([{
+        "id": c.id,
+        "title": c.template.title,
+        "type": c.template.type,
+        "goal": c.template.goal,
+        "progress": c.progress,
+        "streak": c.streak,
+        "deadline": c.deadline.isoformat(),
+        "accepted_at": c.accepted_at.isoformat(),
+        "status": c.status
+    } for c in challenges]), 200

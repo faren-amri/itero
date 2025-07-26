@@ -7,15 +7,16 @@ function MotivationDashboardPage() {
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
     const args = t.args || {};
-    setContext(args);
-    console.log('Trello Context:', args);
+    const memberId = args?.context?.member || args?.member || null;
+    setContext({ memberId });
+    console.log('Resolved Trello member ID:', memberId);
   }, []);
 
-  if (!context) return <div style={{ padding: '2rem', color: 'white' }}>Loading...</div>;
+  if (!context?.memberId) return <div style={{ padding: '2rem', color: 'white' }}>Loading Trello context...</div>;
 
-  return (
-    <MotivationDashboard userId={context.member} />
-  );
-}
+    return (
+      <MotivationDashboard userId={context.memberId} />
+    );
+  }
 
 export default MotivationDashboardPage;

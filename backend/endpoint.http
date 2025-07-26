@@ -5,4 +5,4 @@
 
 //curl -X GET "https://itero-api-fme7.onrender.com/api/streaks/5caaf74254d0ef1db084970f/streak"
 
-//curl https://itero-api-fme7.onrender.com/api/users/lookup/somefakei
+curl -i "https://itero-api-fm7.onrender.com/api/challenges/completed?trello_member_id=test"

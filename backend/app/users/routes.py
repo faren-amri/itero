@@ -19,4 +19,12 @@ def lookup_user(trello_id):
         db.session.add(user)
         db.session.commit()
 
-    return jsonify(user.to_dict())
+    return jsonify({
+        "id": user.id,
+        "trello_id": user.trello_id,
+        "username": user.username,
+        "email": user.email,
+        "xp": user.xp,
+        "level": user.level,
+        "streak": user.streak
+    }), 200

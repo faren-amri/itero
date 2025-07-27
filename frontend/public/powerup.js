@@ -1,8 +1,12 @@
 function completeTask(t) {
-  return Promise.all([t.card('id'), t.member('id'), t.get('card', 'shared', 'taskCompleted')])
-    .then(async ([card, member, alreadyDone]) => {
+  return Promise.all([
+      t.card('id'),
+      t.member('id'),
+      t.member('fullName'),
+      t.get('card', 'shared', 'taskCompleted')
+    ]).then(async ([card, memberId, fullName, alreadyDone]) => {
       const cardId = card.id;
-      const memberId = member;
+
 
       if (!cardId || !memberId) {
         return t.alert({ message: '❌ Missing card or member info.' });
@@ -18,8 +22,10 @@ function completeTask(t) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             trello_user_id: memberId,
+            trello_username: fullName,
             task_id: cardId
           }),
+
         });
 
         if (!response.ok) {

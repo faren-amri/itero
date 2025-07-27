@@ -12,45 +12,46 @@ import sharedStyles from '../../styles/shared/Shared.module.css';
 import useCSSVariable from '../../hooks/useCSSvariable';
 
 const MotivationDashboard = () => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(null);         // DB id
+  const [trelloId, setTrelloId] = useState(null);     // Trello member ID
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
   const headingColor = useCSSVariable('--section-heading', '#172b4d');
 
   useEffect(() => {
-  const t = window.TrelloPowerUp.iframe();
-  const context = t.getContext(); // ✅ synchronous
+    const t = window.TrelloPowerUp.iframe();
+    const context = t.getContext();
+    const memberId = context?.member || context?.memberId;
 
-  const trelloId = context?.member || context?.memberId;
+    if (memberId) {
+      setTrelloId(memberId);  // ✅ Save Trello ID for challenge routes
 
-  if (trelloId) {
-    fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${trelloId}`)
-      .then(res => {
-        if (!res.ok) throw new Error(`API error ${res.status}`);
-        return res.json();
-      })
-      .then(user => {
-        if (user?.id) {
-          setUserId(user.id);
-        } else {
-          console.error("User lookup failed:", user);
-        }
-      })
-      .catch(err => {
-        console.error("❌ Failed to fetch or create Trello user:", err.message);
-      });
-  } else {
-    console.error("❌ Trello member ID not found in context:", context);
-  }
-
-  t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
-    if (shouldRefresh) {
-      setRefreshKey(prev => prev + 1);
-      t.set('member', 'shared', 'refresh', false);
+      fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${memberId}`)
+        .then(res => {
+          if (!res.ok) throw new Error(`API error ${res.status}`);
+          return res.json();
+        })
+        .then(user => {
+          if (user?.id) {
+            setUserId(user.id); // ✅ Save DB user.id for XP, streak, mood
+          } else {
+            console.error("User lookup failed:", user);
+          }
+        })
+        .catch(err => {
+          console.error("❌ Failed to fetch or create Trello user:", err.message);
+        });
+    } else {
+      console.error("❌ Trello member ID not found in context:", context);
     }
-  });
-}, []);
 
+    t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
+      if (shouldRefresh) {
+        setRefreshKey(prev => prev + 1);
+        t.set('member', 'shared', 'refresh', false);
+      }
+    });
+  }, []);
 
   const toggleTheme = () => {
     const newTheme = isDark ? "light" : "dark";
@@ -64,7 +65,7 @@ const MotivationDashboard = () => {
         {isDark ? '🌞 Light Mode' : '🌙 Dark Mode'}
       </button>
 
-      {userId && (
+      {userId && trelloId && (
         <>
           <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🎮 Gamification</h3>
           <div className={styles.subGrid}>
@@ -98,15 +99,15 @@ const MotivationDashboard = () => {
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>
-              <ChallengeSuggestions userId={userId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
+              <ChallengeSuggestions userId={trelloId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
-              <ActiveChallenges userId={userId} refreshKey={refreshKey} />
+              <ActiveChallenges userId={trelloId} refreshKey={refreshKey} />
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
-              <CompletedChallenges userId={userId} refreshKey={refreshKey} />
+              <CompletedChallenges userId={trelloId} refreshKey={refreshKey} />
             </div>
           </div>
         </>

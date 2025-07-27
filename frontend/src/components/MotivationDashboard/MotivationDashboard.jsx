@@ -33,7 +33,7 @@ const MotivationDashboard = () => {
         })
         .then(user => {
           if (user?.id) {
-            setUserId(user.id); // ✅ Save DB user.id for XP, streak, mood
+            setUserId(user.trello_id);          
           } else {
             console.error("User lookup failed:", user);
           }

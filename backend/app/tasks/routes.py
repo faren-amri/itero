@@ -16,6 +16,8 @@ XP_PER_CHALLENGE_COMPLETION = 20
 def complete_task():
     try:
         data = request.get_json()
+        print("Incoming payload:", data)  # ✅ Debug
+
         trello_user_id = data.get("trello_user_id")
         trello_username = data.get("trello_username", "Anonymous")
         task_id = data.get("task_id")
@@ -44,45 +46,53 @@ def complete_task():
         completed_challenges = []
 
         for uc in user_challenges:
-            template = uc.template
-            if template.source != source:
-                continue
-
-            if uc.deadline and get_current_utc() > normalize_to_utc(uc.deadline):
-                uc.status = 'failed'
-                continue
-
-            if template.type == 'count':
-                uc.progress += 1
-                if uc.progress >= template.goal:
-                    uc.status = 'completed'
-                    user.xp += XP_PER_CHALLENGE_COMPLETION
-                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
-                    completed_challenges.append({
-                        "id": uc.id,
-                        "title": template.title,
-                        "goal": template.goal,
-                        "status": uc.status
-                    })
-            elif template.type == 'streak':
-                if uc.last_activity_date and is_same_day_utc(uc.last_activity_date, now_utc):
+            try:
+                template = uc.template  # ⚠️ Ensure relationship exists
+                if not template:
+                    logging.warning(f"Challenge {uc.id} has no template.")
                     continue
-                if uc.last_activity_date and days_between_utc(uc.last_activity_date, now_utc) > 1:
+
+                if template.source != source:
+                    continue
+
+                if uc.deadline and get_current_utc() > normalize_to_utc(uc.deadline):
                     uc.status = 'failed'
                     continue
 
-                uc.streak += 1
-                uc.last_activity_date = now_utc
-                if uc.streak >= template.goal:
-                    uc.status = 'completed'
-                    user.xp += XP_PER_CHALLENGE_COMPLETION
-                    total_xp_earned += XP_PER_CHALLENGE_COMPLETION
-                    completed_challenges.append({
-                        "id": uc.id,
-                        "title": template.title,
-                        "goal": template.goal,
-                        "status": uc.status
-                    })
+                if template.type == 'count':
+                    uc.progress += 1
+                    if uc.progress >= template.goal:
+                        uc.status = 'completed'
+                        user.xp += XP_PER_CHALLENGE_COMPLETION
+                        total_xp_earned += XP_PER_CHALLENGE_COMPLETION
+                        completed_challenges.append({
+                            "id": uc.id,
+                            "title": template.title,
+                            "goal": template.goal,
+                            "status": uc.status
+                        })
+                elif template.type == 'streak':
+                    if uc.last_activity_date and is_same_day_utc(uc.last_activity_date, now_utc):
+                        continue
+                    if uc.last_activity_date and days_between_utc(uc.last_activity_date, now_utc) > 1:
+                        uc.status = 'failed'
+                        continue
+
+                    uc.streak += 1
+                    uc.last_activity_date = now_utc
+                    if uc.streak >= template.goal:
+                        uc.status = 'completed'
+                        user.xp += XP_PER_CHALLENGE_COMPLETION
+                        total_xp_earned += XP_PER_CHALLENGE_COMPLETION
+                        completed_challenges.append({
+                            "id": uc.id,
+                            "title": template.title,
+                            "goal": template.goal,
+                            "status": uc.status
+                        })
+
+            except Exception as e:
+                logging.exception(f"❌ Error while processing challenge ID {uc.id} for user {user.id}")
 
         while user.xp >= user.level * 100:
             user.level += 1
@@ -98,8 +108,9 @@ def complete_task():
         }), 200
 
     except Exception as e:
-        logging.exception("Task completion failed")
+        logging.exception("❌ Task completion failed at top-level")
         return jsonify({"error": "Internal server error"}), 500
+
 
 @task_bp.route("/xp/<trello_user_id>", methods=["GET"])
 def get_xp(trello_user_id):

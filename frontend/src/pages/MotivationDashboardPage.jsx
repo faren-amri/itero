@@ -5,17 +5,24 @@ function MotivationDashboardPage() {
   const [context, setContext] = useState(null);
 
   useEffect(() => {
-    const t = window.TrelloPowerUp.iframe();
-    const args = t.args || {};
-    const memberId = args?.member || null;
+    async function loadTrelloArgs() {
+      try {
+        const t = window.TrelloPowerUp.iframe();
+        const args = await t.args;
+        const memberId = args?.member || null;
 
-
-    if (memberId) {
-      console.log('✅ Resolved Trello member ID:', memberId);
-      setContext({ memberId });
-    } else {
-      console.warn('⚠️ Trello member ID not found in iframe args.');
+        if (memberId) {
+          console.log('✅ Trello member ID resolved from iframe args:', memberId);
+          setContext({ memberId });
+        } else {
+          console.warn('⚠️ Trello member ID NOT found in iframe args:', args);
+        }
+      } catch (err) {
+        console.error('❌ Error retrieving Trello iframe args:', err);
+      }
     }
+
+    loadTrelloArgs();
   }, []);
 
   if (!context?.memberId) {

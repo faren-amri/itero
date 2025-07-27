@@ -9,7 +9,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`${API_BASE}/api/challenges/suggestions?trello_member_id=${userId}`)
+    fetch(`${API_BASE}/challenges/suggestions?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => setSuggestions(data || []))
       .catch(err => console.error('Failed to load challenge suggestions:', err));
@@ -17,7 +17,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
 
   const handleAcceptChallenge = async (templateId) => {
     try {
-      const res = await fetch(`${API_BASE}/api/challenges/accept/${templateId}`, {
+      const res = await fetch(`${API_BASE}/challenges/accept/${templateId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ trello_member_id: userId })

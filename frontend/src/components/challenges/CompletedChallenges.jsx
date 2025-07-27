@@ -11,7 +11,7 @@ const CompletedChallenges = ({ userId, refreshKey }) => {
     if (!userId) return;
 
     setLoading(true);
-    fetch(`${API_BASE}/api/challenges/completed?trello_member_id=${userId}`)
+    fetch(`${API_BASE}/challenges/completed?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         setChallenges(data || []);

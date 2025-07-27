@@ -54,19 +54,18 @@ function completeTask(t) {
 }
 
 function openDashboard(t) {
-  return t.getContext().then((context) => {
-    const memberId = context?.member || null;
+  const context = t.getContext(); // this is a sync call
+  const memberId = context?.member || null;
 
-    return t.modal({
-      url: 'https://itero-powerup.netlify.app/#/dashboard',
-      fullscreen: true,
-      title: 'Motivation Dashboard',
-      accentColor: '#4A90E2',
-      args: {
-        secret: 'itero-beta-2025',
-        member: memberId,
-      }
-    });
+  return t.modal({
+    url: 'https://itero-powerup.netlify.app/#/dashboard',
+    fullscreen: true,
+    title: 'Motivation Dashboard',
+    accentColor: '#4A90E2',
+    args: {
+      secret: 'itero-beta-2025',
+      member: memberId,
+    }
   });
 }
 

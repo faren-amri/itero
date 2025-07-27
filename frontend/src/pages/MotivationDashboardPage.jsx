@@ -9,6 +9,7 @@ function MotivationDashboardPage() {
     const args = t.args || {};
     const memberId = args?.member || null;
 
+
     if (memberId) {
       console.log('✅ Resolved Trello member ID:', memberId);
       setContext({ memberId });

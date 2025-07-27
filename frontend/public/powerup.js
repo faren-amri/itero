@@ -54,16 +54,19 @@ function completeTask(t) {
 }
 
 function openDashboard(t) {
-  const context = t.getContext();
-  return t.modal({
-    url: 'https://itero-powerup.netlify.app/#/dashboard',
-    fullscreen: true,
-    title: 'Motivation Dashboard',
-    accentColor: '#4A90E2',
-    args: {
-      secret: 'itero-beta-2025',
-      member: context.member
-    }
+  return t.getContext().then((context) => {
+    const memberId = context?.member || null;
+
+    return t.modal({
+      url: 'https://itero-powerup.netlify.app/#/dashboard',
+      fullscreen: true,
+      title: 'Motivation Dashboard',
+      accentColor: '#4A90E2',
+      args: {
+        secret: 'itero-beta-2025',
+        member: memberId,
+      }
+    });
   });
 }
 

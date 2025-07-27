@@ -2,25 +2,29 @@ import { useEffect, useState } from 'react';
 import MotivationDashboard from '../components/MotivationDashboard/MotivationDashboard';
 
 function MotivationDashboardPage() {
-  const [context, setContext] = useState(null);
+  const [memberId, setMemberId] = useState(null);
 
   useEffect(() => {
     const t = window.TrelloPowerUp.iframe();
 
-    t.render(() => {
-      const args = t.args || {};
-      const memberId = args.member || null;
+    const loadMember = async () => {
+      try {
+        const member = await t.arg('member');
+        console.log('✅ Resolved Trello member ID:', member);
+        setMemberId(member);
+      } catch (err) {
+        console.error('❌ Failed to get member ID:', err);
+      }
+    };
 
-      console.log('✅ Resolved Trello member ID:', memberId);
-      setContext({ memberId });
-    });
+    loadMember();
   }, []);
 
-  if (!context?.memberId) {
+  if (!memberId) {
     return <div style={{ padding: '2rem', color: 'white' }}>Loading Trello context...</div>;
   }
 
-  return <MotivationDashboard userId={context.memberId} />;
+  return <MotivationDashboard userId={memberId} />;
 }
 
 export default MotivationDashboardPage;

@@ -9,13 +9,18 @@ function MotivationDashboardPage() {
       try {
         const t = window.TrelloPowerUp.iframe();
         const args = await t.args;
-        const memberId = args?.member || null;
+
+        // Support for array structure returned by modal args
+        const memberId =
+          args?.[1]?.member?.id || // correct structure
+          args?.[0]?.context?.member || // fallback
+          null;
 
         if (memberId) {
-          console.log('✅ Trello member ID resolved from iframe args:', memberId);
+          console.log('✅ Trello member ID resolved:', memberId);
           setContext({ memberId });
         } else {
-          console.warn('⚠️ Trello member ID NOT found in iframe args:', args);
+          console.warn('⚠️ Could not resolve Trello member ID from args:', args);
         }
       } catch (err) {
         console.error('❌ Error retrieving Trello iframe args:', err);

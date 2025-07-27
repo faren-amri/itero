@@ -1,7 +1,8 @@
 // src/services/analyticsService.js
 import axios from 'axios';
 
-export const API_BASE = import.meta.env.VITE_API_URL || 'https://itero-api-fme7.onrender.com';
+// ✅ Use correct backend domain
+export const API_BASE = import.meta.env.VITE_API_URL || 'https://itero.onrender.com';
 
 export const getXPData = async (userId) => {
   const res = await axios.get(`${API_BASE}/api/tasks/xp/${userId}`);
@@ -12,7 +13,6 @@ export const getStreakData = async (userId) => {
   const res = await axios.get(`${API_BASE}/api/streaks/${userId}/streak`);
   return res.data;
 };
-
 
 export const getMoodData = async (userId) => {
   const res = await axios.get(`${API_BASE}/user/${userId}/mood`);

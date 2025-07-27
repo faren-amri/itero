@@ -1,12 +1,8 @@
 function completeTask(t) {
-  return Promise.all([
-      t.card('id'),
-      t.member('id'),
-      t.member('fullName'),
-      t.get('card', 'shared', 'taskCompleted')
-    ]).then(async ([card, memberId, fullName, alreadyDone]) => {
+  return Promise.all([t.card('id'), t.member('id'), t.get('card', 'shared', 'taskCompleted')])
+    .then(async ([card, member, alreadyDone]) => {
       const cardId = card.id;
-
+      const memberId = member.id;  // ✅ FIXED: Extract the actual ID
 
       if (!cardId || !memberId) {
         return t.alert({ message: '❌ Missing card or member info.' });
@@ -21,11 +17,9 @@ function completeTask(t) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            trello_user_id: memberId,
-            trello_username: fullName,
+            trello_user_id: memberId,  // ✅ Now just the string ID
             task_id: cardId
           }),
-
         });
 
         if (!response.ok) {
@@ -58,6 +52,7 @@ function completeTask(t) {
       }
     });
 }
+
 
 function openDashboard(t) {
   return t.member('id').then(memberId => {

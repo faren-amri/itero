@@ -12,13 +12,8 @@ const StreakTracker = ({ userId, refreshKey }) => {
       try {
         const data = await getStreakData(userId);
        if (data.streaks && data.streaks.length > 0) {
-          const daily = data.streaks.find(s => s.streak_type === 'daily');
-          console.log(data.streaks);
-          if (daily) {
-            setStreak(daily);
-          } else {
-            setStreak(null);
-          }
+          const daily = data.streaks.find(s => s.type === 'daily');
+          setStreak(daily || null);
         }
       } catch (err) {
         console.error('Failed to load streak data:', err);

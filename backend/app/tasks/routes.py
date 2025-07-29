@@ -98,6 +98,8 @@ def complete_task():
                     uc.last_activity_date = now_utc
                     print(f"  🔥 Continuing streak for {template.title} → Streak: {uc.streak}")
 
+                uc.progress = uc.streak  # 🔥 always update progress to match streak
+
                 if uc.streak >= template.goal:
                     uc.status = 'completed'
                     user.xp += XP_PER_CHALLENGE_COMPLETION

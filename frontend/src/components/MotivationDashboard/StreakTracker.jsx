@@ -13,6 +13,7 @@ const StreakTracker = ({ userId, refreshKey }) => {
         const data = await getStreakData(userId);
        if (data.streaks && data.streaks.length > 0) {
           const daily = data.streaks.find(s => s.streak_type === 'daily');
+          console.log(streak_type);
           if (daily) {
             setStreak(daily);
           } else {

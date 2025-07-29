@@ -1,5 +1,5 @@
-from datetime import datetime, date
-from app.database.db import db  # assuming you import `db` this way now
+from datetime import datetime
+from app.database.db import db
 
 class ChallengeTemplate(db.Model):
     __tablename__ = 'challenge_template'
@@ -10,8 +10,11 @@ class ChallengeTemplate(db.Model):
 
     type = db.Column(db.String(50), nullable=False)  # "count" or "streak"
     goal = db.Column(db.Integer, nullable=False)
-    source = db.Column(db.String(20), default="task")  # ✅ Add this line
+    source = db.Column(db.String(20), default="task")  # task, mood, etc.
     duration_days = db.Column(db.Integer, nullable=False)
+
+    repeatable = db.Column(db.Boolean, default=False)  # ✅ new
+    cooldown_days = db.Column(db.Integer, default=0)   # ✅ new (used if repeatable)
 
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
 
@@ -27,7 +30,7 @@ class UserChallenge(db.Model):
     __tablename__ = 'user_challenge'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('challenge_template.id', ondelete="CASCADE"), nullable=False)
 

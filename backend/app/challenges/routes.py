@@ -21,13 +21,36 @@ def challenge_suggestions():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    active_ids = db.session.query(UserChallenge.template_id).filter_by(
-        user_id=user.id, status='active'
-    ).all()
+    # Step 1: Load all challenge templates
+    all_templates = ChallengeTemplate.query.all()
+    suggestions = []
 
-    suggestions = ChallengeTemplate.query.filter(
-        ~ChallengeTemplate.id.in_([x[0] for x in active_ids])
-    ).all()
+    # Step 2: For each challenge, check user eligibility
+    for template in all_templates:
+        # Get most recent UserChallenge for this template
+        last_attempt = UserChallenge.query.filter_by(
+            user_id=user.id,
+            template_id=template.id
+        ).order_by(UserChallenge.accepted_at.desc()).first()
+
+        if not last_attempt:
+            # Never accepted before → show
+            suggestions.append(template)
+            continue
+
+        if last_attempt.status == 'active':
+            # Already doing it → skip
+            continue
+
+        if not template.repeatable:
+            # Completed/failed a non-repeatable → skip
+            continue
+
+        # Check cooldown
+        last_done = last_attempt.accepted_at
+        days_since = (get_current_utc().date() - last_done.date()).days
+        if days_since >= template.cooldown_days:
+            suggestions.append(template)
 
     return jsonify([{
         "id": t.id,
@@ -35,9 +58,10 @@ def challenge_suggestions():
         "description": t.description,
         "type": t.type,
         "goal": t.goal,
-        "duration_days": t.duration_days
+        "duration_days": t.duration_days,
+        "repeatable": t.repeatable,
+        "cooldown_days": t.cooldown_days
     } for t in suggestions]), 200
-
 
 @challenge_bp.route("/accept/<int:template_id>", methods=["POST"], endpoint="accept_challenge")
 def accept_challenge(template_id):

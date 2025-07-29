@@ -44,11 +44,11 @@ const MoodTrends = ({ userId, refreshKey }) => {
 
   const moodLabel = (value) => {
     const map = {
-      1: "😩 Burned Out",
-      2: "😴 Tired",
-      3: "😐 Neutral",
-      4: "😊 Energized",
-      5: "😁 Great",
+      1: "Burned Out",
+      2: "Tired",
+      3: "Neutral",
+      4: "Energized",
+      5: "Great",
     };
     return map[value] || value;
   };

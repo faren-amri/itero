@@ -14,8 +14,6 @@ const TaskCompleteModal = () => {
     const cardId = isDev ? 'mock-card-id' : args.cardId || args.card;
     const memberId = isDev ? 'mock-member-id' : args.memberId || args.member;
 
-    console.log('[TaskCompleteModal] Context:', { cardId, memberId });
-
     if (!cardId || !memberId) {
       toast.error("❌ Missing Trello card or user info.");
       setStatus('❌ Missing task info.');
@@ -24,7 +22,8 @@ const TaskCompleteModal = () => {
 
     axios.post('https://itero-api-fme7.onrender.com/api/tasks/complete', {
       trello_user_id: memberId,
-      task_id: cardId
+      task_id: cardId,
+      source: "task" 
     })
       .then(res => {
         const data = res.data;

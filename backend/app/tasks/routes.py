@@ -16,7 +16,7 @@ XP_PER_CHALLENGE_COMPLETION = 20
 def complete_task():
     try:
         data = request.get_json()
-        print("Incoming payload:", data)  # ✅ Debug
+        print("Incoming payload:", data) 
 
         trello_user_id = data.get("trello_user_id")
         trello_username = data.get("trello_username", "Anonymous")

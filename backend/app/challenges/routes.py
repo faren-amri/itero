@@ -100,6 +100,7 @@ def active_challenges():
         "id": c.id,
         "title": c.template.title,
         "progress": c.progress,
+        "goal": c.template.goal,
         "status": c.status
     } for c in challenges]), 200
 

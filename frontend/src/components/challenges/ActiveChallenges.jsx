@@ -31,21 +31,23 @@ const ActiveChallenges = ({ userId, refreshKey }) => {
         <p className={styles.placeholder}>No active challenges</p>
       ) : (
         <ul className={styles.challengeList}>
-          {challenges.map(ch => (
-            <li key={ch.id} className={styles.challengeItem}>
-              <div className={styles.challengeHeader}>
-                <h4 className={styles.challengeTitle}>{ch.title}</h4>
-                <span className={styles.progressText}>{ch.progress}%</span>
-              </div>
-              <p className={styles.challengeDescription}>{ch.description}</p>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressFill}
-                  style={{ width: `${ch.progress}%` }}
-                />
-              </div>
-            </li>
-          ))}
+          {challenges.map(ch => {
+            const goal = ch.goal || 1; // fallback to avoid division by zero
+            const percent = Math.min(100, Math.round((ch.progress / goal) * 100));
+
+            return (
+              <li key={ch.id} className={styles.challengeItem}>
+                <div className={styles.challengeHeader}>
+                  <h4 className={styles.challengeTitle}>{ch.title}</h4>
+                  <span className={styles.progressText}>{percent}%</span>
+                </div>
+                <p className={styles.challengeDescription}>{ch.description}</p>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${percent}%` }} />
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </Card>

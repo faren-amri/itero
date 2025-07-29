@@ -34,7 +34,7 @@ class UserChallenge(db.Model):
     status = db.Column(db.String(20), nullable=False, default='active')  # 'active', 'completed', 'failed'
     progress = db.Column(db.Integer, nullable=False, default=0)
     streak = db.Column(db.Integer, nullable=False, default=0)
-    last_activity_date = db.Column(db.Date)
+    last_activity_date = db.Column(db.DateTime(timezone=True), nullable=True)
 
     accepted_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
     deadline = db.Column(db.DateTime(timezone=True), nullable=True)

@@ -5,14 +5,22 @@ import { API_BASE } from '../../services/analyticsService';
 
 const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) return;
 
+    setLoading(true);
     fetch(`${API_BASE}/api/challenges/suggestions?trello_member_id=${userId}`)
       .then(res => res.json())
-      .then(data => setSuggestions(data || []))
-      .catch(err => console.error('Failed to load challenge suggestions:', err));
+      .then(data => {
+        setSuggestions(data || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load challenge suggestions:', err);
+        setLoading(false);
+      });
   }, [userId]);
 
   const handleAcceptChallenge = async (templateId) => {
@@ -35,24 +43,31 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
     }
   };
 
-  if (suggestions.length === 0) return null;
-
   return (
     <Card>
-      <div className={styles.suggestionGrid}>
-        {suggestions.map((template) => (
-          <div key={template.id} className={styles.card}>
-            <div className={styles.title}>{template.title}</div>
-            <div className={styles.description}>{template.description}</div>
-            <button
-              className={styles.button}
-              onClick={() => handleAcceptChallenge(template.id)}
-            >
-              Accept Challenge
-            </button>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <p className={styles.placeholder}>🔄 Loading suggestions...</p>
+      ) : suggestions.length === 0 ? (
+        <p className={styles.placeholder}>
+          🎯 All challenges are currently in progress or cooling down. <br />
+          New challenges will appear soon!
+        </p>
+      ) : (
+        <div className={styles.suggestionGrid}>
+          {suggestions.map((template) => (
+            <div key={template.id} className={styles.card}>
+              <div className={styles.title}>{template.title}</div>
+              <div className={styles.description}>{template.description}</div>
+              <button
+                className={styles.button}
+                onClick={() => handleAcceptChallenge(template.id)}
+              >
+                Accept Challenge
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </Card>
   );
 };

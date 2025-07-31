@@ -49,7 +49,7 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
         <p className={styles.placeholder}>🔄 Loading suggestions...</p>
       ) : suggestions.length === 0 ? (
         <p className={styles.placeholder}>
-          🎯 All challenges are currently in progress or cooling down. <br />
+          All challenges are currently in progress or cooling down. <br />
           New challenges will appear soon!
         </p>
       ) : (

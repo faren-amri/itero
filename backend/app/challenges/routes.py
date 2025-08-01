@@ -40,9 +40,12 @@ def challenge_suggestions():
             if not template.repeatable:
                 continue
 
+            # 👇 Avoid crash if cooldown_days is None
+            cooldown = template.cooldown_days or 0
             last_done = last_attempt.accepted_at
             days_since = (get_current_utc().date() - last_done.date()).days
-            if days_since >= template.cooldown_days:
+
+            if days_since >= cooldown:
                 suggestions.append(template)
 
         return jsonify([
@@ -63,6 +66,7 @@ def challenge_suggestions():
         import traceback
         print("🔥 /suggestions error:", traceback.format_exc())
         return jsonify({"error": "Internal server error"}), 500
+
 
 
 @challenge_bp.route("/accept/<int:template_id>", methods=["POST"], endpoint="accept_challenge")

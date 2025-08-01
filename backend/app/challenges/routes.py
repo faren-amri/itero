@@ -10,58 +10,60 @@ challenge_bp = Blueprint("challenges", __name__)
 XP_FOR_CHALLENGE_ACCEPT = 8
 XP_FOR_CHALLENGE_COMPLETE = 20
 
-
-@challenge_bp.route("/suggestions", methods=["GET"], endpoint="challenge_suggestions")
+@challenge_bp.route("/suggestions", methods=["GET"])
 def challenge_suggestions():
-    trello_member_id = request.args.get("trello_member_id")
-    if not trello_member_id:
-        return jsonify({"error": "Missing trello_member_id"}), 400
+    try:
+        trello_member_id = request.args.get("trello_member_id")
+        if not trello_member_id:
+            return jsonify({"error": "Missing trello_member_id"}), 400
 
-    user = User.query.filter_by(trello_id=trello_member_id).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+        user = User.query.filter_by(trello_id=trello_member_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
 
-    # Step 1: Load all challenge templates
-    all_templates = ChallengeTemplate.query.all()
-    suggestions = []
+        all_templates = ChallengeTemplate.query.all()
+        suggestions = []
 
-    # Step 2: For each challenge, check user eligibility
-    for template in all_templates:
-        # Get most recent UserChallenge for this template
-        last_attempt = UserChallenge.query.filter_by(
-            user_id=user.id,
-            template_id=template.id
-        ).order_by(UserChallenge.accepted_at.desc()).first()
+        for template in all_templates:
+            last_attempt = UserChallenge.query.filter_by(
+                user_id=user.id,
+                template_id=template.id
+            ).order_by(UserChallenge.accepted_at.desc()).first()
 
-        if not last_attempt:
-            # Never accepted before → show
-            suggestions.append(template)
-            continue
+            if not last_attempt:
+                suggestions.append(template)
+                continue
 
-        if last_attempt.status == 'active':
-            # Already doing it → skip
-            continue
+            if last_attempt.status == 'active':
+                continue
 
-        if not template.repeatable:
-            # Completed/failed a non-repeatable → skip
-            continue
+            if not template.repeatable:
+                continue
 
-        # Check cooldown
-        last_done = last_attempt.accepted_at
-        days_since = (get_current_utc().date() - last_done.date()).days
-        if days_since >= template.cooldown_days:
-            suggestions.append(template)
+            last_done = last_attempt.accepted_at
+            days_since = (get_current_utc().date() - last_done.date()).days
+            if days_since >= template.cooldown_days:
+                suggestions.append(template)
 
-    return jsonify([{
-        "id": t.id,
-        "title": t.title,
-        "description": t.description,
-        "type": t.type,
-        "goal": t.goal,
-        "duration_days": t.duration_days,
-        "repeatable": t.repeatable,
-        "cooldown_days": t.cooldown_days
-    } for t in suggestions]), 200
+        return jsonify([
+            {
+                "id": t.id,
+                "title": t.title,
+                "description": t.description,
+                "type": t.type,
+                "goal": t.goal,
+                "duration_days": t.duration_days,
+                "repeatable": t.repeatable,
+                "cooldown_days": t.cooldown_days
+            }
+            for t in suggestions
+        ]), 200
+
+    except Exception as e:
+        import traceback
+        print("🔥 /suggestions error:", traceback.format_exc())
+        return jsonify({"error": "Internal server error"}), 500
+
 
 @challenge_bp.route("/accept/<int:template_id>", methods=["POST"], endpoint="accept_challenge")
 def accept_challenge(template_id):

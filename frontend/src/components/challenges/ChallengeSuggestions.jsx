@@ -6,19 +6,29 @@ import { API_BASE } from '../../services/analyticsService';
 const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  
 
   useEffect(() => {
     if (!userId) return;
 
     setLoading(true);
+    setError(null);  // Reset error
+
     fetch(`${API_BASE}/api/challenges/suggestions?trello_member_id=${userId}`)
       .then(res => res.json())
       .then(data => {
-        setSuggestions(data || []);
+        if (Array.isArray(data)) {
+          setSuggestions(data);
+        } else {
+          console.warn("Unexpected data format:", data);
+          setSuggestions([]);
+          setError(data?.error || "Unexpected response");
+        }
         setLoading(false);
       })
       .catch(err => {
         console.error('Failed to load challenge suggestions:', err);
+        setError("Network error or server not responding");
         setLoading(false);
       });
   }, [userId]);
@@ -47,6 +57,8 @@ const ChallengeSuggestions = ({ userId, onChallengeAccepted }) => {
     <Card>
       {loading ? (
         <p className={styles.placeholder}>🔄 Loading suggestions...</p>
+      ) : error ? (
+        <p className={styles.placeholder}>⚠️ {error}</p>
       ) : suggestions.length === 0 ? (
         <p className={styles.placeholder}>
           All challenges are currently in progress or cooling down. <br />

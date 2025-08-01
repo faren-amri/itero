@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default defineConfig({
   base: './',
@@ -8,7 +9,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: './index.html' // ONLY React app entry
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        popup: resolve(__dirname, 'public/popup.html')
+      }
     }
   }
 });

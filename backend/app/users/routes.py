@@ -28,3 +28,20 @@ def lookup_user(trello_id):
         "level": user.level,
         "streak": user.streak
     }), 200
+
+# GDPR Compliance Polling API — required by Trello
+@user_bp.route("/compliance/user/<string:trello_id>", methods=["GET"])
+def check_user_compliance(trello_id):
+    user = User.query.filter_by(trello_id=trello_id).first()
+    has_data = user is not None
+    return jsonify({"hasData": has_data}), 200
+
+# Optional: GDPR-compliant route to delete user data
+@user_bp.route("/compliance/user/delete/<string:trello_id>", methods=["DELETE"])
+def delete_user_data(trello_id):
+    user = User.query.filter_by(trello_id=trello_id).first()
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "User data deleted."}), 200
+    return jsonify({"message": "User not found."}), 404

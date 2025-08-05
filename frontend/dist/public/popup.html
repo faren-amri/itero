@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Itero Power-Up Connector</title>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script>
+      var t = TrelloPowerUp.iframe();
+
+      t.modal({
+        url: '/#/dashboard',  // use your React route here
+        fullscreen: true,
+        title: 'Motivation Dashboard'
+      });
+
+      t.closePopup();
+    </script>
   </head>
-  <body>
-    <script src="../powerup.js"></script>
-  </body>
 </html>

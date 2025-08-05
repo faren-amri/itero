@@ -1,6 +1,6 @@
 /*
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-  Content-Security-Policy: 
+  Content-Security-Policy:
     default-src 'self';
     frame-ancestors 'self' https://trello.com;
     script-src 'self' 'unsafe-inline' https://p.trellocdn.com;

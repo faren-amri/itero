@@ -6,57 +6,52 @@ import MoodInput from '../mood/MoodInput';
 import ActiveChallenges from '../challenges/ActiveChallenges';
 import CompletedChallenges from '../challenges/CompletedChallenges';
 import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
-
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import useCSSVariable from '../../hooks/useCSSvariable';
 
-const MotivationDashboard = () => {
-  const [userId, setUserId] = useState(null);         // DB id
-  const [trelloId, setTrelloId] = useState(null);     // Trello member ID
+const API = 'https://itero-api-fme7.onrender.com';
+
+const MotivationDashboard = ({ trelloMemberId }) => {
+  const [userId, setUserId] = useState(null); // backend user id
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
-  const headingColor = useCSSVariable('--section-heading', '#172b4d');
+  useCSSVariable('--section-heading', '#172b4d'); // keeps existing behavior
 
   useEffect(() => {
-    const t = window.TrelloPowerUp.iframe();
-    const context = t.getContext();
-    const memberId = context?.member || context?.memberId;
-
-    if (memberId) {
-      setTrelloId(memberId);  // ✅ Save Trello ID for challenge routes
-
-      fetch(`https://itero-api-fme7.onrender.com/api/users/lookup/${memberId}`)
-        .then(res => {
-          if (!res.ok) throw new Error(`API error ${res.status}`);
-          return res.json();
-        })
-        .then(user => {
-          if (user?.id) {
-            setUserId(user.trello_id);          
-          } else {
-            console.error("User lookup failed:", user);
-          }
-        })
-        .catch(err => {
-          console.error("❌ Failed to fetch or create Trello user:", err.message);
-        });
-    } else {
-      console.error("❌ Trello member ID not found in context:", context);
-    }
-
-    t.get('member', 'shared', 'refresh').then((shouldRefresh) => {
-      if (shouldRefresh) {
-        setRefreshKey(prev => prev + 1);
-        t.set('member', 'shared', 'refresh', false);
+    let cancelled = false;
+    (async () => {
+      if (!trelloMemberId) return;
+      try {
+        const res = await fetch(`${API}/api/users/lookup/${trelloMemberId}`);
+        if (!res.ok) return; // no console noise
+        const data = await res.json();
+        if (!cancelled && data?.trello_id) setUserId(data.trello_id);
+      } catch {
+        /* swallow in prod */
       }
-    });
-  }, []);
+    })();
+
+    // refresh flag from shared storage (optional — guarded)
+    try {
+      const t = window?.TrelloPowerUp?.iframe?.();
+      if (t) {
+        t.get('member', 'shared', 'refresh').then((should) => {
+          if (should) {
+            setRefreshKey((p) => p + 1);
+            t.set('member', 'shared', 'refresh', false);
+          }
+        });
+      }
+    } catch { /* ignore */ }
+
+    return () => { cancelled = true; };
+  }, [trelloMemberId]);
 
   const toggleTheme = () => {
-    const newTheme = isDark ? "light" : "dark";
+    const next = isDark ? 'light' : 'dark';
     setIsDark(!isDark);
-    document.body.setAttribute("data-theme", newTheme);
+    document.body.setAttribute('data-theme', next);
   };
 
   return (
@@ -65,7 +60,7 @@ const MotivationDashboard = () => {
         {isDark ? '🌞 Light Mode' : '🌙 Dark Mode'}
       </button>
 
-      {userId && trelloId && (
+      {userId && trelloMemberId && (
         <>
           <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🎮 Gamification</h3>
           <div className={styles.subGrid}>
@@ -87,11 +82,11 @@ const MotivationDashboard = () => {
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
-              <MoodInput userId={userId} onMoodLogged={() => setRefreshKey(prev => prev + 1)} />
+              <MoodInput userId={trelloMemberId} onMoodLogged={() => setRefreshKey((p) => p + 1)} />
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>📈 Mood Trends</h2>
-              <MoodTrends userId={userId} refreshKey={refreshKey} />
+              <MoodTrends userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
           </div>
 
@@ -99,15 +94,15 @@ const MotivationDashboard = () => {
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>
-              <ChallengeSuggestions userId={trelloId} onChallengeAccepted={() => setRefreshKey(prev => prev + 1)} />
+              <ChallengeSuggestions userId={trelloMemberId} onChallengeAccepted={() => setRefreshKey((p) => p + 1)} />
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
-              <ActiveChallenges userId={trelloId} refreshKey={refreshKey} />
+              <ActiveChallenges userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
-              <CompletedChallenges userId={trelloId} refreshKey={refreshKey} />
+              <CompletedChallenges userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
           </div>
         </>

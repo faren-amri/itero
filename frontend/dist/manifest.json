@@ -31,7 +31,7 @@
   },
   "connectors": {
     "iframe": {
-      "url": "https://itero-powerup.netlify.app/popup-v5.html",
+      "url": "https://itero-powerup.netlify.app/popup-itero.html",
       "originWhitelist": [
         "https://itero-powerup.netlify.app"
       ]

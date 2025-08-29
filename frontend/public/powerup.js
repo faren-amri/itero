@@ -1,4 +1,6 @@
-// powerup.js
+/* global TrelloPowerUp */
+
+// ---- Actions ----
 
 async function completeTask(t) {
   const [card, member, alreadyDone] = await Promise.all([
@@ -10,8 +12,12 @@ async function completeTask(t) {
   const cardId = card?.id;
   const memberId = member?.id;
 
-  if (!cardId || !memberId) return t.alert({ message: '❌ Missing card or member info.' });
-  if (alreadyDone) return t.alert({ message: '✅ Task already completed.' });
+  if (!cardId || !memberId) {
+    return t.alert({ message: '❌ Missing card or member info.' });
+  }
+  if (alreadyDone) {
+    return t.alert({ message: '✅ Task already completed.' });
+  }
 
   try {
     const resp = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
@@ -33,23 +39,27 @@ async function completeTask(t) {
     const completed = data?.completed_challenges?.length ?? 0;
 
     let message = `🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`;
-    if (completed > 0) message += ` · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed`;
+    if (completed > 0) {
+      message += ` · 🏆 ${completed} challenge${completed > 1 ? 's' : ''} completed`;
+    }
 
     return t.alert({ message, duration: 5 });
-  } catch (_) {
-    // no console logs in production
+  } catch {
     return t.alert({ message: '❌ Something went wrong.', duration: 4 });
   }
 }
 
 async function openDashboard(t) {
-  // Pre-sign the base URL, then append hash to avoid the "signing url that already has a hash" warning
-  const signed = await t.signUrl('https://itero-powerup.netlify.app/index.html');
+  // Sign the BASE file only; append the hash AFTER signing.
+  const baseUrl = 'https://itero-powerup.netlify.app/index.html';
+  const signedBase = await t.signUrl(baseUrl);
+
   return t.modal({
-    url: `${signed}#/dashboard`,
-    fullscreen: true,
+    url: `${signedBase}#/dashboard`,
     title: 'Motivation Dashboard',
+    fullscreen: true,
     accentColor: '#4A90E2',
+    // Pass Trello member ID into React app
     args: { member: (await t.member('id'))?.id || null },
   });
 }
@@ -57,21 +67,29 @@ async function openDashboard(t) {
 function openSettings(t) {
   return t.popup({
     title: 'Itero Settings',
-    url: 'https://itero-powerup.netlify.app/terms-of-service.html', // simple, static, zero-console
+    url: 'https://itero-powerup.netlify.app/settings.html', // simple static page
     height: 240,
   });
 }
 
+// ---- Connector initialization ----
+
 window.TrelloPowerUp.initialize({
-  'card-buttons': () => [{
-    text: 'Complete Task 🎯',
-    callback: completeTask,
-  }],
-  'board-buttons': () => [{
-    icon: 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png',
-    text: 'Itero',
-    callback: openDashboard,
-  }],
-  // Only declare capabilities you actually handle:
+  // Keep capabilities minimal — only ones you actually implement
+  'board-buttons': (t) => [
+    {
+      icon: 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png',
+      text: 'Itero',
+      callback: openDashboard,
+    },
+  ],
+
+  'card-buttons': (t) => [
+    {
+      text: 'Complete Task 🎯',
+      callback: completeTask,
+    },
+  ],
+
   'show-settings': openSettings,
 });

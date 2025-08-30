@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Itero Modal Launcher</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+  </head>
+  <body>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script>
+      (async function () {
+        const t = window.TrelloPowerUp.iframe();
+
+        // Sign the base file WITHOUT a hash
+        const signed = await t.signUrl('https://itero-powerup.netlify.app/index.html');
+
+        // Append the hash AFTER signing to avoid the Trello warning
+        const url = `${signed}#/dashboard`;
+
+        await t.modal({
+          url,
+          title: 'Itero Dashboard',
+          fullscreen: true
+        });
+
+        t.closePopup();
+      })();
+    </script>
+  </body>
+</html>

@@ -9,6 +9,7 @@ import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import useCSSVariable from '../../hooks/useCSSvariable';
+import { trello as t } from '../../main.jsx';
 
 const API = 'https://itero-api-fme7.onrender.com';
 
@@ -16,34 +17,34 @@ const MotivationDashboard = ({ trelloMemberId }) => {
   const [userId, setUserId] = useState(null); // backend user id
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
-  useCSSVariable('--section-heading', '#172b4d'); // keeps existing behavior
+  useCSSVariable('--section-heading', '#172b4d');
 
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       if (!trelloMemberId) return;
       try {
         const res = await fetch(`${API}/api/users/lookup/${trelloMemberId}`);
-        if (!res.ok) return; // no console noise
+        if (!res.ok) return;
         const data = await res.json();
         if (!cancelled && data?.trello_id) setUserId(data.trello_id);
-      } catch {
-        /* swallow in prod */
-      }
+      } catch {}
     })();
 
-    // refresh flag from shared storage (optional — guarded)
-    try {
-      const t = window?.TrelloPowerUp?.iframe?.();
-      if (t) {
-        t.get('member', 'shared', 'refresh').then((should) => {
+    // 🔒 Respect Trello context if present; safe when opened outside Trello
+    if (t) {
+      t.get('member', 'shared', 'refresh')
+        .then((should) => {
           if (should) {
             setRefreshKey((p) => p + 1);
             t.set('member', 'shared', 'refresh', false);
           }
-        });
-      }
-    } catch { /* ignore */ }
+        })
+        .catch(() => {});
+      // Optional: auto-size inside Trello
+      try { t.render(() => t.sizeTo(document.body)); } catch {}
+    }
 
     return () => { cancelled = true; };
   }, [trelloMemberId]);

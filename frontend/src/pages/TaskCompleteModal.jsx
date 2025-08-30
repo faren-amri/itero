@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { trello as t } from '../lib/trello.js';
+
 
 const API = 'https://itero-api-fme7.onrender.com';
 
@@ -11,7 +13,6 @@ const TaskCompleteModal = () => {
   useEffect(() => {
     (async () => {
       try {
-        const t = window?.TrelloPowerUp?.iframe?.();
         if (!t) { setStatus('❌ Not inside Trello'); return; }
 
         const cardId = t.arg('cardId') || t.arg('card');
@@ -23,21 +24,27 @@ const TaskCompleteModal = () => {
         }
 
         const res = await axios.post(`${API}/api/tasks/complete`, {
-          trello_user_id: memberId,
+          trello_user_id: memberId,   // ✅ raw string id
           task_id: cardId,
           source: 'task'
         });
 
-        const data = res?.data || {};
-        const xp = data.xp_gained ?? 10;
-        const lvl = data.level ?? '✓';
-        const streak = data.streak_count ?? 0;
+        if (!res?.data) throw new Error('Empty response');
 
-        toast.success(`🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`, { autoClose: 2000 });
-        setStatus(`✅ XP: ${xp} | Level: ${lvl} | 🔥 Streak: ${streak}`);
+        const { xp_gained, level, streak_count, completed_challenges } = res.data;
+        const xp = xp_gained ?? 10;
+        const lvl = level ?? '✓';
+        const streak = streak_count ?? 0;
+        const done = Array.isArray(completed_challenges) ? completed_challenges.length : 0;
+
+        let msg = `🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`;
+        if (done > 0) msg += ` · 🏆 ${done} challenge${done > 1 ? 's' : ''} completed`;
+
+        toast.success(msg, { autoClose: 2000 });
+        setStatus(`✅ ${msg}`);
 
         setTimeout(() => t.closeModal(), 2100);
-      } catch {
+      } catch (err) {
         setStatus('❌ Could not complete task.');
       }
     })();

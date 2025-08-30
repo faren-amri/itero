@@ -1,65 +1,110 @@
 /* global TrelloPowerUp */
 
-// minimal, correct, cache-busted connector
+const tpu = window.TrelloPowerUp;
 
-async function openDashboard(t) {
-  // SIGN THE BASE FILE ONLY
-  const signedBase = await t.signUrl('https://itero-powerup.netlify.app/index.html');
-  return t.modal({
-    url: `${signedBase}#/dashboard`,     // append hash AFTER signing
-    title: 'Motivation Dashboard',
-    fullscreen: true,
-    accentColor: '#4A90E2',
-    args: { member: (await t.member('id'))?.id || null },
+// Static assets hosted on your domain
+const ICON_URL = 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png';
+
+// --- Actions ---
+
+async function openDashboardFromButton(t) {
+  // Use a small popup that immediately opens the full-screen modal and closes
+  return t.popup({
+    title: 'Itero',
+    url: 'dashboard-wrapper.html', // RELATIVE to /public
+    height: 80
   });
 }
 
 async function completeTask(t) {
-  const [card, member, alreadyDone] = await Promise.all([
-    t.card('id'),
-    t.member('id'),
-    t.get('card', 'shared', 'taskCompleted'),
-  ]);
+  // Read Trello context
+  const [card, member] = await Promise.all([t.card('id'), t.member('id')]);
+  const cardId = card && card.id;
+  const memberId = member && member.id;
 
-  const cardId = card?.id, memberId = member?.id;
-  if (!cardId || !memberId) return t.alert({ message: '❌ Missing card or member info.' });
-  if (alreadyDone) return t.alert({ message: '✅ Task already completed.' });
+  if (!cardId || !memberId) {
+    return t.alert({ message: '❌ Missing card or member context.' });
+  }
+
+  // Prevent double-submission based on card shared state
+  const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
+  if (alreadyDone) {
+    return t.alert({ message: '✅ Task already completed.' });
+  }
 
   try {
-    const r = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
+    // IMPORTANT: send only the raw id string (not an object)
+    const res = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ trello_user_id: memberId, task_id: cardId }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        trello_user_id: memberId,
+        task_id: cardId
+      })
     });
-    if (!r.ok) return t.alert({ message: '❌ Task completion failed.' });
 
-    const data = await r.json();
-    await t.set('card','shared','taskCompleted',true);
-    await t.set('member','shared','refresh',true);
+    if (!res.ok) {
+      return t.alert({ message: '❌ Task completion failed.' });
+    }
 
-    const xp = data?.xp_gained ?? 10;
-    const lvl = data?.level ?? '?';
+    const data = await res.json();
+
+    // Mark completed in Trello shared state
+    await t.set('card', 'shared', 'taskCompleted', true);
+    await t.set('member', 'shared', 'refresh', true);
+
+    // Toast UX
+    const xp     = data?.xp_gained ?? 10;
+    const level  = data?.level ?? '?';
     const streak = data?.streak_count ?? 0;
-    const done = data?.completed_challenges?.length ?? 0;
+    const done   = Array.isArray(data?.completed_challenges) ? data.completed_challenges.length : 0;
 
-    let msg = `🎉 +${xp} XP · Level ${lvl} · 🔥 ${streak}-day streak`;
-    if (done > 0) msg += ` · 🏆 ${done} challenge${done>1?'s':''} completed`;
+    let msg = `🎉 +${xp} XP · Level ${level} · 🔥 ${streak}-day streak`;
+    if (done > 0) msg += ` · 🏆 ${done} challenge${done > 1 ? 's' : ''} completed`;
+
     return t.alert({ message: msg, duration: 5 });
-  } catch {
+  } catch (e) {
     return t.alert({ message: '❌ Something went wrong.', duration: 4 });
   }
 }
 
 function openSettings(t) {
-  return t.popup({ title: 'Itero Settings', url: '/settings.html', height: 240 });
+  // Only keep this if you ship settings.html; otherwise remove the capability below
+  return t.popup({
+    title: 'Itero Settings',
+    url: 'settings.html',
+    height: 240
+  });
 }
 
-window.TrelloPowerUp.initialize({
-  'board-buttons': () => [{
-    icon: 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png', // absolute URL
-    text: 'Itero',
-    callback: openDashboard,
-  }],
-  'card-buttons':  () => [{ text: 'Complete Task 🎯', callback: completeTask }],
-  'show-settings': openSettings,
+// --- Register capabilities ---
+
+tpu.initialize({
+  'board-buttons': function () {
+    return [
+      {
+        icon: ICON_URL,
+        text: 'Itero',
+        callback: openDashboardFromButton
+      }
+    ];
+  },
+
+  'card-buttons': function () {
+    return [
+      {
+        icon: ICON_URL,
+        text: 'Complete Task 🎯',
+        callback: completeTask
+      },
+      {
+        icon: ICON_URL,
+        text: 'Open Itero',
+        callback: openDashboardFromButton
+      }
+    ];
+  },
+
+  // Remove this key if you do not include settings.html
+  'show-settings': openSettings
 });

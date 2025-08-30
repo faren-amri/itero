@@ -2,10 +2,13 @@
 (async function () {
   const t = window.TrelloPowerUp.iframe();
 
-  // Sign the base file WITHOUT a hash
-  const signed = await t.signUrl('https://itero-powerup.netlify.app/index.html');
+  // Build a guaranteed hashless URL
+  const base = new URL('https://itero-powerup.netlify.app/index.html');
+  base.hash = ''; // defensive
+  const clean = base.toString().split('#')[0]; // double-defensive
 
-  // Append the hash AFTER signing to avoid Trello warnings
+  // Sign clean URL, then append hash AFTER signing
+  const signed = await t.signUrl(clean);
   const url = `${signed}#/dashboard`;
 
   await t.modal({

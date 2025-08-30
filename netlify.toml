@@ -2,17 +2,50 @@
   command = "npm run build"
   publish = "frontend/dist"
 
+# ---- Serve connector files as-is (no SPA rewrite) ----
 [[redirects]]
-  from = "/powerup.js"
-  to = "/powerup.js"
+  from = "/popup-itero.html"
+  to   = "/popup-itero.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/powerup-itero.js"
+  to   = "/powerup-itero.js"
+  status = 200
+  force = true
+
+# (optional: keep legacy names working while you transition)
+[[redirects]]
+  from = "/popup-v5.html"
+  to   = "/popup-v5.html"
   status = 200
 
+[[redirects]]
+  from = "/powerup-v5.js"
+  to   = "/powerup-v5.js"
+  status = 200
+
+# Keep manifest direct
 [[redirects]]
   from = "/manifest.json"
-  to = "/manifest.json"
+  to   = "/manifest.json"
   status = 200
 
+# SPA fallback for everything else
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to   = "/index.html"
   status = 200
+
+# ---- Headers: kill caching on connector files ----
+[[headers]]
+  for = "/popup-itero.html"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/powerup-itero.js"
+  [headers.values]
+    Cache-Control = "no-store"
+    Content-Type  = "application/javascript; charset=utf-8"

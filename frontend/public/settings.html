@@ -4,20 +4,14 @@
     <meta charset="utf-8" />
     <title>Itero Settings</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px; }
-      label { display:block; margin: 12px 0 6px; }
-      input { width: 100%; padding: 8px; }
-    </style>
+    <!-- optional: move CSS to a file as well if you want to tighten style-src later -->
+    <link rel="stylesheet" href="settings.css" />
   </head>
   <body>
     <h3>Itero Settings</h3>
-    <p>Add your settings UI here.</p>
+    <p>Put your config UI here.</p>
 
-    <script src="https://p.trellocdn.com/power-up.min.js"></script>
-    <script>
-      const t = window.TrelloPowerUp.iframe();
-      // Example: t.get('board','shared','yourKey') / t.set(...)
-    </script>
+    <script src="https://p.trellocdn.com/power-up.min.js" defer></script>
+    <script src="settings.js" defer></script>
   </body>
 </html>

@@ -27,3 +27,9 @@
   for = "/popup.html"
   [headers.values]
     Content-Type = "text/html; charset=utf-8"
+  
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+

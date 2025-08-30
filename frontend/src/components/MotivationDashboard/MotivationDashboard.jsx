@@ -42,8 +42,6 @@ const MotivationDashboard = ({ trelloMemberId }) => {
           }
         })
         .catch(() => {});
-      // Optional: auto-size inside Trello
-      try { t.render(() => t.sizeTo(document.body)); } catch {}
     }
 
     return () => { cancelled = true; };

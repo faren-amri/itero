@@ -9,7 +9,7 @@ import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import useCSSVariable from '../../hooks/useCSSvariable';
-import { trello as t } from '../../main.jsx';
+import { trello as t } from '../../lib/trello.js';
 
 const API = 'https://itero-api-fme7.onrender.com';
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { trello as t } from './main.jsx';
 import { trello as t } from '../lib/trello.js';
 
 export function useTrelloContext({ waitFor = ['card', 'member'] } = {}) {

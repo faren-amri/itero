@@ -1,53 +1,28 @@
 {
-  "id": "com.itero.motivation",
-  "name": "Itero Motivation Engine",
-  "description": "Gamify your team's productivity directly inside Trello — streaks, challenges, mood tracking, and XP-powered motivation.",
-  "author": "Farnoud Amiri",
-  "version": "1.0.0",
+  "name": "Itero",
+  "details": {
+    "overview": "Gamified motivation dashboard for Trello — track XP, streaks, challenges, and mood.",
+    "description": "Itero motivates teams by rewarding progress with XP, streak streaks, and challenges directly in Trello. Open the dashboard to see your progress and celebrate wins."
+  },
   "icon": {
-    "url": "https://itero-powerup.netlify.app/assets/itero-icon-144.png"
+    "url": "https://itero-powerup.netlify.app/assets/itero-icon-w-24.png"
   },
-  "permissions": [
-    "read",
-    "write",
-    "account",
+  "author": "Itero",
+  "capabilities": [
+    "board-buttons",
     "card-buttons",
-    "board-buttons"
+    "show-settings"
   ],
-  "capabilities": {
-    "board-buttons": [
-      {
-        "text": "Open Itero",
-        "callback": "openDashboard"
-      }
-    ],
-    "card-buttons": [
-      {
-        "text": "Complete Task 🎯",
-        "callback": "completeTask"
-      }
-    ],
-    "show-settings": true
-  },
   "connectors": {
     "iframe": {
-      "url": "https://itero-powerup.netlify.app/popup-itero.html",
-      "originWhitelist": [
-        "https://itero-powerup.netlify.app"
-      ]
+      "url": "https://itero-powerup.netlify.app/popup.html"
     }
   },
-  "listing": {
-    "overview": "Motivate your team with XP, streaks, mood tracking, and personal challenges right inside Trello.",
-    "features": [
-      "Gamified task tracking",
-      "XP and streak system",
-      "Mood logging & personal challenges",
-      "Motivation dashboard directly in Trello"
-    ],
-    "category": "Team Collaboration"
-  },
-"privacyUrl": "https://itero-powerup.netlify.app/privacy.html",
-"termsUrl": "https://itero-powerup.netlify.app/terms-of-service.html",
-  "supportUrl": "mailto:farnoudamiri@gmail.com"
+  "categories": [
+    "communication",
+    "analytics",
+    "utility"
+  ],
+  "privacy_url": "https://itero-powerup.netlify.app/privacy.html",
+  "terms_url": "https://itero-powerup.netlify.app/terms-of-service.html"
 }

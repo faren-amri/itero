@@ -1,51 +1,29 @@
 [build]
   command = "npm run build"
-  publish = "frontend/dist"
-
-# ---- Serve connector files as-is (no SPA rewrite) ----
-[[redirects]]
-  from = "/popup-itero.html"
-  to   = "/popup-itero.html"
-  status = 200
-  force = true
+  publish = "dist"
 
 [[redirects]]
-  from = "/powerup-itero.js"
-  to   = "/powerup-itero.js"
-  status = 200
-  force = true
-
-# (optional: keep legacy names working while you transition)
-[[redirects]]
-  from = "/popup-v5.html"
-  to   = "/popup-v5.html"
-  status = 200
-
-[[redirects]]
-  from = "/powerup-v5.js"
-  to   = "/powerup-v5.js"
-  status = 200
-
-# Keep manifest direct
-[[redirects]]
-  from = "/manifest.json"
-  to   = "/manifest.json"
-  status = 200
-
-# SPA fallback for everything else
-[[redirects]]
+  # React SPA fallback
   from = "/*"
-  to   = "/index.html"
+  to = "/index.html"
   status = 200
 
-# ---- Headers: kill caching on connector files ----
 [[headers]]
-  for = "/popup-itero.html"
+  for = "/*"
   [headers.values]
-    Cache-Control = "no-store"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Content-Security-Policy = "default-src 'self'; frame-ancestors https://trello.com https://*.trello.com; script-src 'self' 'unsafe-inline' https://p.trellocdn.com; script-src-elem 'self' 'unsafe-inline' https://p.trellocdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.trello.com https://itero-api-fme7.onrender.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Explicitly serve Power-Up connector files as JS/HTML
+[[headers]]
+  for = "/powerup.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
 
 [[headers]]
-  for = "/powerup-itero.js"
+  for = "/popup.html"
   [headers.values]
-    Cache-Control = "no-store"
-    Content-Type  = "application/javascript; charset=utf-8"
+    Content-Type = "text/html; charset=utf-8"

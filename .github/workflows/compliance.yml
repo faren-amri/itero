@@ -2,8 +2,8 @@ name: Trello Compliance Poller
 
 on:
   schedule:
-    - cron: "0 */12 * * *"   # every 12 hours (UTC)
-  workflow_dispatch:         # lets you run it manually
+    - cron: "0 */12 * * *"   # every 12 hours UTC
+  workflow_dispatch:         # allow manual trigger
 
 jobs:
   poll:
@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Call compliance endpoint
         run: |
-          curl -sS -i -X POST "https://itero-api-fm7.onrender.com/api/users/compliance/run-now" \
+          set -euo pipefail
+          curl -sS -i -X POST "${{ secrets.API_BASE_URL }}/api/users/compliance/run-now" \
             -H "X-Admin-Token: ${{ secrets.ADMIN_JOB_TOKEN }}" \
             --fail

@@ -2,16 +2,22 @@ name: Trello Compliance Poller
 
 on:
   schedule:
-    - cron: "0 */12 * * *"   # every 12 hours UTC
-  workflow_dispatch:         # allow manual trigger
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
 
 jobs:
   poll:
     runs-on: ubuntu-latest
     steps:
+      - name: Sanity check host
+        run: |
+          BASE="https://itero-api-fme7.onrender.com"   
+          echo "Pinging $BASE ..."
+          curl -sS -I "$BASE" --fail
+
       - name: Call compliance endpoint
         run: |
-          set -euo pipefail
-          curl -sS -i -X POST "${{ secrets.API_BASE_URL }}/api/users/compliance/run-now" \
+          BASE="https://itero-api-fme7.onrender.com"   
+          curl -sS -i -X POST "$BASE/api/users/compliance/run-now" \
             -H "X-Admin-Token: ${{ secrets.ADMIN_JOB_TOKEN }}" \
             --fail

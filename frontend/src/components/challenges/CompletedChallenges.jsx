@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import sharedStyles from '../../styles/shared/shared.module.css';
+import sharedStyles from '../../styles/shared/Shared.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
 function CompletedChallenges({ userId, trelloMemberId, refreshKey }) {

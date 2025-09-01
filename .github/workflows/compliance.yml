@@ -9,15 +9,29 @@ jobs:
   poll:
     runs-on: ubuntu-latest
     steps:
-      - name: Sanity check host
+      - name: Warm up Render (handles hibernation 503)
         run: |
-          BASE="https://itero-api-fme7.onrender.com"   
-          echo "Pinging $BASE ..."
-          curl -sS -I "$BASE" --fail
+          set -euo pipefail
+          BASE="${{ secrets.API_BASE_URL }}"
+          echo "Warming $BASE ..."
+          for i in {1..12}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE" || true)
+            echo "Attempt $i -> HTTP $code"
+            case "$code" in
+              200|301|302|401|404)  # any real response means it's awake
+                echo "Service awake"; break;;
+            esac
+            sleep $((i*5))         # backoff up to ~5 min total
+            if [ "$i" -eq 12 ]; then
+              echo "Service did not wake in time" >&2
+              exit 1
+            fi
+          done
 
       - name: Call compliance endpoint
         run: |
-          BASE="https://itero-api-fme7.onrender.com"   
+          set -euo pipefail
+          BASE="${{ secrets.API_BASE_URL }}"
           curl -sS -i -X POST "$BASE/api/users/compliance/run-now" \
             -H "X-Admin-Token: ${{ secrets.ADMIN_JOB_TOKEN }}" \
             --fail

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
-import sharedStyles from '../../styles/shared/Shared.module.css';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 
 function ChallengeSuggestions({ userId, onChallengeAccepted }) {
@@ -57,18 +56,18 @@ function ChallengeSuggestions({ userId, onChallengeAccepted }) {
   return (
     <div className={styles.innerCard}>
       {loading ? (
-        <p className={sharedStyles.muted}>Loading suggestions…</p>
+        <p className={styles.muted}>Loading suggestions…</p>
       ) : suggestions.length === 0 ? (
-        <p className={sharedStyles.muted}>No suggestions</p>
+        <p className={styles.muted}>No suggestions</p>
       ) : (
         <div className={styles.listColumn}>
           {suggestions.map(s => (
-            <div key={s.id} className={sharedStyles.card}>
-              <div className={sharedStyles.cardTitle}>{s.title}</div>
-              {s.description && <p className={sharedStyles.muted}>{s.description}</p>}
+            <div key={s.id} className={styles.card}>
+              <div className={styles.cardTitle}>{s.title}</div>
+              {s.description && <p className={styles.muted}>{s.description}</p>}
               <div style={{ marginTop: 8 }}>
                 <button
-                  className={sharedStyles.primaryButton}
+                  className={styles.button}
                   onClick={() => accept(s.id)}
                   disabled={busyId === s.id}
                   aria-busy={busyId === s.id}

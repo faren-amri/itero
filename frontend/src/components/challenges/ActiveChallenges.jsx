@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/components/ActiveChallenges.module.css';
-import sharedStyles from '../../styles/shared/shared.module.css';
+import sharedStyles from '../../styles/shared/Shared.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
 function ActiveChallenges({ userId, trelloMemberId, refreshKey }) {

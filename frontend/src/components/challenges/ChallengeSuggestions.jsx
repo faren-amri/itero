@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
+import sharedStyles from '../../styles/shared/Shared.module.css';
+import styles from '../../styles/components/MotivationDashboard.module.css';
 
 function ChallengeSuggestions({ userId, onChallengeAccepted }) {
   const [suggestions, setSuggestions] = useState([]);
@@ -8,7 +10,6 @@ function ChallengeSuggestions({ userId, onChallengeAccepted }) {
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       setLoading(true);
       try {
@@ -25,74 +26,65 @@ function ChallengeSuggestions({ userId, onChallengeAccepted }) {
         if (!cancelled) setLoading(false);
       }
     })();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [userId]);
 
   const accept = async (templateId) => {
     if (busyId) return;
     setBusyId(templateId);
-
     try {
-      const res = await fetch(
-        `${API_BASE}/api/challenges/accept/${templateId}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ trello_member_id: userId }),
-        }
-      );
-
+      const res = await fetch(`${API_BASE}/api/challenges/accept/${templateId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trello_member_id: userId })
+      });
       let payload = null;
-      try {
-        payload = await res.json();
-      } catch {
-        payload = null;
-      }
-
-      // Treat “Already accepted” as success (idempotent UX)
+      try { payload = await res.json(); } catch { payload = null; }
       const msg = (payload?.message || payload?.error || '').toString();
-      const alreadyAccepted =
-        res.status === 400 && /already\s*accepted/i.test(msg);
+      const alreadyAccepted = res.status === 400 && /already\s*accepted/i.test(msg);
 
       if (res.ok || alreadyAccepted) {
-        setSuggestions((prev) => prev.filter((s) => s.id !== templateId));
+        setSuggestions(prev => prev.filter(s => s.id !== templateId));
         onChallengeAccepted?.();
       } else {
-        // Quiet fail: no console output (keeps reviewer console clean)
+        // silent fail to keep console clean
       }
     } catch {
-      // Network issue — swallow quietly
+      // silent
     } finally {
       setBusyId(null);
     }
   };
 
-  if (loading) {
-    return <div>Loading suggestions…</div>;
-  }
-
-  if (!suggestions.length) {
-    return <div>No suggestions</div>;
-  }
-
   return (
-    <div className="suggestions">
-      {suggestions.map((s) => (
-        <div key={s.id} className="suggestion-card">
-          <div className="title">{s.title}</div>
-          <div className="desc">{s.description}</div>
-          <button
-            onClick={() => accept(s.id)}
-            disabled={busyId === s.id}
-            aria-busy={busyId === s.id}
-          >
-            {busyId === s.id ? 'Adding…' : 'Accept'}
-          </button>
+    <div className={styles.innerCard}>
+      {loading ? (
+        <p className={sharedStyles.muted}>Loading suggestions…</p>
+      ) : suggestions.length === 0 ? (
+        <p className={styles.placeholder}>
+          All challenges are currently in progress or cooling down. <br />
+          New challenges will appear soon!
+        </p>
+      ) : (
+        <div className={styles.listColumn}>
+          {suggestions.map(s => (
+            <div key={s.id} className={sharedStyles.card}>
+              <div className={sharedStyles.cardTitle}>{s.title}</div>
+              {s.description && <p className={sharedStyles.muted}>{s.description}</p>}
+              <div style={{ marginTop: 8 }}>
+                <button
+                  className={sharedStyles.primaryButton}
+                  onClick={() => accept(s.id)}
+                  disabled={busyId === s.id}
+                  aria-busy={busyId === s.id}
+                >
+                  {busyId === s.id ? 'Adding…' : 'Accept Challenge'}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

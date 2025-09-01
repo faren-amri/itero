@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
+import sharedStyles from '../../styles/shared/Shared.module.css';
+import styles from '../../styles/components/MotivationDashboard.module.css';
 
 function CompletedChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
@@ -7,7 +9,6 @@ function CompletedChallenges({ userId, refreshKey }) {
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       setLoading(true);
       try {
@@ -24,23 +25,26 @@ function CompletedChallenges({ userId, refreshKey }) {
         if (!cancelled) setLoading(false);
       }
     })();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [userId, refreshKey]);
 
-  if (loading) return <div>Loading completed challenges…</div>;
-  if (!items.length) return <div>No completed challenges yet</div>;
+  if (loading) return <div className={styles.innerCard}><p className={sharedStyles.muted}>Loading completed challenges…</p></div>;
+  if (!items.length) return <div className={styles.innerCard}><p className={sharedStyles.muted}>No completed challenges yet</p></div>;
 
   return (
-    <div className="completed-challenges">
-      {items.map((c) => (
-        <div key={c.id} className="challenge-card">
-          <div className="title">{c.title}</div>
-          <div className="meta">Completed: {c.completed_at?.slice(0, 10) || '-'}</div>
-        </div>
-      ))}
+    <div className={styles.innerCard}>
+      <div className={styles.listColumn}>
+        {items.map(c => (
+          <div key={c.id} className={sharedStyles.card}>
+            <div className={sharedStyles.cardTitle}>
+              {c.title} <span className={sharedStyles.okBadge}>✓ Completed</span>
+            </div>
+            <div className={styles.progressBarContainer} style={{ marginTop: 6 }}>
+              <div className={styles.progressBar} style={{ width: '100%' }} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

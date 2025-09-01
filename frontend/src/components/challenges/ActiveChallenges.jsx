@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
+import sharedStyles from '../../styles/shared/Shared.module.css';
+import styles from '../../styles/components/MotivationDashboard.module.css';
 
 function ActiveChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
@@ -7,7 +9,6 @@ function ActiveChallenges({ userId, refreshKey }) {
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       setLoading(true);
       try {
@@ -24,23 +25,30 @@ function ActiveChallenges({ userId, refreshKey }) {
         if (!cancelled) setLoading(false);
       }
     })();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [userId, refreshKey]);
 
-  if (loading) return <div>Loading active challenges…</div>;
-  if (!items.length) return <div>No active challenges</div>;
+  if (loading) return <div className={styles.innerCard}><p className={sharedStyles.muted}>Loading active challenges…</p></div>;
+  if (!items.length) return <div className={styles.innerCard}><p className={sharedStyles.muted}>No active challenges</p></div>;
 
   return (
-    <div className="active-challenges">
-      {items.map((c) => (
-        <div key={c.id} className="challenge-card">
-          <div className="title">{c.title}</div>
-          <div className="meta">Started: {c.started_at?.slice(0, 10) || '-'}</div>
-        </div>
-      ))}
+    <div className={styles.innerCard}>
+      <div className={styles.listColumn}>
+        {items.map(c => {
+          const pct = Math.max(0, Math.min(100, Number(c.progress_percent ?? 0)));
+          return (
+            <div key={c.id} className={sharedStyles.card}>
+              <div className={sharedStyles.cardTitle}>{c.title}</div>
+              <div className={styles.progressRow}>
+                <div className={styles.progressBarContainer}>
+                  <div className={styles.progressBar} style={{ width: `${pct}%` }} />
+                </div>
+                <div className={sharedStyles.muted} style={{ marginLeft: 8 }}>{pct}%</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

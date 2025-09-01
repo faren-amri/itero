@@ -47,10 +47,8 @@ function ChallengeSuggestions({ userId, onChallengeAccepted }) {
         setSuggestions(prev => prev.filter(s => s.id !== templateId));
         onChallengeAccepted?.();
       } else {
-        // silent fail to keep console clean
       }
     } catch {
-      // silent
     } finally {
       setBusyId(null);
     }

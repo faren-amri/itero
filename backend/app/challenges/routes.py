@@ -129,6 +129,7 @@ def active_challenges():
     return jsonify([{
         "id": c.id,
         "title": c.template.title,
+        "description": c.description,
         "progress": c.progress,
         "goal": c.template.goal,
         "status": c.status

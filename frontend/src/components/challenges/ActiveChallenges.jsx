@@ -1,21 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import styles from '../../styles/components/ActiveChallenges.module.css';
+import sharedStyles from '../../styles/shared/shared.module.css';
 import { API_BASE } from '../../services/analyticsService';
-import sharedStyles from '../../styles/shared/Shared.module.css';
-import styles from '../../styles/components/MotivationDashboard.module.css';
 
-function ActiveChallenges({ userId, refreshKey }) {
+function ActiveChallenges({ userId, trelloMemberId, refreshKey }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tick, setTick] = useState(0);
+
+  const memberId = userId ?? trelloMemberId;
+
+  useEffect(() => {
+    const onChanged = () => setTick(t => t + 1);
+    window.addEventListener('itero:challenges-changed', onChanged);
+    return () => window.removeEventListener('itero:challenges-changed', onChanged);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
       try {
+        if (!memberId) {
+          setItems([]);
+          return;
+        }
         const res = await fetch(
-          `${API_BASE}/api/challenges/active?trello_member_id=${encodeURIComponent(
-            userId
-          )}`
+          `${API_BASE}/api/challenges/active?trello_member_id=${encodeURIComponent(memberId)}&t=${Date.now()}`,
+          { cache: 'no-store' }
         );
         const data = await res.json().catch(() => []);
         if (!cancelled) setItems(Array.isArray(data) ? data : []);
@@ -26,29 +38,32 @@ function ActiveChallenges({ userId, refreshKey }) {
       }
     })();
     return () => { cancelled = true; };
-  }, [userId, refreshKey]);
+  }, [memberId, refreshKey, tick]);
 
-  if (loading) return <div className={styles.innerCard}><p className={sharedStyles.muted}>Loading active challenges…</p></div>;
-  if (!items.length) return <div className={styles.innerCard}><p className={sharedStyles.muted}>No active challenges</p></div>;
+  if (loading) return <div className={sharedStyles.muted}>Loading…</div>;
+  if (!items.length) return <div className={sharedStyles.muted}>No active challenges</div>;
 
   return (
-    <div className={styles.innerCard}>
-      <div className={styles.listColumn}>
-        {items.map(c => {
-          const pct = Math.max(0, Math.min(100, Number(c.progress_percent ?? 0)));
-          return (
-            <div key={c.id} className={sharedStyles.card}>
-              <div className={sharedStyles.cardTitle}>{c.title}</div>
-              <div className={styles.progressRow}>
-                <div className={styles.progressBarContainer}>
-                  <div className={styles.progressBar} style={{ width: `${pct}%` }} />
-                </div>
-                <div className={sharedStyles.muted} style={{ marginLeft: 8 }}>{pct}%</div>
+    <div className={styles.grid}>
+      {items.map(c => {
+        const pct = c.progress_percent || 0;
+        return (
+          <div key={c.id} className={sharedStyles.card}>
+            <div className={sharedStyles.cardTitle}>{c.title}</div>
+            {c.description && (
+              <div className={sharedStyles.muted} style={{ marginTop: 4 }}>
+                {c.description}
               </div>
+            )}
+            <div className={styles.progressRow}>
+              <div className={styles.progressBarContainer}>
+                <div className={styles.progressBar} style={{ width: `${pct}%` }} />
+              </div>
+              <div className={sharedStyles.muted} style={{ marginLeft: 8 }}>{pct}%</div>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

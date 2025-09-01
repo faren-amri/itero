@@ -3,38 +3,47 @@ import { API_BASE } from '../../services/analyticsService';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 
-function ActiveChallenges({ userId, trelloMemberId, refreshKey }) {
+function ActiveChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // accept either prop; if an object was passed, use its .id
-  const memberId =
-    typeof userId === 'string' ? userId :
-    typeof userId === 'object' && userId ? userId.id :
-    typeof trelloMemberId === 'string' ? trelloMemberId :
-    typeof trelloMemberId === 'object' && trelloMemberId ? trelloMemberId.id :
-    '';
+  // Normalize: accept number/string or an object with .id
+  const normalizedUserId =
+    typeof userId === 'number' || (typeof userId === 'string' && userId.trim() !== '')
+      ? userId
+      : (userId && typeof userId === 'object' && (userId.id ?? userId.userId)) || '';
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
       try {
-        if (!memberId) { setItems([]); return; }
-        const res = await fetch(
-          `${API_BASE}/api/challenges/active?trello_member_id=${encodeURIComponent(memberId)}&t=${Date.now()}`,
-          { cache: 'no-store' }
-        );
+        if (!normalizedUserId) {
+          // nothing to query yet
+          if (!cancelled) setItems([]);
+          return;
+        }
+        const url = `${API_BASE}/api/challenges/active?user_id=${encodeURIComponent(
+          normalizedUserId
+        )}&t=${Date.now()}`;
+
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) {
+          // surface server errors in console so you can see them
+          const txt = await res.text().catch(() => '');
+          console.error('ActiveChallenges fetch failed:', res.status, txt);
+        }
         const data = await res.json().catch(() => []);
         if (!cancelled) setItems(Array.isArray(data) ? data : []);
-      } catch {
+      } catch (err) {
+        console.error('ActiveChallenges fetch error:', err);
         if (!cancelled) setItems([]);
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, [memberId, refreshKey]);
+  }, [normalizedUserId, refreshKey]);
 
   if (loading) {
     return (
@@ -48,8 +57,7 @@ function ActiveChallenges({ userId, trelloMemberId, refreshKey }) {
     return (
       <div className={styles.innerCard}>
         <p className={sharedStyles.muted}>
-          All challenges are currently in progress or cooling down. <br />
-          New challenges will appear soon!
+          No Active Challenge!
         </p>
       </div>
     );
@@ -58,7 +66,7 @@ function ActiveChallenges({ userId, trelloMemberId, refreshKey }) {
   return (
     <div className={styles.innerCard}>
       <div className={styles.listColumn}>
-        {items.map(c => {
+        {items.map((c) => {
           const pct = Math.max(0, Math.min(100, Number(c.progress_percent ?? 0)));
           return (
             <div key={c.id} className={sharedStyles.card}>

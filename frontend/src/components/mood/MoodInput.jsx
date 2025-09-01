@@ -8,12 +8,12 @@ const moods = ["Burned Out", "Tired", "Neutral", "Energized", "Great"];
 const MoodInput = ({ userId, onMoodLogged }) => {
   const [submitting, setSubmitting] = useState(false);
   const [loggedMood, setLoggedMood] = useState(null);
-
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleMoodSelect = async (mood) => {
-
     if (!userId || submitting) return;
     setSubmitting(true);
+    setErrorMsg('');
 
     try {
       const res = await fetch(`${API_BASE}/api/moods/log`, {
@@ -22,15 +22,15 @@ const MoodInput = ({ userId, onMoodLogged }) => {
         body: JSON.stringify({ trello_member_id: userId, mood }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setLoggedMood(data.mood);
-        if (onMoodLogged) onMoodLogged();
+        setLoggedMood(data.mood || mood);
+        onMoodLogged?.();
       } else {
-        console.warn(data.message || data.error);
+        setErrorMsg(data.message || data.error || 'Could not log mood.');
       }
-    } catch (err) {
-      console.error("Failed to log mood:", err);
+    } catch {
+      setErrorMsg('Network error while logging mood.');
     } finally {
       setSubmitting(false);
     }
@@ -39,11 +39,16 @@ const MoodInput = ({ userId, onMoodLogged }) => {
   return (
     <div className={styles.moodInput}>
       <h3>How are you feeling today?</h3>
+
+      {errorMsg && <p className={styles.error}>{errorMsg}</p>}
+
       {loggedMood ? (
-        <p className={styles.confirmation}>You logged: <strong>{loggedMood}</strong></p>
+        <p className={styles.confirmation}>
+          You logged: <strong>{loggedMood}</strong>
+        </p>
       ) : (
         <div className={styles.buttons}>
-          {moods.map(m => (
+          {moods.map((m) => (
             <button key={m} onClick={() => handleMoodSelect(m)} disabled={submitting}>
               {m}
             </button>

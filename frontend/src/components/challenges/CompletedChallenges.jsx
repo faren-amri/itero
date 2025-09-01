@@ -1,61 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import Card from '../common/Card';
-import styles from '../../styles/components/ActiveChallenges.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
-const CompletedChallenges = ({ userId, refreshKey }) => {
-  const [challenges, setChallenges] = useState([]);
+function CompletedChallenges({ userId, refreshKey }) {
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) return;
+    let cancelled = false;
 
-    setLoading(true);
-    fetch(`${API_BASE}/api/challenges/completed?trello_member_id=${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        setChallenges(data || []);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to load completed challenges', err);
-        setLoading(false);
-      });
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/challenges/completed?trello_member_id=${encodeURIComponent(
+            userId
+          )}`
+        );
+        const data = await res.json().catch(() => []);
+        if (!cancelled) setItems(Array.isArray(data) ? data : []);
+      } catch {
+        if (!cancelled) setItems([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [userId, refreshKey]);
 
-  if (loading) {
-    return (
-      <Card>
-        <p className={styles.placeholder}>🔄 Syncing completed challenges...</p>
-      </Card>
-    );
-  }
-
-  if (challenges.length === 0) {
-    return (
-      <Card>
-        <p className={styles.placeholder}>No completed challenges yet</p>
-      </Card>
-    );
-  }
+  if (loading) return <div>Loading completed challenges…</div>;
+  if (!items.length) return <div>No completed challenges yet</div>;
 
   return (
-    <Card>
-      <ul className={styles.challengeList}>
-        {challenges.map(ch => (
-          <li key={ch.id} className={styles.challengeItem}>
-            <div className={styles.challengeHeader}>
-              <h4 className={styles.challengeTitle}>{ch.title}</h4>
-              <span className={styles.completedLabel}>✓ Completed</span>
-            </div>
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill} style={{ width: '100%' }} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <div className="completed-challenges">
+      {items.map((c) => (
+        <div key={c.id} className="challenge-card">
+          <div className="title">{c.title}</div>
+          <div className="meta">Completed: {c.completed_at?.slice(0, 10) || '-'}</div>
+        </div>
+      ))}
+    </div>
   );
-};
+}
 
 export default CompletedChallenges;

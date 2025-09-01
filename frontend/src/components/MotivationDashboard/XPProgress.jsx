@@ -12,10 +12,11 @@ const XPProgress = ({ userId, refreshKey }) => {
       setLoading(true);
       try {
         const data = await getXPData(userId);
-        setXp(data.xp);
-        setNextLevel(data.next_level_xp);
-      } catch (err) {
-        console.error('Failed to load XP data:', err);
+        setXp(Number(data.xp) || 0);
+        setNextLevel(Number(data.next_level_xp) || 100);
+      } catch {
+        setXp(0);
+        setNextLevel(100);
       } finally {
         setLoading(false);
       }
@@ -24,7 +25,7 @@ const XPProgress = ({ userId, refreshKey }) => {
     if (userId) fetchXP();
   }, [userId, refreshKey]);
 
-  const progressPercent = Math.min((xp / nextLevel) * 100, 100);
+  const progressPercent = Math.min((xp / nextLevel) * 100 || 0, 100);
 
   return (
     <div className={styles.innerCard}>

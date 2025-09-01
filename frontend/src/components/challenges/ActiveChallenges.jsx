@@ -55,7 +55,6 @@ function ActiveChallenges({ userId, refreshKey }) {
   }
 
   return (
-  <Card>
     <div className={styles.innerCard}>
       <div className={styles.listColumn}>
         {items.map(c => {
@@ -79,7 +78,6 @@ function ActiveChallenges({ userId, refreshKey }) {
         })}
       </div>
     </div>
-  </Card>
 
   );
 }

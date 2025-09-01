@@ -9,4 +9,6 @@
 
 
 
-GET https://itero-api-fm7.onrender.com/api/users/compliance
+curl -i -X POST https://itero-api-fme7.onrender.com/api/users/compliance/run-now \
+  -H "X-Admin-Token: 9019901990199019"
+

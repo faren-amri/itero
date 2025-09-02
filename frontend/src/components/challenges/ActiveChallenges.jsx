@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
 import sharedStyles from '../../styles/shared/Shared.module.css';
-import styles from '../../styles/components/MotivationDashboard.module.css';
+import styles from '../../styles/components/ActiveChallenges.module.css';
 
 function ActiveChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
@@ -61,9 +61,9 @@ function ActiveChallenges({ userId, refreshKey }) {
           const percent = pct(c.progress, c.goal);
           return (
             <div key={c.id} className={sharedStyles.card}>
-              <div className={sharedStyles.cardTitle}>{c.title}</div>
+              <div className={styles.challengeTitle}>{c.title}</div>
               {c.description && (
-                <div className={sharedStyles.muted} style={{ marginTop: 4 }}>
+                <div className={styles.challengeDescription} style={{ marginTop: 4 }}>
                   {c.description}
                 </div>
               )}
@@ -71,7 +71,7 @@ function ActiveChallenges({ userId, refreshKey }) {
                 <div className={styles.progressBarContainer}>
                   <div className={styles.progressBar} style={{ width: `${percent}%` }} />
                 </div>
-                <div className={sharedStyles.muted} style={{ marginLeft: 8 }}>{percent}%</div>
+                <div className={styles.progressFill} style={{ marginLeft: 8 }}>{percent}%</div>
               </div>
             </div>
           );

@@ -41,8 +41,8 @@ function CompletedChallenges({ userId, refreshKey }) {
             </div>
             <div className={styles.progressBarContainer} style={{ marginTop: 6 }}>
               <div className={styles.progressBar} style={{ width: '100%' }} />
-              <span className={sharedStyles.cardBody}> Completed</span>
             </div>
+            <span className={sharedStyles.cardBody}> Completed</span>
           </div>
         ))}
       </div>

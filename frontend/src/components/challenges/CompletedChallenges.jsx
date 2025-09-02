@@ -36,11 +36,12 @@ function CompletedChallenges({ userId, refreshKey }) {
       <div className={styles.listColumn}>
         {items.map(c => (
           <div key={c.id} className={sharedStyles.card}>
-            <div className={sharedStyles.cardTitle}>
-              {c.title} <span className={sharedStyles.okBadge}> 100%</span>
+            <div className={sharedStyles.cardBody}>
+              {c.title}
             </div>
             <div className={styles.progressBarContainer} style={{ marginTop: 6 }}>
               <div className={styles.progressBar} style={{ width: '100%' }} />
+              <span className={sharedStyles.cardBody}> Completed</span>
             </div>
           </div>
         ))}

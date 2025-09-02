@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
-import styles from '../../styles/components/MotivationDashboard.module.css';
+import Sharedstyles from '../../styles/components/MotivationDashboard.module.css';
+import styles from '../../styles/components/ChallengeSuggestions.module.css';
 
 function ChallengeSuggestions({ userId, onChallengeAccepted }) {
   const [suggestions, setSuggestions] = useState([]);

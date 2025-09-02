@@ -67,11 +67,8 @@ function ActiveChallenges({ userId, refreshKey }) {
                   {c.description}
                 </div>
               )}
-              <div className={styles.progressRow}>
-                <div className={styles.progressBarContainer}>
-                  <div className={styles.progressBar} style={{ width: `${percent}%` }} />
-                </div>
-                <div className={styles.progressFill} style={{ marginLeft: 8 }}>{percent}%</div>
+              <div className={styles.progressBar}>
+                <div className={styles.progressFill} style={{ width: `${percent}%` }} />
               </div>
             </div>
           );

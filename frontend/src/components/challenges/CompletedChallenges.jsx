@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
 import sharedStyles from '../../styles/shared/Shared.module.css';
-import styles from '../../styles/components/MotivationDashboard.module.css';
+import styles from '../../styles/components/ActiveChallenges.module.css';
 
 function CompletedChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
@@ -39,8 +39,8 @@ function CompletedChallenges({ userId, refreshKey }) {
             <div className={sharedStyles.cardBody}>
               {c.title}
             </div>
-            <div className={styles.progressBarContainer} style={{ marginTop: 6 }}>
-              <div className={styles.progressBar} style={{ width: '100%' }} />
+           <div className={styles.progressBar}>
+              <div className={styles.progressFill} style={{ width: '100%' }} />
             </div>
             <span className={sharedStyles.cardBody}> Completed</span>
           </div>

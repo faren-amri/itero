@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { logger } from "../../services/logger";
+
 import {
   LineChart,
   Line,
@@ -34,7 +36,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       const data = await res.json();
       setMoodData(data);
     } catch (err) {
-      console.error('Failed to fetch mood history:', err);
+        logger.error("Failed to fetch mood history:", err);
     }
   };
 

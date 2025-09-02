@@ -59,7 +59,8 @@ function ChallengeSuggestions({ userId, onChallengeAccepted }) {
       {loading ? (
         <p className={styles.muted}>Loading suggestions…</p>
       ) : suggestions.length === 0 ? (
-        <p className={styles.muted}>No suggestions</p>
+        <p className={styles.muted}>No suggestions! <br/>
+        New challenges will appear soon!</p>
       ) : (
         <div className={styles.listColumn}>
           {suggestions.map(s => (

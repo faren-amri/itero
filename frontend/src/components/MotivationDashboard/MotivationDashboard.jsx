@@ -10,8 +10,8 @@ import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import useCSSVariable from '../../hooks/useCSSvariable';
 import { trello as t } from '../../lib/trello.js';
+import { api } from '../../services/analyticsService';
 
-const API = 'https://itero-api-fme7.onrender.com';
 
 const MotivationDashboard = ({ trelloMemberId }) => {
   const [userId, setUserId] = useState(null); // backend user id
@@ -25,9 +25,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
     (async () => {
       if (!trelloMemberId) return;
       try {
-        const res = await fetch(`${API}/api/users/lookup/${trelloMemberId}`);
-        if (!res.ok) return;
-        const data = await res.json();
+        const { data } = await api.get(`/api/users/lookup/${trelloMemberId}`);
         if (!cancelled && data?.trello_id) setUserId(data.trello_id);
       } catch {}
     })();

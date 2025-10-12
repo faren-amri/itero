@@ -91,7 +91,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
           <Line
             type="monotone"
             dataKey="mood"
-            stroke="var(--progress-blue)"
+            stroke="var(--progress)"
             strokeWidth={2}
             dot={{ r: 4 }}
             activeDot={{ r: 6 }}

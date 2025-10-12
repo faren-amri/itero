@@ -47,7 +47,7 @@
 }
 
 .progressFill {
-  background: var(--progress-blue, #0079bf);
+  background: var(--progress, #0079bf);
   height: 100%;
   transition: width 0.3s ease;
 }
@@ -68,7 +68,7 @@
 }
 
 .completedLabel {
-  color: var(--progress-blue);
+  color: var(--progress);
   font-weight: bold;
   font-size: 14px;
 }

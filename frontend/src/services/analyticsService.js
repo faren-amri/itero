@@ -1,25 +1,18 @@
 // src/services/analyticsService.js
-import axios from 'axios';
+import axios from "axios";
 
-// ✅ Use correct backend domain
-export const API_BASE = import.meta.env.VITE_API_URL || 'https://itero-api-fme7.onrender.com';
+export const API_BASE =
+  import.meta.env.VITE_API_URL || "https://itero-api-fme7.onrender.com";
 
-export const getXPData = async (userId) => {
-  const res = await axios.get(`${API_BASE}/api/tasks/xp/${userId}`);
-  return res.data;
-};
+export const api = axios.create({
+  baseURL: API_BASE,
+  timeout: 15000,
+  headers: { "Content-Type": "application/json" },
+});
 
-export const getStreakData = async (userId) => {
-  const res = await axios.get(`${API_BASE}/api/streaks/${userId}/streak`);
-  return res.data;
-};
-
-export const getMoodData = async (userId) => {
-  const res = await axios.get(`${API_BASE}/user/${userId}/mood`);
-  return res.data;
-};
-
-export const getMoodHistory = async (userId) => {
-  const res = await axios.get(`${API_BASE}/api/moods/history?trello_member_id=${userId}`);
-  return res.data;
-};
+// Reads
+export const getXPData       = (userId) => api.get(`/api/tasks/xp/${userId}`).then(r => r.data);
+export const getStreakData   = (userId) => api.get(`/api/streaks/${userId}/streak`).then(r => r.data);
+export const getMoodData     = (userId) => api.get(`/user/${userId}/mood`).then(r => r.data);
+export const getMoodHistory  = (userId) =>
+  api.get(`/api/moods/history`, { params: { trello_member_id: userId } }).then(r => r.data);

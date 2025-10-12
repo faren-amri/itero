@@ -1,7 +1,9 @@
-// src/main.jsx
+import "./styles/tokens/itero-theme.css";
+import "./styles/base.css";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
+
 import { HashRouter } from 'react-router-dom';
 
 // Convert query param to hash route so t.modal can pass a hashless URL

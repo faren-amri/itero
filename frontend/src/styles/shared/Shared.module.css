@@ -17,3 +17,39 @@
 .muted{color:var(--text-muted)}
 .kpi{font-weight:700;font-variant-numeric:tabular-nums;font-size:1.75rem;color:var(--section-heading)}
 .kpiSub{margin-left:var(--space-2);color:var(--text-muted);font-size:.875rem}
+
+.heading{
+  font-size: var(--h-section);
+  font-weight: 600;
+  color: var(--section-heading, var(--text-main));
+  margin: 0 0 var(--space-4, 16px);
+  display:flex; align-items:center; gap:8px;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 6px;
+  opacity: .95;
+}
+
+.card{
+  background:var(--surface);
+  color:var(--text-main);
+  border:1px solid var(--border);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-1);
+  padding:var(--card-padding);
+  transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+.card:hover{ transform: translateY(-1px) }
+
+.cardTitle{ font-size: var(--h-card); font-weight:600; margin:0 0 6px }
+.cardBody{ font-size: var(--text); line-height:1.5 }
+
+.muted{ color:var(--text-muted) }
+
+.kpi{
+  font-weight:700;
+  font-size: var(--kpi);
+  color: var(--section-heading, var(--text-main));
+  font-variant-numeric: tabular-nums;
+}
+.kpiSub{ margin-left:8px; color:var(--text-muted); font-size: 14px }
+.inner{ background:var(--surface-elev); border-radius:12px; padding:12px }

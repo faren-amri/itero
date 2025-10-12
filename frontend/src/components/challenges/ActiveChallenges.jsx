@@ -1,8 +1,8 @@
+// src/components/challenges/ActiveChallenges.jsx
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../../services/analyticsService';
 import sharedStyles from '../../styles/shared/Shared.module.css';
 import styles from '../../styles/components/ActiveChallenges.module.css';
-
 
 function ActiveChallenges({ userId, refreshKey }) {
   const [items, setItems] = useState([]);
@@ -37,6 +37,13 @@ function ActiveChallenges({ userId, refreshKey }) {
     return Math.max(0, Math.min(100, v));
   };
 
+  // 🌈 purely presentational: choose accent class by title keyword (fallback blue)
+  const accentClass = (title = '') => {
+    if (/streak/i.test(title)) return styles.fillAmber;
+    if (/mood/i.test(title))   return styles.fillGreen;
+    return styles.fillBlue;
+  };
+
   if (loading) {
     return (
       <div className={styles.innerCard}>
@@ -48,36 +55,43 @@ function ActiveChallenges({ userId, refreshKey }) {
   if (!items.length) {
     return (
       <div className={styles.innerCard}>
-        <p className={sharedStyles.muted}>
-          No Active Challenge!
-        </p>
+        <p className={sharedStyles.muted}>No Active Challenge!</p>
       </div>
     );
   }
 
   return (
     <div className={styles.innerCard}>
-      <div className={styles.listColumn}>
-        {items.map(c => {
+      <div className={styles.listColumn} role="list">
+        {items.map((c) => {
           const percent = pct(c.progress, c.goal);
+          const fillCls = accentClass(c.title);
+
           return (
-            <div key={c.id} className={sharedStyles.card}>
-              <div className={styles.challengeTitle}>{c.title}</div>
+            <div key={c.id} className={sharedStyles.card} role="listitem">
+              {/* title row */}
+              <div className={styles.titleRow}>
+                <div className={styles.challengeTitle}>{c.title}</div>
+                <span className={styles.badge}>{percent}%</span>
+              </div>
+
+              {/* optional subtitle/description */}
               {c.description && (
-                <div className={styles.challengeDescription} style={{ marginTop: 4 }}>
+                <div className={styles.challengeDescription}>
                   {c.description}
                 </div>
               )}
-              <span className={styles.progressText}>{percent}%</span>
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: `${percent}%` }} />
+
+              {/* meter */}
+              <div className={styles.progressBar} aria-label={`${c.title} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+                <div className={`${styles.progressFill} ${fillCls}`} style={{ width: `${percent}%` }} />
               </div>
             </div>
           );
         })}
       </div>
     </div>
-
   );
 }
+
 export default ActiveChallenges;

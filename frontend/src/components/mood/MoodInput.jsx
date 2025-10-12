@@ -36,6 +36,13 @@ const MoodInput = ({ userId, onMoodLogged }) => {
     }
   };
 
+  // 🔹 purely presentational: map mood → pill class (no logic changes)
+  const moodClass = (m) =>
+    m === "Burned Out" ? styles.btnBurned :
+    m === "Neutral"    ? styles.btnNeutral :
+    m === "Great"      ? styles.btnGreat :
+    ""; // Tired/Energized use default pill style
+
   return (
     <div className={styles.moodInput}>
       <h3>How are you feeling today?</h3>
@@ -47,9 +54,14 @@ const MoodInput = ({ userId, onMoodLogged }) => {
           You logged: <strong>{loggedMood}</strong>
         </p>
       ) : (
-        <div className={styles.buttons}>
+        <div className={styles.buttons} role="group" aria-label="Mood options">
           {moods.map((m) => (
-            <button key={m} onClick={() => handleMoodSelect(m)} disabled={submitting}>
+            <button
+              key={m}
+              className={moodClass(m)}
+              onClick={() => handleMoodSelect(m)}
+              disabled={submitting}
+            >
               {m}
             </button>
           ))}

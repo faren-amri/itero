@@ -1,46 +1,27 @@
-.moodInput {
-  background-color: var(--card-bg); /* theme-adaptive */
-  color: var(--text-main);
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.15);
-  border: 1px solid rgba(223, 225, 230, 0.1);
-}
+.moodInput{ background:var(--surface); color:var(--text-main); border-radius:14px; padding:var(--card-padding); border:1px solid var(--border) }
+.moodInput h3{ font-size:var(--h-card); font-weight:600; color:var(--text-main); margin:0 0 10px }
 
-.moodInput h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-main); /* theme-adaptive */
-  margin-bottom: 0.75rem;
-}
+.buttons{ display:flex; flex-wrap:wrap; gap:8px }
 
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.buttons button{
+  height:36px; padding:0 14px;
+  border-radius:9999px;
+  border:1px solid var(--border);
+  background:var(--surface-elev);
+  color:var(--text-main);
+  font-weight:500; cursor:pointer;
+  transition:transform .15s ease, background-color .2s ease;
 }
+.buttons button:hover{ transform: translateY(-1px) }
+.buttons button:disabled{ opacity:.6; cursor:not-allowed }
 
-.buttons button {
-  background-color: var(--ds-background-accent-blue-subtle, #e4f0f6);
-  color: var(--ds-text-accent-blue, #0079bf);
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
+.btnBurned{ background:#f2d8d8; color:#b23a3a; }
+:root[data-theme='dark'] .btnBurned{ background:#2a1717; color:#c44545; }
 
-.buttons button:hover {
-  background-color: var(--ds-background-accent-blue-subtler, #cce4f6);
-}
+.btnNeutral{ background:#eaecef; color:#5a6a82; }
+:root[data-theme='dark'] .btnNeutral{ background:#23262b; color:#aab6c5; }
 
-.buttons button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.btnGreat{ background:#d7efe1; color:#2b8a57; }
+:root[data-theme='dark'] .btnGreat{ background:#15251b; color:#27ae60; }
 
-.confirmation {
-  font-size: 0.9rem;
-  color: var(--text-main); /* theme-adaptive */
-}
+.confirmation{ font-size:14px; color:var(--text-main) }

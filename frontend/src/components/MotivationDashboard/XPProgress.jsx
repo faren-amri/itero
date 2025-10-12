@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/components/MotivationDashboard.module.css';
+import shared from '../../styles/shared/Shared.module.css';
 import { getXPData } from '../../services/analyticsService.js';
 
 const XPProgress = ({ userId, refreshKey }) => {
@@ -27,17 +28,16 @@ const XPProgress = ({ userId, refreshKey }) => {
 
   const progressPercent = Math.min((xp / nextLevel) * 100 || 0, 100);
 
+  if (loading) return <p className={styles.syncText}>🔄 Syncing XP…</p>;
+
   return (
-    <div className={styles.innerCard}>
-      {loading ? (
-        <p className={styles.syncText}>🔄 Syncing XP...</p>
-      ) : (
-        <div className={styles.progressBarContainer}>
-          <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
-          <span className={styles.progressText}>{xp} / {nextLevel} XP</span>
-        </div>
-      )}
-    </div>
+    <>
+      <div className={shared.kpi}>{xp} / {nextLevel} XP</div>
+      <span className={shared.kpiSub}>Level Progress</span>
+      <div className={styles.progressBarContainer} style={{ marginTop: 8 }}>
+        <div className={styles.progressBar} style={{ width: `${pct}%` }} />
+      </div>
+    </>
   );
 };
 

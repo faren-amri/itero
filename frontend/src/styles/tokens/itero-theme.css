@@ -13,3 +13,62 @@
   --progress:var(--primary);--card-bg:var(--surface);--section-heading:var(--text-main);
   --shadow-1:0 6px 24px rgba(0,0,0,.24)
 }
+
+:root{
+  /* ——— Light palette (spec) ——— */
+  --bg:#f8f9fb;
+  --surface:#ffffff;
+  --surface-elev:#f1f3f6;
+  --border:#d9dee6;
+
+  --text-main:#1a1f29;
+  --text-muted:#5a6a82;
+
+  --primary:#2f6aa6;   /* XP progress, main actions */
+  --accent:#6750a4;    /* Mood highlights */
+  --success:#2b8a57;   /* Completed / success */
+  --warning:#c77929;   /* Streaks / alerts */
+  --danger:#b23a3a;    /* Burned / errors */
+
+  /* Layout */
+  --max-width:1200px;          /* within 1160–1280 spec */
+  --radius-card:14px;          /* spec */
+  --card-padding:18px;         /* 16–20px */
+  --section-space:36px;        /* 32–40px */
+  --grid-gap:24px;             /* spec */
+
+  /* Typography helpers */
+  --h-app:28px;
+  --h-section:21px;
+  --h-card:16px;
+  --text:15px;
+  --kpi:30px;
+
+  --shadow-1:0 8px 26px rgba(16,24,40,.08);
+
+  /* Component accents */
+  --progress:var(--primary);
+  --mood-accent:var(--accent);
+  --streak-amber:var(--warning);
+  --complete-green:var(--success);
+}
+
+:root[data-theme="dark"]{
+  /* ——— Dark palette (spec) ——— */
+  --bg:#0f1216;
+  --surface:#14181e;
+  --surface-elev:#1a2028;
+  --border:#2a313f;
+
+  --text-main:#e7ecf3;
+  --text-muted:#aab6c5;
+
+  --primary:#2f6aa6;
+  --accent:#6750a4;
+  --success:#27ae60;
+  --warning:#d8902f;
+  --danger:#c44545;
+
+  --progress:var(--primary);
+  --shadow-1:0 6px 24px rgba(0,0,0,.24);
+}

@@ -12,7 +12,6 @@ import useCSSVariable from '../../hooks/useCSSvariable';
 import { trello as t } from '../../lib/trello.js';
 import { api } from '../../services/analyticsService';
 
-
 const MotivationDashboard = ({ trelloMemberId }) => {
   const [userId, setUserId] = useState(null); // backend user id
   const [refreshKey, setRefreshKey] = useState(0);
@@ -53,52 +52,78 @@ const MotivationDashboard = ({ trelloMemberId }) => {
 
   return (
     <div className={`${styles.dashboard} ${isDark ? styles.dark : styles.light}`}>
-      <button className={styles.themeToggle} onClick={toggleTheme}>
-        {isDark ? '🌞 Light Mode' : '🌙 Dark Mode'}
-      </button>
+      {/* Top bar / title */}
+      <div className={styles.grid} style={{ alignItems: 'center' }}>
+        <h1 style={{ margin: 0 }}>Itero Dashboard</h1>
+        <div style={{ marginLeft: 'auto' }}>
+          <button className={styles.themeToggle} onClick={toggleTheme}>
+            {isDark ? '🌞 Light Mode' : '🌙 Dark Mode'}
+          </button>
+        </div>
+      </div>
 
       {userId && trelloMemberId && (
         <>
-          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🎮 Gamification</h3>
+          {/* Gamification */}
+          <h3 className={sharedStyles.heading}>Gamification</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>💡 XP Progress</h2>
+              <h2 className={sharedStyles.cardTitle}>XP Progress</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Level progress</p>
               <div className={styles.innerCard}>
                 <XPProgress userId={userId} refreshKey={refreshKey} />
               </div>
             </div>
+
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>🔥 Daily Streak</h2>
+              <h2 className={sharedStyles.cardTitle}>Daily Streak</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Keep it going</p>
               <div className={styles.innerCard}>
                 <StreakTracker userId={userId} refreshKey={refreshKey} />
               </div>
             </div>
           </div>
 
-          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>💚 Mood Tracker</h3>
+          {/* Mood */}
+          <h3 className={sharedStyles.heading}>Mood</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>🙂 Mood Input</h2>
-              <MoodInput userId={trelloMemberId} onMoodLogged={() => setRefreshKey((p) => p + 1)} />
+              <h2 className={sharedStyles.cardTitle}>Mood Input</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Today’s feeling</p>
+              <MoodInput
+                userId={trelloMemberId}
+                onMoodLogged={() => setRefreshKey((p) => p + 1)}
+              />
             </div>
+
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>📈 Mood Trends</h2>
+              <h2 className={sharedStyles.cardTitle}>Mood Trends</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Last 7 days</p>
               <MoodTrends userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
           </div>
 
-          <h3 className={sharedStyles.heading} style={{ color: '#ffffff' }}>🏆 Progress & Challenges</h3>
+          {/* Challenges */}
+          <h3 className={sharedStyles.heading}>Challenges</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>🎯 Suggested Challenges</h2>
-              <ChallengeSuggestions userId={trelloMemberId} onChallengeAccepted={() => setRefreshKey((p) => p + 1)} />
+              <h2 className={sharedStyles.cardTitle}>Suggested</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Ideas</p>
+              <ChallengeSuggestions
+                userId={trelloMemberId}
+                onChallengeAccepted={() => setRefreshKey((p) => p + 1)}
+              />
             </div>
+
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>🚧 Active Challenges</h2>
+              <h2 className={sharedStyles.cardTitle}>Active</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Goals</p>
               <ActiveChallenges userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
+
             <div className={sharedStyles.card}>
-              <h2 className={sharedStyles.cardTitle}>✅ Completed Challenges</h2>
+              <h2 className={sharedStyles.cardTitle}>Completed</h2>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>History</p>
               <CompletedChallenges userId={trelloMemberId} refreshKey={refreshKey} />
             </div>
           </div>

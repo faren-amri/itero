@@ -1,6 +1,13 @@
 /*
-  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; frame-ancestors https://trello.com https://*.trello.com; script-src 'self' https://p.trellocdn.com; script-src-elem 'self' https://p.trellocdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self';
+  frame-ancestors https://trello.com https://*.trello.com;
+  script-src 'self' https://p.trellocdn.com;
+  script-src-elem 'self' https://p.trellocdn.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  font-src 'self' data: https:;
+  connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com;
+  object-src 'none';
+  base-uri 'none';
+  form-action 'self';
+  upgrade-insecure-requests

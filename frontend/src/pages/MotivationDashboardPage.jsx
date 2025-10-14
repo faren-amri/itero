@@ -1,3 +1,4 @@
+// src/pages/MotivationDashboardPage.jsx
 import { useEffect, useState } from 'react';
 import MotivationDashboard from '../components/MotivationDashboard/MotivationDashboard';
 import { getTrelloArgsSafe } from '../services/trelloContext';
@@ -8,28 +9,21 @@ function MotivationDashboardPage() {
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       const { member } = await getTrelloArgsSafe();
-      if (!cancelled && member) {
-        setTrelloMemberId(member);
-      }
       if (!cancelled) {
+        setTrelloMemberId(member || null);
         setLoading(false);
       }
     })();
-
     return () => { cancelled = true; };
   }, []);
 
   if (loading) {
-    return <div style={{ padding: '2rem', color: 'white' }}>Loading…</div>;
+    return <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>Loading…</div>;
   }
 
-  if (!trelloMemberId) {
-    return <div style={{ padding: '2rem', color: 'red' }}>❌ Trello context not available</div>;
-  }
-
+  // Render anyway — components will gracefully handle missing IDs
   return <MotivationDashboard trelloMemberId={trelloMemberId} />;
 }
 

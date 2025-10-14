@@ -13,8 +13,8 @@ const XPProgress = ({ userId, refreshKey }) => {
       setLoading(true);
       try {
         const data = await getXPData(userId);
-        setXp(Number(data?.xp) || 0);
-        setNextLevel(Number(data?.next_level_xp) || 100);
+        setXp(Number(data.xp) || 0);
+        setNextLevel(Number(data.next_level_xp) || 100);
       } catch {
         setXp(0);
         setNextLevel(100);
@@ -22,20 +22,20 @@ const XPProgress = ({ userId, refreshKey }) => {
         setLoading(false);
       }
     };
+
     if (userId) fetchXP();
   }, [userId, refreshKey]);
 
-  const denom = nextLevel > 0 ? nextLevel : 100;
-  const progressPercent = Math.min(((xp / denom) * 100) || 0, 100);
+  const progressPercent = Math.min((xp / nextLevel) * 100 || 0, 100);
 
   if (loading) return <p className={styles.syncText}>🔄 Syncing XP…</p>;
 
   return (
     <>
-      <div className={shared.kpi}>{xp} / {denom} XP</div>
-      <span className={shared.kpiSub}>Level progress</span>
+      <div className={shared.kpi}>{xp} / {nextLevel} XP</div>
+      <span className={shared.kpiSub}>Level Progress</span>
       <div className={styles.progressBarContainer} style={{ marginTop: 8 }}>
-        <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
+        <div className={styles.progressBar} style={{ width: `${pct}%` }} />
       </div>
     </>
   );

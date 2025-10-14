@@ -1,13 +1,15 @@
+// public/dashboard-launcher.js
 (async function () {
   const t = window.TrelloPowerUp.iframe();
-  const [card, member] = await Promise.all([t.card('id'), t.member('id')]);
 
-  const url = `https://ui-redesign--itero-powerup.netlify.app/index.html#/dashboard` +
-              `?member=${encodeURIComponent(member?.id || '')}` +
-              `&card=${encodeURIComponent(card?.id || '')}`;
+  // No hash here; Trello will sign this internally.
+  const url = 'https://ui-redesign--itero-powerup.netlify.app/index.html?goto=dashboard';
 
-  const signedUrl = await t.signUrl(url);
+  await t.modal({
+    url,
+    title: 'Itero Dashboard',
+    fullscreen: true
+  });
 
-  await t.modal({ url: signedUrl, title: 'Itero Dashboard', fullscreen: true });
   t.closePopup();
 })();

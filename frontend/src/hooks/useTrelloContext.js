@@ -1,34 +1,62 @@
+import { useEffect, useState } from 'react';
 import { trello as t } from '../lib/trello.js';
 
-const withTimeout = (p, ms = 800) =>
-  Promise.race([p, new Promise((r) => setTimeout(() => r(undefined), ms))]);
+export function useTrelloContext({ waitFor = ['card', 'member'] } = {}) {
+  const [t, setT] = useState(null);
+  const [card, setCard] = useState(null);
+  const [member, setMember] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const [error, setError] = useState(null);
 
-export async function getTrelloArgsSafe({ preferArgs = true, timeoutMs = 800 } = {}) {
-  const params = new URLSearchParams(window.location.search);
-  const fallbackMember = params.get('member');
-  const fallbackCard = params.get('card');
+  useEffect(() => {
+    const init = async () => {
+      let tInstance = null;
+      const maxAttempts = 10;
+      let attempts = 0;
 
-  if (!t) {
-    return { insideTrello: false, member: fallbackMember, cardId: fallbackCard };
-  }
+      // Retry iframe context loading
+      while (!tInstance && attempts < maxAttempts) {
+        tInstance = window.TrelloPowerUp?.iframe?.();
+        //console.log("📦 tInstance:", tInstance);
+        //console.log("🧭 Is in iframe?", window !== window.parent);
+        //console.log("🌐 Current URL:", window.location.href);
 
-  const arg = (n) => { try { return t.arg(n); } catch { return undefined; } };
+        if (!tInstance) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          attempts++;
+        }
+      }
 
-  let member = preferArgs ? arg('member') : null;
-  let cardId = preferArgs ? arg('cardId') : null;
+      if (!tInstance) {
+        setError("⚠️ Trello iframe not available.");
+        setLoading(false);
+        return;
+      }
 
-  if (!member) {
-    member = await withTimeout(t.member('id').then(m => m?.id).catch(() => undefined), timeoutMs);
-  }
-  if (!cardId) {
-    cardId = await withTimeout(t.card('id').then(c => c?.id).catch(() => undefined), timeoutMs);
-  }
+      setT(tInstance);
 
-  return {
-    insideTrello: true,
-    member: member || fallbackMember,
-    cardId: cardId || fallbackCard,
-  };
+      try {
+        const fetches = [];
+
+        if (waitFor.includes('card')) fetches.push(tInstance.card('id'));
+        if (waitFor.includes('member')) fetches.push(tInstance.member('id', 'username'));
+
+        const results = await Promise.all(fetches);
+
+        if (waitFor.includes('card')) setCard(results[0]);
+        if (waitFor.includes('member')) setMember(waitFor.includes('card') ? results[1] : results[0]);
+
+        setIsReady(true);
+      } catch (err) {
+        setError(err.message || "Error loading Trello context");
+      }
+
+      setLoading(false);
+    };
+
+    init();
+  }, [waitFor]);
+
+  return { t, card, member, loading, isReady, error };
 }
-
-export default getTrelloArgsSafe;

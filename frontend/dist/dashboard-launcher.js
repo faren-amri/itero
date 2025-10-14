@@ -1,4 +1,3 @@
-// public/dashboard-launcher.js
 (async function () {
   const t = window.TrelloPowerUp.iframe();
   const [card, member] = await Promise.all([t.card('id'), t.member('id')]);
@@ -9,11 +8,6 @@
 
   const signedUrl = await t.signUrl(url);
 
-  await t.modal({
-    url: signedUrl,
-    title: 'Itero Dashboard',
-    fullscreen: true
-  });
-
+  await t.modal({ url: signedUrl, title: 'Itero Dashboard', fullscreen: true });
   t.closePopup();
 })();

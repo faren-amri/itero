@@ -1,4 +1,3 @@
-// src/pages/MotivationDashboardPage.jsx
 import { useEffect, useState } from 'react';
 import MotivationDashboard from '../components/MotivationDashboard/MotivationDashboard';
 import { getTrelloArgsSafe } from '../services/trelloContext';
@@ -19,11 +18,7 @@ function MotivationDashboardPage() {
     return () => { cancelled = true; };
   }, []);
 
-  if (loading) {
-    return <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>Loading…</div>;
-  }
-
-  // Render even if member is temporarily null; widgets show light placeholders
+  if (loading) return <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>Loading…</div>;
   return <MotivationDashboard trelloMemberId={trelloMemberId} />;
 }
 

@@ -1,4 +1,3 @@
-// src/components/MotivationDashboard/XPProgress.jsx
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import shared from '../../styles/shared/Shared.module.css';
@@ -34,7 +33,7 @@ const XPProgress = ({ userId, refreshKey }) => {
   return (
     <>
       <div className={shared.kpi}>{xp} / {denom} XP</div>
-      <span className={shared.kpiSub}>Level Progress</span>
+      <span className={shared.kpiSub}>Level progress</span>
       <div className={styles.progressBarContainer} style={{ marginTop: 8 }}>
         <div className={styles.progressBar} style={{ width: `${progressPercent}%` }} />
       </div>

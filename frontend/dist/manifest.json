@@ -5,7 +5,7 @@
     "description": "Itero motivates teams by rewarding progress with XP, streak streaks, and challenges directly in Trello. Open the dashboard to see your progress and celebrate wins."
   },
   "icon": {
-    "url": "https://itero-powerup.netlify.app/assets/itero-icon-w-24.png"
+    "url": "https://ui-redesign--itero-powerup.netlify.app/assets/itero-icon-w-24.png"
   },
   "author": "Itero",
   "capabilities": [
@@ -15,7 +15,7 @@
   ],
   "connectors": {
     "iframe": {
-      "url": "https://itero-powerup.netlify.app/popup.html"
+      "url": "https://ui-redesign--itero-powerup.netlify.app/popup.html"
     }
   },
   "categories": [
@@ -23,6 +23,6 @@
     "analytics",
     "utility"
   ],
-  "privacy_url": "https://itero-powerup.netlify.app/privacy.html",
-  "terms_url": "https://itero-powerup.netlify.app/terms-of-service.html"
+  "privacy_url": "https://ui-redesign--itero-powerup.netlify.app/privacy.html",
+  "terms_url": "https://ui-redesign--itero-powerup.netlify.app/terms-of-service.html"
 }

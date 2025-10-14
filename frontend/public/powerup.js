@@ -3,7 +3,7 @@
 const tpu = window.TrelloPowerUp;
 
 // Static assets hosted on your domain
-const ICON_URL = 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png';
+const ICON_URL = 'https://ui-redesign--itero-powerup.netlify.app/assets/itero-icon-w-24.png';
 
 // --- Actions ---
 

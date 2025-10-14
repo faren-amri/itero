@@ -3,7 +3,7 @@
   const t = window.TrelloPowerUp.iframe();
 
   // No hash here; Trello will sign this internally.
-  const url = 'https://itero-powerup.netlify.app/index.html?goto=dashboard';
+  const url = 'https://ui-redesign--itero-powerup.netlify.app/index.html?goto=dashboard';
 
   await t.modal({
     url,

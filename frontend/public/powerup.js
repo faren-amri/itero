@@ -34,7 +34,7 @@ async function completeTask(t) {
 
   try {
     // IMPORTANT: send only the raw id string (not an object)
-    const res = await fetch('https://itero-api-fme7.onrender.com/api/tasks/complete', {
+    const res = await fetch('https://itero-api-dev.onrender.com/api/tasks/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

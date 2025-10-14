@@ -21,29 +21,29 @@ const MotivationDashboard = ({ trelloMemberId }) => {
 
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       if (!trelloMemberId) return;
       try {
         const { data } = await api.get(`/api/users/lookup/${trelloMemberId}`);
         if (!cancelled) {
-          // ✅ Prefer internal id; fall back if API uses another field name
+          // ✅ store internal id, not trello_id
           const internalId = data?.id ?? data?.user_id ?? null;
           setUserId(internalId);
         }
-      } catch { /* noop */ }
+      } catch { /* ignore */ }
     })();
 
-    // Honor refresh flag set by powerup.js after actions
-    if (t) {
-      t.get('member', 'shared', 'refresh')
-        .then((should) => {
-          if (should) {
-            setRefreshKey((p) => p + 1);
-            t.set('member', 'shared', 'refresh', false);
-          }
-        })
-        .catch(() => {});
-    }
+    // Optional: listen for a refresh flag set by Power-Up actions
+    t?.get('member', 'shared', 'refresh')
+      .then((should) => {
+        if (should) {
+          setRefreshKey((p) => p + 1);
+          t.set('member', 'shared', 'refresh', false);
+        }
+      })
+      .catch(() => {});
+
     return () => { cancelled = true; };
   }, [trelloMemberId]);
 
@@ -65,7 +65,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
         </div>
       </div>
 
-      {/* Gamification (XP/Streak need internal userId) */}
+      {/* Gamification */}
       <h3 className={sharedStyles.heading}>Gamification</h3>
       <div className={styles.subGrid}>
         <div className={sharedStyles.card}>
@@ -89,7 +89,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
         </div>
       </div>
 
-      {/* Mood — works with trelloMemberId */}
+      {/* Mood — uses trelloMemberId */}
       <h3 className={sharedStyles.heading}>Mood</h3>
       <div className={styles.subGrid}>
         <div className={sharedStyles.card}>
@@ -105,7 +105,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
         </div>
       </div>
 
-      {/* Challenges — these also use trelloMemberId */}
+      {/* Challenges — also use trelloMemberId */}
       <h3 className={sharedStyles.heading}>Challenges</h3>
       <div className={styles.subGrid}>
         <div className={sharedStyles.card}>

@@ -5,7 +5,7 @@ const withTimeout = (p, ms = 800) =>
   Promise.race([p, new Promise((r) => setTimeout(() => r(undefined), ms))]);
 
 export async function getTrelloArgsSafe({ preferArgs = true, timeoutMs = 800 } = {}) {
-  // URL fallbacks (from launcher)
+  // Fallbacks from URL (e.g., #/dashboard?member=...&card=...)
   const params = new URLSearchParams(window.location.search);
   const fallbackMember = params.get('member');
   const fallbackCard = params.get('card');

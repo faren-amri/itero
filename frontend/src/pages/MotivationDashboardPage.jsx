@@ -23,7 +23,7 @@ function MotivationDashboardPage() {
     return <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>Loading…</div>;
   }
 
-  // Render anyway — components will gracefully handle missing IDs
+  // Render even if member is temporarily null; widgets show light placeholders
   return <MotivationDashboard trelloMemberId={trelloMemberId} />;
 }
 

@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { logger } from "../../services/logger";
-
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
 import styles from '../../styles/components/MoodTrends.module.css';
 import { API_BASE } from '../../services/analyticsService';
 
 const MoodTrends = ({ userId, refreshKey }) => {
   const [moodData, setMoodData] = useState([]);
-  const [textColor, setTextColor] = useState('#172b4d');
 
+  // colors pulled from CSS variables (light/dark aware)
+  const [textColor, setTextColor] = useState('#1a1f29');
+  const [gridColor, setGridColor] = useState('#d9dee6');
+
+  // ✅ read from :root and observe the right element
   useEffect(() => {
-    const updateColor = () => {
-      const computed = getComputedStyle(document.body).getPropertyValue('--text-main');
-      setTextColor(computed?.trim() || '#f4f5f7');
+    const applyVars = () => {
+      const root = document.documentElement;
+      const text = getComputedStyle(root).getPropertyValue('--text-main')?.trim() || '#1a1f29';
+      const border = getComputedStyle(root).getPropertyValue('--border')?.trim() || '#d9dee6';
+      setTextColor(text);
+      // make grid a little softer (dash color)
+      setGridColor(border);
     };
-    updateColor();
+    applyVars();
 
-    const observer = new MutationObserver(updateColor);
-    observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
-
+    const observer = new MutationObserver(applyVars);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
     return () => observer.disconnect();
   }, []);
 
@@ -36,7 +39,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       const data = await res.json();
       setMoodData(data);
     } catch (err) {
-        logger.error("Failed to fetch mood history:", err);
+      logger.error("Failed to fetch mood history:", err);
     }
   };
 
@@ -44,16 +47,13 @@ const MoodTrends = ({ userId, refreshKey }) => {
     if (userId) loadMoodData();
   }, [userId, refreshKey]);
 
-  const moodLabel = (value) => {
-    const map = {
-      1: "Burned Out",
-      2: "Tired",
-      3: "Neutral",
-      4: "Energized",
-      5: "Great",
-    };
-    return map[value] || value;
-  };
+  const moodLabel = (value) => ({
+    1: "Burned Out",
+    2: "Tired",
+    3: "Neutral",
+    4: "Energized",
+    5: "Great",
+  }[value] || value);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -70,30 +70,44 @@ const MoodTrends = ({ userId, refreshKey }) => {
 
   return (
     <div className={styles.chartWrapper}>
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={moodData} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+      <ResponsiveContainer width="100%" height={260}>
+        <LineChart
+          data={moodData}
+          // ✅ extra left/right space so y labels don’t clip and x labels align
+          margin={{ top: 20, right: 24, bottom: 20, left: 56 }}
+        >
+          <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
+
           <XAxis
             dataKey="day"
             stroke={textColor}
             tickLine={{ stroke: textColor }}
+            // ✅ consistent label color + spacing
             tick={{ fill: textColor, fontSize: 12 }}
+            tickMargin={10}
+            interval="preserveStartEnd"
           />
+
           <YAxis
             domain={[1, 5]}
             ticks={[1, 2, 3, 4, 5]}
             stroke={textColor}
             tickLine={{ stroke: textColor }}
+            // ✅ more room + spacing; prevents truncation and misalignment
+            width={96}
             tick={{ fill: textColor, fontSize: 12 }}
+            tickMargin={10}
             tickFormatter={moodLabel}
           />
+
           <Tooltip content={<CustomTooltip />} />
+
           <Line
             type="monotone"
             dataKey="mood"
             stroke="var(--progress)"
             strokeWidth={2}
-            dot={{ r: 4 }}
+            dot={{ r: 4, stroke: 'var(--surface)', strokeWidth: 2 }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

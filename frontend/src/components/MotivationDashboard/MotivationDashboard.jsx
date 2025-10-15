@@ -1,6 +1,5 @@
 // src/components/MotivationDashboard/MotivationDashboard.jsx
 import React, { useEffect, useState } from 'react';
-
 import XPProgress from './XPProgress';
 import StreakTracker from './StreakTracker';
 import MoodTrends from '../mood/MoodTrends';
@@ -8,10 +7,8 @@ import MoodInput from '../mood/MoodInput';
 import ActiveChallenges from '../challenges/ActiveChallenges';
 import CompletedChallenges from '../challenges/CompletedChallenges';
 import ChallengeSuggestions from '../challenges/ChallengeSuggestions';
-
 import styles from '../../styles/components/MotivationDashboard.module.css';
 import sharedStyles from '../../styles/shared/Shared.module.css';
-
 import useCSSVariable from '../../hooks/useCSSvariable';
 import { trello as t } from '../../lib/trello.js';
 import { api } from '../../services/analyticsService';
@@ -24,25 +21,21 @@ const MotivationDashboard = ({ trelloMemberId }) => {
   // keep section heading var in sync with theme token
   useCSSVariable('--section-heading', '#172b4d');
 
-  // ---- theme bootstrapping (persist + system pref) ----
+  // --- Theme bootstrap: default to LIGHT (ignore OS if nothing saved) ---
   useEffect(() => {
-    let saved = localStorage.getItem('theme');
-    if (!saved) {
-      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-      saved = prefersDark ? 'dark' : 'light';
-    }
+    const saved = localStorage.getItem('theme') || 'light';
     setIsDark(saved === 'dark');
-    document.documentElement.setAttribute('data-theme', saved);
+    document.documentElement.setAttribute('data-theme', saved); // apply to :root
   }, []);
 
   const toggleTheme = () => {
     const next = isDark ? 'light' : 'dark';
     setIsDark(!isDark);
-    document.documentElement.setAttribute('data-theme', next); // <-- key fix
+    document.documentElement.setAttribute('data-theme', next); // :root[data-theme="..."]
     localStorage.setItem('theme', next);
   };
 
-  // ---- load backend user + handle refresh flag from Trello ----
+  // --- Load backend user + handle refresh flag from Trello ---
   useEffect(() => {
     let cancelled = false;
 

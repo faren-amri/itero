@@ -70,7 +70,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       <ResponsiveContainer width="100%" height={260}>
         <LineChart
           data={moodData}
-          // tighter right edge
+          // ✅ Reduced right margin and balanced spacing
           margin={{ top: 20, right: 0, bottom: 20, left: 56 }}
         >
           <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
@@ -82,10 +82,6 @@ const MoodTrends = ({ userId, refreshKey }) => {
             tick={{ fill: textColor, fontSize: 12 }}
             tickMargin={10}
             interval="preserveStartEnd"
-            // 👇 key fixes
-            scale="point"                     // no band -> no extra half-band at ends
-            padding={{ left: 0, right: 0 }}   // zero out additional axis padding
-            allowDuplicatedCategory={false}   // if your data repeats labels (e.g., Mon twice)
           />
 
           <YAxis
@@ -96,9 +92,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
             width={96}
             tick={{ fill: textColor, fontSize: 12 }}
             tickMargin={10}
-            tickFormatter={(v) =>
-              ({1:'Burned Out',2:'Tired',3:'Neutral',4:'Energized',5:'Great'}[v] || v)
-            }
+            tickFormatter={moodLabel}
           />
 
           <Tooltip content={<CustomTooltip />} />
@@ -114,7 +108,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
         </LineChart>
       </ResponsiveContainer>
     </div>
-  );  
+  );
 };
 
 export default MoodTrends;

@@ -3,21 +3,22 @@
 const tpu = window.TrelloPowerUp;
 
 // Static assets hosted on your domain
-const ICON_URL = 'https://ui-redesign--itero-powerup.netlify.app/assets/itero-icon-w-24.png';
+const ICON_URL = '/assets/itero-icon-w-24.png';
+
+// TEMP: public/ is not bundled, so no imports. Hardcode dev API for this branch.
+const API_BASE = 'https://itero-api-dev-zg94.onrender.com';
 
 // --- Actions ---
 
 async function openDashboardFromButton(t) {
-  // Use a small popup that immediately opens the full-screen modal and closes
   return t.popup({
     title: 'Itero',
-    url: 'dashboard-wrapper.html', // RELATIVE to /public
+    url: '/dashboard-wrapper.html',  // root-relative
     height: 80
   });
 }
 
 async function completeTask(t) {
-  // Read Trello context
   const [card, member] = await Promise.all([t.card('id'), t.member('id')]);
   const cardId = card && card.id;
   const memberId = member && member.id;
@@ -26,34 +27,25 @@ async function completeTask(t) {
     return t.alert({ message: '❌ Missing card or member context.' });
   }
 
-  // Prevent double-submission based on card shared state
   const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
   if (alreadyDone) {
     return t.alert({ message: '✅ Task already completed.' });
   }
 
   try {
-    // IMPORTANT: send only the raw id string (not an object)
-    const res = await fetch('https://itero-api-dev.onrender.com/api/tasks/complete', {
+    const res = await fetch(`${API_BASE}/api/tasks/complete`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        trello_user_id: memberId,
-        task_id: cardId
-      })
+      body: JSON.stringify({ trello_user_id: memberId, task_id: cardId })
     });
 
-    if (!res.ok) {
-      return t.alert({ message: '❌ Task completion failed.' });
-    }
+    if (!res.ok) return t.alert({ message: '❌ Task completion failed.' });
 
     const data = await res.json();
 
-    // Mark completed in Trello shared state
     await t.set('card', 'shared', 'taskCompleted', true);
     await t.set('member', 'shared', 'refresh', true);
 
-    // Toast UX
     const xp     = data?.xp_gained ?? 10;
     const level  = data?.level ?? '?';
     const streak = data?.streak_count ?? 0;
@@ -63,13 +55,12 @@ async function completeTask(t) {
     if (done > 0) msg += ` · 🏆 ${done} challenge${done > 1 ? 's' : ''} completed`;
 
     return t.alert({ message: msg, duration: 5 });
-  } catch (e) {
+  } catch {
     return t.alert({ message: '❌ Something went wrong.', duration: 4 });
   }
 }
 
 function openSettings(t) {
-  // Only keep this if you ship settings.html; otherwise remove the capability below
   return t.popup({
     title: 'Itero Settings',
     url: 'settings.html',
@@ -77,34 +68,16 @@ function openSettings(t) {
   });
 }
 
-// --- Register capabilities ---
-
 tpu.initialize({
-  'board-buttons': function () {
-    return [
-      {
-        icon: ICON_URL,
-        text: 'Itero',
-        callback: openDashboardFromButton
-      }
-    ];
-  },
+  'board-buttons': () => [
+    { icon: ICON_URL, text: 'Itero', callback: openDashboardFromButton }
+  ],
 
-  'card-buttons': function () {
-    return [
-      {
-        icon: ICON_URL,
-        text: 'Complete Task 🎯',
-        callback: completeTask
-      },
-      {
-        icon: ICON_URL,
-        text: 'Open Itero',
-        callback: openDashboardFromButton
-      }
-    ];
-  },
+  'card-buttons': () => [
+    { icon: ICON_URL, text: 'Complete Task 🎯', callback: completeTask },
+    { icon: ICON_URL, text: 'Open Itero',        callback: openDashboardFromButton }
+  ],
 
-  // Remove this key if you do not include settings.html
+  // Comment this out if you don't ship settings.html:
   'show-settings': openSettings
 });

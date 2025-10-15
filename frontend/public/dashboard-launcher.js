@@ -1,15 +1,21 @@
 // public/dashboard-launcher.js
-(async function () {
+(function () {
+  // If opened outside Trello (directly in a browser), just go to the app.
+  if (!window.TrelloPowerUp) {
+    window.location.replace('/index.html#/dashboard'); // or '/index.html?goto=dashboard'
+    return;
+  }
+
   const t = window.TrelloPowerUp.iframe();
 
-  // No hash here; Trello will sign this internally.
-  const url = 'https://ui-redesign--itero-powerup.netlify.app/index.html?goto=dashboard';
+  // Root-relative, no domain
+  const url = '/index.html#/dashboard'; // or '/index.html?goto=dashboard' if you use query routing
 
-  await t.modal({
+  t.modal({
     url,
     title: 'Itero Dashboard',
     fullscreen: true
-  });
-
-  t.closePopup();
+  })
+  .then(() => t.closePopup())
+  .catch(() => t.closePopup());
 })();

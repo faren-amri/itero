@@ -3,22 +3,61 @@
   command = "npm run build"
   publish = "dist"
 
+# SPA fallback
 [[redirects]]
-  # React SPA fallback
   from = "/*"
   to = "/index.html"
   status = 200
 
+# ---------- DEFAULT (fallback for non-specified contexts) ----------
+# Keep security headers here, but DO NOT set CSP globally.
 [[headers]]
   for = "/*"
   [headers.values]
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
-    Content-Security-Policy = "default-src 'self'; frame-ancestors https://trello.com https://*.trello.com; script-src 'self' https://p.trellocdn.com; script-src-elem 'self' https://p.trellocdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.trello.com https://itero-api-fme7.onrender.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-# Explicitly serve Power-Up connector files as JS/HTML
+# ---------- PRODUCTION (main) ----------
+[context.production]
+  [context.production.headers]
+    [[context.production.headers.values]]
+      Content-Security-Policy = """
+default-src 'self';
+frame-ancestors https://trello.com https://*.trello.com;
+script-src 'self' https://p.trellocdn.com;
+script-src-elem 'self' https://p.trellocdn.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+font-src 'self' data: https:;
+connect-src 'self' https://api.trello.com https://itero-api-fme7.onrender.com;
+object-src 'none';
+base-uri 'none';
+form-action 'self';
+upgrade-insecure-requests
+"""
+
+# ---------- BRANCH: ui-redesign ----------
+[context."ui-redesign"]
+  [context."ui-redesign".headers]
+    [[context."ui-redesign".headers.values]]
+      Content-Security-Policy = """
+default-src 'self';
+frame-ancestors https://trello.com https://*.trello.com;
+script-src 'self' https://p.trellocdn.com;
+script-src-elem 'self' https://p.trellocdn.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+font-src 'self' data: https:;
+connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com;
+object-src 'none';
+base-uri 'none';
+form-action 'self';
+upgrade-insecure-requests
+"""
+
+# Explicit types for connector files (optional)
 [[headers]]
   for = "/powerup.js"
   [headers.values]

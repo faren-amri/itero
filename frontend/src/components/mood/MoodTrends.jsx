@@ -1,5 +1,5 @@
+// src/components/mood/MoodTrends.jsx
 import React, { useEffect, useState } from 'react';
-import { logger } from "../../services/logger";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
@@ -9,18 +9,15 @@ import { API_BASE } from '../../services/analyticsService';
 const MoodTrends = ({ userId, refreshKey }) => {
   const [moodData, setMoodData] = useState([]);
 
-  // colors pulled from CSS variables (light/dark aware)
   const [textColor, setTextColor] = useState('#1a1f29');
   const [gridColor, setGridColor] = useState('#d9dee6');
 
-  // ✅ read from :root and observe the right element
   useEffect(() => {
     const applyVars = () => {
       const root = document.documentElement;
       const text = getComputedStyle(root).getPropertyValue('--text-main')?.trim() || '#1a1f29';
       const border = getComputedStyle(root).getPropertyValue('--border')?.trim() || '#d9dee6';
       setTextColor(text);
-      // make grid a little softer (dash color)
       setGridColor(border);
     };
     applyVars();
@@ -39,7 +36,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       const data = await res.json();
       setMoodData(data);
     } catch (err) {
-      logger.error("Failed to fetch mood history:", err);
+      console.error("Failed to fetch mood history:", err);
     }
   };
 
@@ -73,8 +70,8 @@ const MoodTrends = ({ userId, refreshKey }) => {
       <ResponsiveContainer width="100%" height={260}>
         <LineChart
           data={moodData}
-          // ✅ extra left/right space so y labels don’t clip and x labels align
-          margin={{ top: 20, right: 24, bottom: 20, left: 56 }}
+          // ✅ Reduced right margin and balanced spacing
+          margin={{ top: 20, right: 8, bottom: 20, left: 56 }}
         >
           <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
 
@@ -82,7 +79,6 @@ const MoodTrends = ({ userId, refreshKey }) => {
             dataKey="day"
             stroke={textColor}
             tickLine={{ stroke: textColor }}
-            // ✅ consistent label color + spacing
             tick={{ fill: textColor, fontSize: 12 }}
             tickMargin={10}
             interval="preserveStartEnd"
@@ -93,7 +89,6 @@ const MoodTrends = ({ userId, refreshKey }) => {
             ticks={[1, 2, 3, 4, 5]}
             stroke={textColor}
             tickLine={{ stroke: textColor }}
-            // ✅ more room + spacing; prevents truncation and misalignment
             width={96}
             tick={{ fill: textColor, fontSize: 12 }}
             tickMargin={10}

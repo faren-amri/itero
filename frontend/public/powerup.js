@@ -1,11 +1,17 @@
 /* global TrelloPowerUp */
 
+// Ensure SDK is present (avoids "cannot read initialize of undefined")
 const tpu = window.TrelloPowerUp;
+if (!tpu) {
+  console.error('Trello Power-Up SDK did not load. Check popup.html script order.');
+  // Optional: retry or show a message, then stop here.
+  throw new Error('Power-Up SDK missing');
+}
 
 // Static assets hosted on your domain
 const ICON_URL = '/assets/itero-icon-w-24.png';
 
-// TEMP: public/ is not bundled, so no imports. Hardcode dev API for this branch.
+// TEMP for branch: public/ isn’t bundled, so use a constant here
 const API_BASE = 'https://itero-api-dev-zg94.onrender.com';
 
 // --- Actions ---
@@ -13,7 +19,7 @@ const API_BASE = 'https://itero-api-dev-zg94.onrender.com';
 async function openDashboardFromButton(t) {
   return t.popup({
     title: 'Itero',
-    url: '/dashboard-wrapper.html',  // root-relative
+    url: '/dashboard-wrapper.html', // root-relative to current origin
     height: 80
   });
 }
@@ -27,6 +33,7 @@ async function completeTask(t) {
     return t.alert({ message: '❌ Missing card or member context.' });
   }
 
+  // Prevent double submission
   const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
   if (alreadyDone) {
     return t.alert({ message: '✅ Task already completed.' });
@@ -63,21 +70,19 @@ async function completeTask(t) {
 function openSettings(t) {
   return t.popup({
     title: 'Itero Settings',
-    url: 'settings.html',
+    url: '/settings.html', // make root-relative; remove capability if you don’t ship it
     height: 240
   });
 }
 
+// --- Register capabilities ---
 tpu.initialize({
   'board-buttons': () => [
     { icon: ICON_URL, text: 'Itero', callback: openDashboardFromButton }
   ],
-
   'card-buttons': () => [
     { icon: ICON_URL, text: 'Complete Task 🎯', callback: completeTask },
-    { icon: ICON_URL, text: 'Open Itero',        callback: openDashboardFromButton }
+    { icon: ICON_URL, text: 'Open Itero', callback: openDashboardFromButton }
   ],
-
-  // Comment this out if you don't ship settings.html:
   'show-settings': openSettings
 });

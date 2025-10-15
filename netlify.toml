@@ -1,16 +1,49 @@
+###############################################
+# Itero Power-Up — Netlify Configuration
+###############################################
+
 [build]
   base = "frontend"
   command = "npm run build"
   publish = "dist"
 
-# SPA fallback
+###############################################
+# ✅ REDIRECTS
+###############################################
+
+# --- Exceptions: must come BEFORE the SPA catch-all ---
+# Prevent popup and SDK files from being redirected to /index.html
+
+[[redirects]]
+  from = "/popup.html"
+  to = "/popup.html"
+  status = 200
+
+[[redirects]]
+  from = "/powerup.js"
+  to = "/powerup.js"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard-wrapper.html"
+  to = "/dashboard-wrapper.html"
+  status = 200
+
+[[redirects]]
+  from = "/settings.html"
+  to = "/settings.html"
+  status = 200
+
+# --- SPA fallback ---
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# ---------- DEFAULT (fallback for non-specified contexts) ----------
-# Keep security headers here, but DO NOT set CSP globally.
+###############################################
+# ✅ DEFAULT HEADERS (apply globally)
+###############################################
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -19,10 +52,26 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-# ---------- PRODUCTION (main) ----------
+# Explicit MIME types (optional but clean)
+[[headers]]
+  for = "/powerup.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/popup.html"
+  [headers.values]
+    Content-Type = "text/html; charset=utf-8"
+
+###############################################
+# ✅ SECURITY HEADERS BY CONTEXT
+###############################################
+
+# ---------- PRODUCTION ----------
 [context.production]
-  [context.production.headers]
-    [[context.production.headers.values]]
+  [[context.production.headers]]
+    for = "/*"
+    [context.production.headers.values]
       Content-Security-Policy = """
 default-src 'self';
 frame-ancestors https://trello.com https://*.trello.com;
@@ -38,10 +87,11 @@ form-action 'self';
 upgrade-insecure-requests
 """
 
-# ---------- BRANCH: ui-redesign ----------
+# ---------- DEV / UI-REDESIGN BRANCH ----------
 [context."ui-redesign"]
-  [context."ui-redesign".headers]
-    [[context."ui-redesign".headers.values]]
+  [[context."ui-redesign".headers]]
+    for = "/*"
+    [context."ui-redesign".headers.values]
       Content-Security-Policy = """
 default-src 'self';
 frame-ancestors https://trello.com https://*.trello.com;
@@ -57,13 +107,10 @@ form-action 'self';
 upgrade-insecure-requests
 """
 
-# Explicit types for connector files (optional)
-[[headers]]
-  for = "/powerup.js"
-  [headers.values]
-    Content-Type = "application/javascript; charset=utf-8"
-
-[[headers]]
-  for = "/popup.html"
-  [headers.values]
-    Content-Type = "text/html; charset=utf-8"
+###############################################
+# ✅ NOTES
+###############################################
+# - The key fix: popup.html and powerup.js must NOT be caught by /* → /index.html
+# - CSP allows https://p.trellocdn.com so Trello SDK can load.
+# - Add new API domains to connect-src when needed.
+# - To debug quickly: open https://your-site.netlify.app/popup.html → console → !!window.TrelloPowerUp should be true.

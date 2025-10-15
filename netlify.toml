@@ -8,12 +8,10 @@
   publish = "dist"
 
 ###############################################
-# ✅ REDIRECTS
+# Redirects
 ###############################################
 
-# --- Exceptions: must come BEFORE the SPA catch-all ---
-# Prevent popup and SDK files from being redirected to /index.html
-
+# Allow these files to load directly (avoid redirect to SPA)
 [[redirects]]
   from = "/popup.html"
   to = "/popup.html"
@@ -34,25 +32,24 @@
   to = "/settings.html"
   status = 200
 
-# --- SPA fallback ---
+# Catch-all SPA rule (keep last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
 ###############################################
-# ✅ DEFAULT HEADERS (apply globally)
+# Default headers
 ###############################################
 
 [[headers]]
   for = "/*"
   [headers.values]
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-Content-Type-Options    = "nosniff"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=()"
 
-# Explicit MIME types (optional but clean)
 [[headers]]
   for = "/powerup.js"
   [headers.values]
@@ -64,10 +61,9 @@
     Content-Type = "text/html; charset=utf-8"
 
 ###############################################
-# ✅ SECURITY HEADERS BY CONTEXT
+# Security Headers — Production
 ###############################################
 
-# ---------- PRODUCTION ----------
 [context.production]
   [[context.production.headers]]
     for = "/*"
@@ -87,7 +83,10 @@ form-action 'self';
 upgrade-insecure-requests
 """
 
-# ---------- DEV / UI-REDESIGN BRANCH ----------
+###############################################
+# Security Headers — Dev Branch: ui-redesign
+###############################################
+
 [context."ui-redesign"]
   [[context."ui-redesign".headers]]
     for = "/*"
@@ -108,9 +107,24 @@ upgrade-insecure-requests
 """
 
 ###############################################
-# ✅ NOTES
+# Security Headers — Deploy Previews
 ###############################################
-# - The key fix: popup.html and powerup.js must NOT be caught by /* → /index.html
-# - CSP allows https://p.trellocdn.com so Trello SDK can load.
-# - Add new API domains to connect-src when needed.
-# - To debug quickly: open https://your-site.netlify.app/popup.html → console → !!window.TrelloPowerUp should be true.
+
+[context.deploy-preview]
+  [[context.deploy-preview.headers]]
+    for = "/*"
+    [context.deploy-preview.headers.values]
+      Content-Security-Policy = """
+default-src 'self';
+frame-ancestors https://trello.com https://*.trello.com;
+script-src 'self' https://p.trellocdn.com;
+script-src-elem 'self' https://p.trellocdn.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+font-src 'self' data: https:;
+connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com;
+object-src 'none';
+base-uri 'none';
+form-action 'self';
+upgrade-insecure-requests
+"""

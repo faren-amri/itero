@@ -1,58 +1,40 @@
-/* Self-contained Itero toast CSS
-   - Light theme defaults
-   - Dark theme via prefers-color-scheme
-   - Uses CSS variables for easy tweaking
-*/
+/* Self-contained Itero toast — widened layout and auto dark mode */
 
 *,
 *::before,
 *::after { box-sizing: border-box; }
 
 :root {
-  /* Light tokens */
+  /* Light mode */
   --bg: #f8f9fb;
   --surface: #ffffff;
   --surface-elev: #f1f3f6;
   --border: #d9dee6;
-
   --text-main: #1a1f29;
   --text-muted: #5a6a82;
-
   --primary: #2f6aa6;
   --on-primary: #ffffff;
-
   --chip-bg: rgba(17, 22, 29, .04);
-
   --radius-card: 14px;
   --radius-1: 10px;
   --radius-2: 12px;
-
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-
   --shadow-1: 0 8px 26px rgba(16, 24, 40, .08);
   --shadow-2: 0 10px 24px rgba(20, 30, 40, .08);
-
   --font: 14px/1.45 "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
 }
 
-/* Dark tokens follow OS preference (Trello’s dark UI usually matches this) */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f1216;
     --surface: #14181e;
     --surface-elev: #1a2028;
     --border: #2a313f;
-
     --text-main: #e7ecf3;
     --text-muted: #aab6c5;
-
-    --primary: #2f6aa6;
-    --on-primary: #ffffff;
-
     --chip-bg: rgba(255, 255, 255, .04);
-
     --shadow-1: 0 6px 24px rgba(0, 0, 0, .24);
     --shadow-2: 0 18px 40px rgba(0, 0, 0, .35);
   }
@@ -63,14 +45,14 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: transparent; /* Trello provides the layer */
+  background: transparent;
   font: var(--font);
   color: var(--text-main);
   font-feature-settings: "tnum" 1;
   font-variant-numeric: tabular-nums;
 }
 
-/* Card container */
+/* Toast container — wider */
 .itero-toast {
   background: var(--surface);
   color: var(--text-main);
@@ -78,8 +60,8 @@ html, body {
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-2);
   padding: var(--space-4);
-  min-width: 320px;
-  max-width: 520px;
+  min-width: 420px;  /* ✅ wider default */
+  max-width: 620px;  /* ✅ larger max */
 }
 
 /* Header row */
@@ -87,7 +69,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  flex-wrap: wrap;           /* ✅ prevents button overlap on narrow width */
+  flex-wrap: wrap;
 }
 
 .itero-logo {
@@ -101,12 +83,9 @@ html, body {
   border-radius: var(--radius-2);
 }
 
-.itero-logo img { width: 22px; height: 22px; display: block; }
+.itero-logo img { width: 22px; height: 22px; }
 
-.itero-head {
-  flex: 1 1 auto;
-  min-width: 0;
-}
+.itero-head { flex: 1 1 auto; min-width: 0; }
 
 .itero-title {
   margin: 0 0 2px;
@@ -114,12 +93,8 @@ html, body {
   font-size: 18px;
 }
 
-.itero-sub {
-  margin: 0;
-  color: var(--text-muted);
-}
+.itero-sub { margin: 0; color: var(--text-muted); }
 
-/* CTA button */
 .itero-btn {
   padding: 8px 12px;
   border-radius: var(--radius-1);
@@ -127,7 +102,7 @@ html, body {
   background: var(--surface);
   color: var(--text-main);
   cursor: pointer;
-  white-space: nowrap;       /* keep text on one line when space permits */
+  white-space: nowrap;
 }
 
 .itero-btn--primary {
@@ -136,7 +111,7 @@ html, body {
   border-color: color-mix(in oklab, var(--primary), #000 15%);
 }
 
-/* Card content */
+/* Panel (achievements) */
 .itero-panel {
   margin-top: var(--space-3);
   background: var(--surface-elev);
@@ -145,7 +120,6 @@ html, body {
   padding: var(--space-3);
 }
 
-/* Pills */
 .itero-pillbar {
   display: flex;
   flex-wrap: wrap;
@@ -163,16 +137,9 @@ html, body {
   font-weight: 600;
 }
 
-/* Footer actions */
 .itero-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-2);
   margin-top: var(--space-3);
-}
-
-/* Make layout comfortable on very small popups */
-@media (max-width: 360px) {
-  .itero-toast { min-width: 280px; }
-  .itero-title { font-size: 16px; }
 }

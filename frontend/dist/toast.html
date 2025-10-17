@@ -7,8 +7,6 @@
 
   <!-- Trello Power-Up SDK -->
   <script src="https://p.trellocdn.com/power-up.min.js"></script>
-
-  <!-- Self-contained styles (no theme import) -->
   <link rel="stylesheet" href="/toast.css" />
 </head>
 <body>
@@ -28,7 +26,7 @@
       </button>
     </div>
 
-    <div class="itero-panel">
+    <div id="pill-section" class="itero-panel">
       <div class="itero-pillbar" id="pillbar"></div>
     </div>
 
@@ -48,25 +46,30 @@
       const done = Number(q.get('done') || 0);
       const note = q.get('note') || '';
 
+      const titleEl = document.querySelector('.itero-title');
+      const subEl = document.querySelector('.itero-sub');
+      const pillSection = document.getElementById('pill-section');
+      const pillbar = document.getElementById('pillbar');
+
       if (note === 'already') {
-        document.querySelector('.itero-title').textContent = 'Already Completed';
-        document.querySelector('.itero-sub').textContent = 'This task was previously marked done.';
+        titleEl.textContent = 'Already Completed';
+        subEl.textContent = 'This task was previously marked done.';
+        pillSection.style.display = 'none'; // ✅ hide achievements section
+      } else {
+        const pills = [
+          { emoji: '🎉', label: 'XP', value: `+${xp}` },
+          { emoji: '🏅', label: 'Level', value: `${level}` },
+          { emoji: '🔥', label: 'Streak', value: `${streak}-day` },
+        ];
+        if (done > 0) pills.push({ emoji: '🏆', label: 'Challenges', value: `${done} completed` });
+
+        pills.forEach(p => {
+          const el = document.createElement('div');
+          el.className = 'itero-pill';
+          el.innerHTML = `${p.emoji} ${p.label}: <b>${p.value}</b>`;
+          pillbar.appendChild(el);
+        });
       }
-
-      const pills = [
-        { emoji: '🎉', label: 'XP', value: `+${xp}` },
-        { emoji: '🏅', label: 'Level', value: `${level}` },
-        { emoji: '🔥', label: 'Streak', value: `${streak}-day` },
-      ];
-      if (done > 0) pills.push({ emoji: '🏆', label: 'Challenges', value: `${done} completed` });
-
-      const wrap = document.getElementById('pillbar');
-      pills.forEach(p => {
-        const el = document.createElement('div');
-        el.className = 'itero-pill';
-        el.innerHTML = `${p.emoji} ${p.label}: <b>${p.value}</b>`;
-        wrap.appendChild(el);
-      });
 
       document.getElementById('openDash').addEventListener('click', async () => {
         try {
@@ -84,8 +87,6 @@
 
       document.getElementById('closeBtn').addEventListener('click', () => t.closePopup());
       window.addEventListener('keydown', (e) => e.key === 'Escape' && t.closePopup());
-
-      // Auto-dismiss
       setTimeout(() => t.closePopup(), 4500);
     })();
   </script>

@@ -13,22 +13,12 @@ import useCSSVariable from '../../hooks/useCSSvariable';
 import { trello as t } from '../../lib/trello.js';
 import { api } from '../../services/analyticsService';
 
-const SkeletonCard = ({ title="Loading…" }) => (
+const SkeletonCard = ({ title = 'Loading…' }) => (
   <div className={sharedStyles.card}>
     <h2 className={sharedStyles.cardTitle}>{title}</h2>
-    <div style={{
-      background:'var(--surface-elev)',
-      borderRadius:12,
-      padding:12
-    }}>
-      <div style={{
-        height:10, width:'70%', background:'var(--border)',
-        borderRadius:6, marginBottom:10, opacity:.6
-      }} />
-      <div style={{
-        height:10, width:'40%', background:'var(--border)',
-        borderRadius:6, opacity:.5
-      }} />
+    <div style={{ background: 'var(--surface-elev)', borderRadius: 12, padding: 12 }}>
+      <div style={{ height: 10, width: '70%', background: 'var(--border)', borderRadius: 6, marginBottom: 10, opacity: .6 }} />
+      <div style={{ height: 10, width: '40%', background: 'var(--border)', borderRadius: 6, opacity: .5 }} />
     </div>
   </div>
 );
@@ -41,6 +31,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
   useCSSVariable('--section-heading', '#172b4d');
 
   useEffect(() => {
+    // default to light if nothing stored
     const saved = localStorage.getItem('theme') || 'light';
     setIsDark(saved === 'dark');
     document.documentElement.setAttribute('data-theme', saved);
@@ -61,7 +52,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
       try {
         const { data } = await api.get(`/api/users/lookup/${trelloMemberId}`);
         if (!cancelled && data?.trello_id) setUserId(data.trello_id);
-      } catch {/* ignore */}
+      } catch { /* ignore */ }
     })();
 
     if (t) {
@@ -82,9 +73,20 @@ const MotivationDashboard = ({ trelloMemberId }) => {
     <div className={`${styles.dashboard} ${isDark ? styles.dark : styles.light}`}>
       <div className={styles.grid} style={{ alignItems: 'center' }}>
         <h1 style={{ margin: 0 }}>Itero Dashboard</h1>
-        <div style={{ marginLeft: 'auto' }}>
-          <button className={styles.themeToggle} onClick={toggleTheme}>
-            {isDark ? '🌞 Light Mode' : '🌙 Dark Mode'}
+
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Icon-only theme toggle (minimal) */}
+          <button
+            type="button"
+            className={styles.themeToggle}
+            onClick={toggleTheme}
+            title={isDark ? 'Light mode' : 'Dark mode'}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            <span className={styles.themeIcon} aria-hidden="true">
+              {isDark ? '🌞' : '🌙'}
+            </span>
+            <span className={styles.srOnly}>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
       </div>
@@ -92,7 +94,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
       {/* If userId not ready, show skeletons instead of an “empty” page */}
       {!userId ? (
         <>
-          <div style={{ color:'var(--text-muted)', marginBottom:8 }}>
+          <div style={{ color: 'var(--text-muted)', marginBottom: 8 }}>
             Preparing your dashboard…
           </div>
           <h3 className={sharedStyles.heading}>Gamification</h3>

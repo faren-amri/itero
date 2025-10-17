@@ -84,13 +84,13 @@ upgrade-insecure-requests
 """
 
 ###############################################
-# Security Headers — Dev Branch: ui-redesign
+# Security Headers — Dev Branch: dev
 ###############################################
 
-[context."ui-redesign"]
-  [[context."ui-redesign".headers]]
+[context."dev"]
+  [[context."dev".headers]]
     for = "/*"
-    [context."ui-redesign".headers.values]
+    [context."dev".headers.values]
       Content-Security-Policy = """
 default-src 'self';
 frame-ancestors https://trello.com https://*.trello.com;

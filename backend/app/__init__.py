@@ -11,7 +11,7 @@ def create_app():
     app.config.from_object("config.Config")
 
     # CORS for your deployed frontend
-    CORS(app, resources={r"/api/*": {"origins": "https://ui-redesign--itero-powerup.netlify.app"}})
+    CORS(app, resources={r"/api/*": {"origins": "https://dev--itero-powerup.netlify.app"}})
 
     # Initialize DB and migrations
     db.init_app(app)

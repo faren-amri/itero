@@ -36,3 +36,44 @@
 .progressText{ margin-top: 8px; display:block; color:var(--text-muted); font-weight:500 }
 .streakValue{ color: var(--streak-amber); font-weight:700; font-size: var(--kpi) }
 .syncText{ color: var(--text-muted); font-size:14px; text-align:center; padding:6px 0 }
+
+/* Minimal, elegant theme toggle */
+.themeToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: var(--surface-elev);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  transition: transform .15s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.themeToggle:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface-elev) 88%, var(--primary) 12%);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+}
+
+.themeToggle:active {
+  transform: translateY(0);
+}
+
+.themeToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.themeIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Dark mode tweak for the button surface */
+:root[data-theme='dark'] .themeToggle {
+  background: var(--surface);
+}

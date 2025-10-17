@@ -5,11 +5,10 @@
   <title>Itero — Task Complete</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Trello SDK -->
+  <!-- Trello Power-Up SDK -->
   <script src="https://p.trellocdn.com/power-up.min.js"></script>
 
-  <!-- Use Itero tokens + toast layout styles -->
-  <link rel="stylesheet" href="/itero-theme.css" />
+  <!-- Self-contained styles (no theme import) -->
   <link rel="stylesheet" href="/toast.css" />
 </head>
 <body>
@@ -18,10 +17,12 @@
       <div class="itero-logo">
         <img src="/assets/itero-icon-w-24.png" alt="Itero" />
       </div>
+
       <div class="itero-head">
         <h2 class="itero-title">Task Completed</h2>
         <p class="itero-sub">Nice work — here’s what you earned</p>
       </div>
+
       <button id="openDash" class="itero-btn itero-btn--primary" aria-label="Open dashboard">
         Open&nbsp;Dashboard
       </button>
@@ -69,13 +70,12 @@
 
       document.getElementById('openDash').addEventListener('click', async () => {
         try {
-          const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#2f6aa6';
           await t.modal({
             url: '/index.html#/dashboard',
             title: 'Itero Dashboard',
             height: 620,
             fullscreen: false,
-            accentColor: primary
+            accentColor: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#2f6aa6'
           });
         } finally {
           t.closePopup();
@@ -85,7 +85,7 @@
       document.getElementById('closeBtn').addEventListener('click', () => t.closePopup());
       window.addEventListener('keydown', (e) => e.key === 'Escape' && t.closePopup());
 
-      // auto-dismiss after 4.5s
+      // Auto-dismiss
       setTimeout(() => t.closePopup(), 4500);
     })();
   </script>

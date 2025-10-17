@@ -69,8 +69,9 @@ async function completeTask(t) {
 
     return t.popup({
       title: 'Task Complete',
-      url: `/toast.html?${qs}`,
-      height: 180
+      url: `/toast.html?${new URLSearchParams({ xp, level, streak, done })}`,
+      height: 200, // bump a bit to avoid scrollbars with wrapping
+      width: 500
     });
   } catch {
     return t.alert({ message: '❌ Something went wrong.', duration: 4 });

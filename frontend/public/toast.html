@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Itero Toast</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
+  <style>
+    :root{
+      --bg:#101418; --surface:#171c22; --border:#2a313f;
+      --text:#e9eef5; --muted:#aab6c5; --accent:#2f6aa6; --good:#27ae60; --amber:#d8902f;
+      --radius:12px;
+    }
+    /* Light theme fallback if Trello renders with light */
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#fff; --surface:#fff; --border:#e6eaf1; --text:#1a1f29; --muted:#5a6a82; }
+    }
+    html,body{ margin:0; padding:0; background:transparent; }
+    .toast{
+      background:var(--surface);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:0 12px 32px rgba(0,0,0,.25);
+      padding:14px 16px;
+      font: 14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
+      min-width: 320px;
+    }
+    .row{ display:flex; align-items:center; gap:12px }
+    .logo{
+      width:36px; height:36px; border-radius:9px;
+      background:#0e1621; display:grid; place-items:center; flex:0 0 36px;
+    }
+    .logo img{ width:20px; height:20px; display:block; }
+    .title{ font-weight:700; font-size:15px; margin:0; }
+    .meta{ color:var(--muted); font-size:12px; margin-top:2px }
+    .pillbar{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px; border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);
+    }
+    .pill b{ font-weight:700 }
+    .cta{
+      margin-left:auto;
+      padding:8px 12px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:var(--accent); color:white;
+      font-weight:600; cursor:pointer;
+    }
+    .footer{ display:flex; align-items:center; gap:8px; margin-top:12px }
+    .ghost{ background:transparent; color:var(--text); border:1px solid var(--border) }
+  </style>
+</head>
+<body>
+  <div class="toast" id="root">
+    <div class="row">
+      <div class="logo">
+        <img src="/assets/itero-icon-w-24.png" alt="Itero" />
+      </div>
+      <div style="flex:1 1 auto">
+        <div class="title">Task Completed</div>
+        <div class="meta">Nice work — here’s what you earned</div>
+      </div>
+      <button id="openDash" class="cta">Open Dashboard</button>
+    </div>
+
+    <div class="pillbar" id="pillbar"></div>
+
+    <div class="footer">
+      <button id="closeBtn" class="cta ghost">Close</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const t = window.TrelloPowerUp?.iframe();
+      const params = new URLSearchParams(location.search);
+      const xp = Number(params.get('xp') || 0);
+      const level = params.get('level') || '?';
+      const streak = Number(params.get('streak') || 0);
+      const done = Number(params.get('done') || 0);
+
+      const pills = [
+        { label: 'XP', value: `+${xp}`, emoji: '🎉' },
+        { label: 'Level', value: `${level}`, emoji: '🏅' },
+        { label: 'Streak', value: `${streak}-day`, emoji: '🔥' }
+      ];
+      if (done > 0) pills.push({ label: 'Challenges', value: `${done} completed`, emoji: '🏆' });
+
+      const wrap = document.getElementById('pillbar');
+      pills.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'pill';
+        el.innerHTML = `${p.emoji} <span>${p.label}: <b>${p.value}</b></span>`;
+        wrap.appendChild(el);
+      });
+
+      document.getElementById('openDash').addEventListener('click', async () => {
+        try {
+          // Reuse your existing modal launcher
+          await t.modal({
+            url: '/index.html#/dashboard',
+            height: 620,
+            fullscreen: false,
+            accentColor: '#2f6aa6',
+            title: 'Itero Dashboard'
+          });
+        } finally {
+          t.closePopup();
+        }
+      });
+
+      document.getElementById('closeBtn').addEventListener('click', () => t.closePopup());
+
+      // Auto-close after a few seconds (optional)
+      setTimeout(() => t.closePopup(), 4500);
+    })();
+  </script>
+</body>
+</html>

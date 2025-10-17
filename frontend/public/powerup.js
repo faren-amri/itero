@@ -1,39 +1,36 @@
 /* global TrelloPowerUp */
 
-// Ensure SDK is present (avoids "cannot read initialize of undefined")
+// --- Ensure SDK is present ---
 const tpu = window.TrelloPowerUp;
 if (!tpu) {
   console.error('Trello Power-Up SDK did not load. Check popup.html script order.');
-  // Optional: retry or show a message, then stop here.
   throw new Error('Power-Up SDK missing');
 }
 
-// Static assets hosted on your domain
+// --- Constants ---
 const ICON_URL = '/assets/itero-icon-w-24.png';
-
-// TEMP for branch: public/ isn’t bundled, so use a constant here
 const API_BASE = 'https://itero-api-dev-zg94.onrender.com';
 
-// --- Actions ---
+// --- Core actions ---
 
 async function openDashboardFromButton(t) {
   return t.popup({
     title: 'Itero',
-    url: '/dashboard-wrapper.html', // root-relative to current origin
+    url: '/dashboard-wrapper.html', // opens the connector that launches the dashboard modal
     height: 80
   });
 }
 
 async function completeTask(t) {
   const [card, member] = await Promise.all([t.card('id'), t.member('id')]);
-  const cardId = card && card.id;
-  const memberId = member && member.id;
+  const cardId = card?.id;
+  const memberId = member?.id;
 
   if (!cardId || !memberId) {
     return t.alert({ message: '❌ Missing card or member context.' });
   }
 
-  // Prevent double submission
+  // Prevent duplicate completion
   const alreadyDone = await t.get('card', 'shared', 'taskCompleted');
   if (alreadyDone) {
     return t.alert({ message: '✅ Task already completed.' });
@@ -46,23 +43,35 @@ async function completeTask(t) {
       body: JSON.stringify({ trello_user_id: memberId, task_id: cardId })
     });
 
-    if (!res.ok) return t.alert({ message: '❌ Task completion failed.' });
+    if (!res.ok) {
+      return t.alert({ message: '❌ Task completion failed.' });
+    }
 
     const data = await res.json();
 
+    // Persist state in Trello
     await t.set('card', 'shared', 'taskCompleted', true);
     await t.set('member', 'shared', 'refresh', true);
 
+    // Extract details from backend response
     const xp     = data?.xp_gained ?? 10;
     const level  = data?.level ?? '?';
     const streak = data?.streak_count ?? 0;
-    const done   = Array.isArray(data?.completed_challenges) ? data.completed_challenges.length : 0;
+    const done   = Array.isArray(data?.completed_challenges)
+      ? data.completed_challenges.length
+      : 0;
 
-    let msg = `🎉 +${xp} XP · Level ${level} · 🔥 ${streak}-day streak`;
-    if (done > 0) msg += ` · 🏆 ${done} challenge${done > 1 ? 's' : ''} completed`;
+    // Open our professional toast popup
+    const query = new URLSearchParams({ xp, level, streak, done }).toString();
 
-    return t.alert({ message: msg, duration: 5 });
-  } catch {
+    return t.popup({
+      title: 'Task Complete',
+      url: `/toast.html?${query}`,
+      height: 180
+    });
+
+  } catch (err) {
+    console.error('Task completion error:', err);
     return t.alert({ message: '❌ Something went wrong.', duration: 4 });
   }
 }
@@ -70,12 +79,12 @@ async function completeTask(t) {
 function openSettings(t) {
   return t.popup({
     title: 'Itero Settings',
-    url: '/settings.html', // make root-relative; remove capability if you don’t ship it
+    url: '/settings.html',
     height: 240
   });
 }
 
-// --- Register capabilities ---
+// --- Capability registration ---
 tpu.initialize({
   'board-buttons': () => [
     { icon: ICON_URL, text: 'Itero', callback: openDashboardFromButton }

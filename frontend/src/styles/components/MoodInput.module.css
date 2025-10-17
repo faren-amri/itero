@@ -1,27 +1,143 @@
-.moodInput{ background:var(--surface); color:var(--text-main); border-radius:14px; padding:var(--card-padding); border:1px solid var(--border) }
-.moodInput h3{ font-size:var(--h-card); font-weight:600; color:var(--text-main); margin:0 0 10px }
+/* ---------- Container ---------- */
+.moodInput{
+  background:var(--surface);
+  color:var(--text-main);
+  border-radius:14px;
+  padding:var(--card-padding);
+  border:1px solid var(--border);
+  box-shadow: var(--shadow-1);
+}
 
-.buttons{ display:flex; flex-wrap:wrap; gap:8px }
+.moodInput h3{
+  font-size:var(--h-card);
+  font-weight:700;
+  color:var(--section-heading, var(--text-main));
+  margin:0 0 10px;
+}
 
+/* Optional subtitle helper */
+.moodInput .subtitle{
+  margin: 2px 0 var(--space-4,16px);
+  color: var(--text-muted);
+  font-size: .95rem;
+}
+
+/* ---------- Button group ---------- */
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+/* Base button */
 .buttons button{
-  height:36px; padding:0 14px;
+  height:36px;
+  padding:0 14px;
   border-radius:9999px;
   border:1px solid var(--border);
   background:var(--surface-elev);
   color:var(--text-main);
-  font-weight:500; cursor:pointer;
-  transition:transform .15s ease, background-color .2s ease;
+  font-weight:600;
+  cursor:pointer;
+  transition:
+    transform .15s ease,
+    background-color .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  letter-spacing:.1px;
 }
+
+/* Hover / active */
 .buttons button:hover{ transform: translateY(-1px) }
+.buttons button:active{ transform: translateY(0) scale(.98) }
 .buttons button:disabled{ opacity:.6; cursor:not-allowed }
 
-.btnBurned{ background:#f2d8d8; color:#b23a3a; }
-:root[data-theme='dark'] .btnBurned{ background:#2a1717; color:#c44545; }
+/* Keyboard focus */
+.buttons button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), white 15%);
+  border-color: color-mix(in oklab, var(--primary), #000 15%);
+}
 
-.btnNeutral{ background:#eaecef; color:#5a6a82; }
-:root[data-theme='dark'] .btnNeutral{ background:#23262b; color:#aab6c5; }
+/* Selected state you can toggle via class */
+.buttons button.isSelected{
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--primary), #000 20%) inset,
+    0 0 14px color-mix(in oklab, var(--primary), #000 70%);
+  color: #fff;
+}
 
-.btnGreat{ background:#d7efe1; color:#2b8a57; }
-:root[data-theme='dark'] .btnGreat{ background:#15251b; color:#27ae60; }
+/* ---------- Mood variants (light) ---------- */
+.btnBurned{
+  background: linear-gradient(135deg, #f7d7d7, #efc2c2);
+  color:#a33;
+  border-color:#e0b3b3;
+}
+.btnTired{
+  background: linear-gradient(135deg, #e6e9f0, #d9dee9);
+  color:#49566b;
+  border-color:#c8cfdd;
+}
+.btnNeutral{
+  background: linear-gradient(135deg, #eceef1, #e2e5ea);
+  color:#5a6a82;
+  border-color:#d3d8e1;
+}
+.btnEnergized{
+  background: linear-gradient(135deg, #d6f2ea, #c8ece5);
+  color:#0f6b56;
+  border-color:#a7ddd1;
+}
+.btnGreat{
+  background: linear-gradient(135deg, #d7efe1, #c9ead7);
+  color:#2b8a57;
+  border-color:#b4dfc6;
+}
 
-.confirmation{ font-size:14px; color:var(--text-main) }
+/* ---------- Mood variants (dark) ---------- */
+:root[data-theme='dark'] .btnBurned{
+  background: linear-gradient(135deg, #3a1c1c, #622626);
+  color:#eaa3a3;
+  border-color:#7b2f2f;
+  box-shadow: 0 0 6px rgba(200, 60, 60, .25);
+}
+:root[data-theme='dark'] .btnTired{
+  background: linear-gradient(135deg, #1f2430, #2c3344);
+  color:#b8c0d4;
+  border-color:#3e475d;
+  box-shadow: 0 0 6px rgba(110, 125, 160, .18);
+}
+:root[data-theme='dark'] .btnNeutral{
+  background: linear-gradient(135deg, #242a2f, #30363d);
+  color:#cfd6e0;
+  border-color:#3b434c;
+  box-shadow: 0 0 6px rgba(120,130,140,.18);
+}
+:root[data-theme='dark'] .btnEnergized{
+  background: linear-gradient(135deg, #143836, #1e5f57);
+  color:#7ff0c9;
+  border-color:#236f63;
+  box-shadow: 0 0 8px rgba(60, 200, 150, .28);
+}
+:root[data-theme='dark'] .btnGreat{
+  background: linear-gradient(135deg, #173619, #20682b);
+  color:#a6f3a6;
+  border-color:#1c7f30;
+  box-shadow: 0 0 8px rgba(60, 200, 100, .28);
+}
+
+/* ---------- Confirmation text ---------- */
+.confirmation{
+  font-size:14px;
+  color:var(--text-main);
+  margin-top: var(--space-3, 12px);
+}
+
+/* ---------- Motion accessibility ---------- */
+@media (prefers-reduced-motion: reduce){
+  .buttons button{ transition: none }
+  .buttons button:hover,
+  .buttons button:active{ transform:none }
+}

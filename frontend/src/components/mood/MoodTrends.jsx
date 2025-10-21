@@ -48,8 +48,8 @@ const MoodTrends = ({ userId, refreshKey }) => {
 
   const xTicks = useMemo(() => data.map(d => d.idx), [data]);
   const xDomain = useMemo(
-    () => (data.length ? [0, data.length - 1] : [0, 0]),
-    [data.length]
+    () => (series.length ? [0, series.length - 1] : [0, 0]),
+    [series.length]
   );
 
   const moodLabel = (value) => ({
@@ -81,7 +81,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       <ResponsiveContainer width="100%" height={260}>
         <LineChart
           data={data}
-          margin={{ top: 20, right: 0, bottom: 20, left: 56 }} // no extra right space
+          margin={{ top: 20, right: 24, bottom: 20, left: 56 }}
         >
           <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
 

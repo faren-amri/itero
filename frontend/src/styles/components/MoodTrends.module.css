@@ -71,3 +71,10 @@
   border-radius: 8px;
   font-size: 0.85rem;
 }
+
+
+/* MoodTrends.module.css */
+.chartContainer {
+  width: 100%;
+  overflow: visible; /* ensure right-most dot/tooltip isn't cropped by a parent */
+}

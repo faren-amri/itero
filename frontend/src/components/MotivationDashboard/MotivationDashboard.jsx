@@ -119,7 +119,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
       ) : (
         <>
           {/* Gamification */}
-          <h3 className={sharedStyles.heading}>Gamification</h3>
+          <h3 className={sharedStyles.heading}>Your Momentum</h3>
           <div className={styles.subGrid}>
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>XP Progress</h2>

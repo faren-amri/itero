@@ -47,6 +47,10 @@ const MoodTrends = ({ userId, refreshKey }) => {
   );
 
   const xTicks = useMemo(() => data.map(d => d.idx), [data]);
+  const series = useMemo(
+    () => safeData.map((d, i) => ({ ...d, idx: i })),
+    [safeData]
+  );
   const xDomain = useMemo(
     () => (series.length ? [0, series.length - 1] : [0, 0]),
     [series.length]

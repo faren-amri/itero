@@ -2,7 +2,7 @@
 import axios from "axios";
 
 export const API_BASE =
-  import.meta.env.VITE_API_URL || "https://itero-api-dev-zg94.onrender.com";
+  import.meta.env.VITE_API_URL || "https://itero-powerup.netlify.app";
 
 export const api = axios.create({
   baseURL: API_BASE,

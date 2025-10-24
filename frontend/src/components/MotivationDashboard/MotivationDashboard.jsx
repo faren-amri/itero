@@ -51,8 +51,6 @@ const MotivationDashboard = ({ trelloMemberId }) => {
       if (!trelloMemberId) return;
       try {
         const { data } = await api.get(`/api/users/lookup/${trelloMemberId}`);
-        const internalId = data?.id;     // <-- use **id**
-        setUserId(internalId);
         if (!cancelled && data?.trello_id) setUserId(data.trello_id);
       } catch { /* ignore */ }
     })();

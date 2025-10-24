@@ -8,7 +8,7 @@ if (!tpu) {
 }
 
 // Static assets hosted on your domain
-const ICON_URL = '/assets/itero-icon-w-24.png';
+const ICON_URL = 'https://itero-powerup.netlify.app/assets/itero-icon-w-24.png';
 
 // TEMP for branch: public/ isn’t bundled, so use a constant here
 const API_BASE = 'https://itero-api-fme7.onrender.com';
@@ -18,7 +18,7 @@ const API_BASE = 'https://itero-api-fme7.onrender.com';
 async function openDashboardFromButton(t) {
   return t.popup({
     title: 'Itero',
-    url: '/dashboard-wrapper.html', // root-relative to current origin
+    url: 'https://itero-powerup.netlify.app/dashboard-wrapper.html', // root-relative to current origin
     height: 80
   });
 }
@@ -69,7 +69,7 @@ async function completeTask(t) {
 
     return t.popup({
       title: 'Task Complete',
-      url: `/toast.html?${new URLSearchParams({ xp, level, streak, done })}`,
+      url: `https://itero-powerup.netlify.app/toast.html?${new URLSearchParams({ xp, level, streak, done })}`,
       height: 200, // bump a bit to avoid scrollbars with wrapping
       width: 500
     });
@@ -81,7 +81,7 @@ async function completeTask(t) {
 function openSettings(t) {
   return t.popup({
     title: 'Itero Settings',
-    url: '/settings.html', // make root-relative; remove capability if you don’t ship it
+    url: 'https://itero-powerup.netlify.app/settings.html', // make root-relative; remove capability if you don’t ship it
     height: 240
   });
 }

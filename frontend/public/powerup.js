@@ -11,7 +11,7 @@ if (!tpu) {
 const ICON_URL = '/assets/itero-icon-w-24.png';
 
 // TEMP for branch: public/ isn’t bundled, so use a constant here
-const API_BASE = 'https://itero-api-dev-zg94.onrender.com';
+const API_BASE = 'https://itero-api-fme7.onrender.com';
 
 // --- Actions ---
 

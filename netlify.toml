@@ -12,6 +12,22 @@
 ###############################################
 
 # Allow these files to load directly (avoid redirect to SPA)
+# toast assets MUST bypass the SPA rule
+[[redirects]]
+  from = "/toast.html"
+  to = "/toast.html"
+  status = 200
+
+[[redirects]]
+  from = "/toast.js"
+  to = "/toast.js"
+  status = 200
+
+[[redirects]]
+  from = "/toast.css"
+  to = "/toast.css"
+  status = 200
+  
 [[redirects]]
   from = "/popup.html"
   to = "/popup.html"

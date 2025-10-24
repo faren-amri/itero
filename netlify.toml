@@ -13,21 +13,22 @@
 
 # Allow these files to load directly (avoid redirect to SPA)
 # toast assets MUST bypass the SPA rule
-[[redirects]]
+# netlify.toml
+[[redirects]]  # toast assets
   from = "/toast.html"
-  to = "/toast.html"
+  to   = "/toast.html"
   status = 200
 
 [[redirects]]
   from = "/toast.js"
-  to = "/toast.js"
+  to   = "/toast.js"
   status = 200
 
 [[redirects]]
   from = "/toast.css"
-  to = "/toast.css"
+  to   = "/toast.css"
   status = 200
-  
+
 [[redirects]]
   from = "/popup.html"
   to = "/popup.html"
@@ -109,6 +110,23 @@
   for = "/popup.html"
   [headers.values]
     Content-Type = "text/html; charset=utf-8"
+
+[[headers]]
+  for = "/toast.html"
+  [headers.values]
+    Content-Type = "text/html; charset=utf-8"
+    X-Frame-Options = ""
+
+[[headers]]
+  for = "/toast.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/toast.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+
 
 ###############################################
 # Contexts (optional overrides if needed)

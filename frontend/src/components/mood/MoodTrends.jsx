@@ -81,8 +81,7 @@ const MoodTrends = ({ userId, refreshKey }) => {
       <ResponsiveContainer width="100%" height={260}>
         <LineChart
           data={data}
-          margin={{ top: 20, right: 0, bottom: 20, left: 56 }} // no extra right space
-        >
+            margin={{ top: 20, right: 24, bottom: 20, left: 56 }}        >
           <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
 
           {/* X as numeric index -> no half-band padding */}

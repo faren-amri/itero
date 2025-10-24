@@ -1,0 +1,145 @@
+/* Self-contained Itero toast — widened layout and auto dark mode */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+:root {
+  /* Light mode */
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --surface-elev: #f1f3f6;
+  --border: #d9dee6;
+  --text-main: #1a1f29;
+  --text-muted: #5a6a82;
+  --primary: #2f6aa6;
+  --on-primary: #ffffff;
+  --chip-bg: rgba(17, 22, 29, .04);
+  --radius-card: 14px;
+  --radius-1: 10px;
+  --radius-2: 12px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --shadow-1: 0 8px 26px rgba(16, 24, 40, .08);
+  --shadow-2: 0 10px 24px rgba(20, 30, 40, .08);
+  --font: 14px/1.45 "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1216;
+    --surface: #14181e;
+    --surface-elev: #1a2028;
+    --border: #2a313f;
+    --text-main: #e7ecf3;
+    --text-muted: #aab6c5;
+    --chip-bg: rgba(255, 255, 255, .04);
+    --shadow-1: 0 6px 24px rgba(0, 0, 0, .24);
+    --shadow-2: 0 18px 40px rgba(0, 0, 0, .35);
+  }
+}
+
+:root { color-scheme: light dark; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  font: var(--font);
+  color: var(--text-main);
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Toast container — wider */
+.itero-toast {
+  background: var(--surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-2);
+  padding: var(--space-4);
+  min-width: 420px;  /* ✅ wider default */
+  max-width: 620px;  /* ✅ larger max */
+}
+
+/* Header row */
+.itero-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.itero-logo {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+}
+
+.itero-logo img { width: 22px; height: 22px; }
+
+.itero-head { flex: 1 1 auto; min-width: 0; }
+
+.itero-title {
+  margin: 0 0 2px;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.itero-sub { margin: 0; color: var(--text-muted); }
+
+.itero-btn {
+  padding: 8px 12px;
+  border-radius: var(--radius-1);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-main);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.itero-btn--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: color-mix(in oklab, var(--primary), #000 15%);
+}
+
+/* Panel (achievements) */
+.itero-panel {
+  margin-top: var(--space-3);
+  background: var(--surface-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+}
+
+.itero-pillbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.itero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 12px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.itero-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}

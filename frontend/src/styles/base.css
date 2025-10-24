@@ -1,0 +1,31 @@
+:root{ color-scheme: light dark }
+*{ box-sizing: border-box }
+html,body,#root{ height:100% }
+body{
+  margin:0;background:var(--bg);color:var(--text-main);
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  line-height:1.5
+}
+a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
+
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text-main);
+  font-family:'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height:1.5;
+  font-size: var(--text);
+  font-weight: 400;
+  /* KPI readability */
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,h2,h3{ margin:0 0 0.5rem 0; color:var(--section-heading, var(--text-main)); }
+h1{ font-size: var(--h-app); font-weight: 700; }
+h2{ font-size: var(--h-section); font-weight: 600; }
+h3{ font-size: var(--h-card); font-weight: 600; }
+
+a{ color:var(--primary); text-decoration:none }
+a:hover{ text-decoration:underline }

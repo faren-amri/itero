@@ -39,7 +39,7 @@
 }
 
 .selected {
-  border-color: var(--progress-blue);
+  border-color: var(--progress);
 }
 
 .thanksMessage {

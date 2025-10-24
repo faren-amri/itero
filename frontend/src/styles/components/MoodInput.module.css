@@ -1,46 +1,115 @@
-.moodInput {
-  background-color: var(--card-bg); /* theme-adaptive */
-  color: var(--text-main);
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.15);
-  border: 1px solid rgba(223, 225, 230, 0.1);
+/* MoodInput.module.css */
+
+.moodInput{
+  background:var(--surface);
+  color:var(--text-main);
+  border-radius:14px;
+  padding:var(--card-padding);
+  border:1px solid var(--border);
+  box-shadow: var(--shadow-1);
 }
 
-.moodInput h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-main); /* theme-adaptive */
-  margin-bottom: 0.75rem;
+.moodInput h3{
+  font-size:var(--h-card);
+  font-weight:700;
+  color:var(--section-heading, var(--text-main));
+  margin:0 0 10px;
 }
 
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
 }
 
-.buttons button {
-  background-color: var(--ds-background-accent-blue-subtle, #e4f0f6);
-  color: var(--ds-text-accent-blue, #0079bf);
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+/* Base pill */
+.buttons button{
+  height:36px;
+  padding:0 14px;
+  border-radius:9999px;
+  border:1px solid var(--border);
+  background:var(--surface-elev);
+  color:var(--text-main);
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, background-color .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.buttons button:hover{ transform: translateY(-1px) }
+.buttons button:active{ transform: translateY(0) scale(.98) }
+.buttons button:disabled{ opacity:.6; cursor:not-allowed }
+.buttons button:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 2px color-mix(in oklab, var(--primary), white 15%);
+  border-color: color-mix(in oklab, var(--primary), #000 15%);
 }
 
-.buttons button:hover {
-  background-color: var(--ds-background-accent-blue-subtler, #cce4f6);
+/* Selected */
+.isSelected{
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--primary), #000 18%) inset,
+    0 0 12px color-mix(in oklab, var(--primary), #000 70%);
+  color:#fff;
 }
 
-.buttons button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* ------ LIGHT variants (increase specificity) ------ */
+.buttons button.btnBurned{
+  background: linear-gradient(135deg, #fde7e7, #f5d1d1);
+  color:#a93b3b;
+  border-color:#e6b3b3;
+}
+.buttons button.btnTired{
+  background: linear-gradient(135deg, #e6e9f0, #d9dee9);
+  color:#49566b;
+  border-color:#c8cfdd;
+}
+.buttons button.btnNeutral{
+  background: linear-gradient(135deg, #edf0f3, #e3e6ea);
+  color:#5a6a82;
+  border-color:#d3d8e1;
+}
+.buttons button.btnEnergized{
+  background: linear-gradient(135deg, #d9f5ed, #c9ede5);
+  color:#12785e;
+  border-color:#b0e0d2;
+}
+.buttons button.btnGreat{
+  background: linear-gradient(135deg, #d7efe1, #c8ead7);
+  color:#217744;
+  border-color:#b4dfc6;
 }
 
-.confirmation {
-  font-size: 0.9rem;
-  color: var(--text-main); /* theme-adaptive */
+/* ------ DARK variants (same specificity) ------ */
+:root[data-theme='dark'] .buttons button.btnBurned{
+  background: linear-gradient(135deg, #3a1c1c, #622626);
+  color:#eaa3a3;
+  border-color:#7b2f2f;
+  box-shadow:0 0 6px rgba(200,60,60,.25);
+}
+:root[data-theme='dark'] .buttons button.btnTired{
+  background: linear-gradient(135deg, #1f2430, #2c3344);
+  color:#b8c0d4;
+  border-color:#3e475d;
+}
+:root[data-theme='dark'] .buttons button.btnNeutral{
+  background: linear-gradient(135deg, #242a2f, #30363d);
+  color:#cfd6e0;
+  border-color:#3b434c;
+}
+:root[data-theme='dark'] .buttons button.btnEnergized{
+  background: linear-gradient(135deg, #143836, #1e5f57);
+  color:#7ff0c9;
+  border-color:#236f63;
+}
+:root[data-theme='dark'] .buttons button.btnGreat{
+  background: linear-gradient(135deg, #173619, #20682b);
+  color:#a6f3a6;
+  border-color:#1c7f30;
+}
+
+/* Status text */
+.confirmation{
+  font-size:14px;
+  color:var(--text-main);
+  margin-top: var(--space-3, 12px);
 }

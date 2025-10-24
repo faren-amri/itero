@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
   </head>
   <body>
-    <!-- Trello Power-Up client -->
+    <!-- Load Trello SDK synchronously so window.TrelloPowerUp exists -->
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
 
-    <!-- Your initializer (RELATIVE; no leading slash) -->
-    <script src="powerup.js?v=__APP_VERSION__" defer></script>
+    <!-- Then load your initializer (root-relative path) -->
+    <script src="/powerup.js?v=__APP_VERSION__"></script>
   </body>
 </html>

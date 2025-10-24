@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/components/MotivationDashboard.module.css';
-import { getStreakData } from '../../services/analyticsService.js';
+import shared from '../../styles/shared/Shared.module.css';import { getStreakData } from '../../services/analyticsService.js';
 
 const StreakTracker = ({ userId, refreshKey }) => {
   const [streak, setStreak] = useState(null);
@@ -27,20 +27,14 @@ const StreakTracker = ({ userId, refreshKey }) => {
     if (userId) fetchStreak();
   }, [userId, refreshKey]);
 
+  if (loading) return <p className={styles.syncText}>🔄 Syncing streak…</p>;
+  if (!streak)  return <p className={styles.syncText}>No streak yet</p>;
+
   return (
-    <div className={styles.innerCard}>
-      <div className={styles.streakList}>
-        {loading ? (
-          <p className={styles.syncText}>🔄 Syncing streak...</p>
-        ) : streak ? (
-          <p className={styles.streakValue}>
-            🔥 <strong>{streak.count}</strong> day streak
-          </p>
-        ) : (
-          <p>No streak yet</p>
-        )}
-      </div>
-    </div>
+    <>
+      <div className={styles.streakValue}>🔥 {streak.count} days</div>
+      <div className={shared.kpiSub}>Keep it going — complete a task today</div>
+    </>
   );
 };
 

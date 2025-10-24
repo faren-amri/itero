@@ -9,7 +9,16 @@ export default defineConfig({
     react(),
     replace({
       preventAssignment: true,
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || 'dev')
     })
-  ]
+  ],
+  build: {
+    sourcemap: true, // ✅ Enables source maps for better stack traces
+    outDir: 'dist',
+    emptyOutDir: true,
+  },
+  server: {
+    port: 5173,
+    open: true,
+  },
 })

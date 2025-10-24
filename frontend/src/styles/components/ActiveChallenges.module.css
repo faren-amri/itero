@@ -1,74 +1,47 @@
-.challengeList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.progressFill{ background: var(--progress); height:100%; transition: width .3s ease }
+
+.fillAmber{ background: var(--streak-amber) }
+.fillBlue{ background: var(--primary) }
+.fillGreen{ background: var(--success) }
+
+
+/* Layout polish for each card header */
+.titleRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.5rem;
+  margin-bottom: 6px;
 }
 
-.challengeItem {
-  background: var(--card-bg); /* theme-aware background */
-  color: var(--text-main);    /* theme-aware text */
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
-  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.1);
-  transition: background 0.2s ease;
-}
-
-.challengeItem:hover {
-  background: rgba(255, 255, 255, 0.05); /* subtle hover */
-}
-
-.challengeHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.4rem;
-}
-
-.challengeTitle {
-  font-size: 0.95rem;
+/* Small percentage badge on the right */
+.badge{
+  font-size: 12px;
   font-weight: 600;
-  color: var(--section-heading); /* consistent with headings */
-  margin: 0;
+  color: var(--text-main);
+  background: var(--surface-elev, rgba(0,0,0,0.04));
+  border:1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 9999px;
 }
 
-.progressText,
-.completedLabel {
-  font-size: 0.75rem;
-  color: var(--text-main); /* theme-adaptive */
-}
+/* Accent fills (presentational only) */
+.fillAmber{ background: var(--streak-amber) !important; }
+.fillBlue{  background: var(--primary) !important; }
+.fillGreen{ background: var(--success) !important; }
 
-.progressBar {
-  background: rgba(255, 255, 255, 0.15); /* neutral for all themes */
-  height: 8px;
-  border-radius: 4px;
+/* Ensure meter looks sleek (thin & rounded) */
+.progressBar{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  height: 10px;                /* thinner bar per spec */
+  border-radius: 9999px;
   overflow: hidden;
-  margin-top: 0.4rem;
+  margin-top: 6px;
 }
 
-.progressFill {
-  background: var(--progress-blue, #0079bf);
+.progressFill{
   height: 100%;
-  transition: width 0.3s ease;
-}
-
-.placeholder {
-  font-style: italic;
-  color: var(--text-main);
-  font-size: 0.875rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.challengeDescription {
-  font-size: 14px;
-  color: var(--text-main);
-  margin: 6px 0 12px;
-  line-height: 1.4;
-}
-
-.completedLabel {
-  color: var(--progress-blue);
-  font-weight: bold;
-  font-size: 14px;
+  border-radius: 9999px;
+  transition: width .3s ease;
 }

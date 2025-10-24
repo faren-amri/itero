@@ -39,7 +39,7 @@
   status = 200
 
 ###############################################
-# Default headers
+# Default headers (global)
 ###############################################
 
 [[headers]]
@@ -49,6 +49,39 @@
     X-Content-Type-Options    = "nosniff"
     Referrer-Policy           = "strict-origin-when-cross-origin"
     Permissions-Policy        = "camera=(), microphone=(), geolocation=()"
+
+    # ✅ Global Content Security Policy
+    # This CSP is designed for Trello Power-Ups — allows embedding inside Trello
+    Content-Security-Policy = """
+      default-src 'self';
+      base-uri 'self';
+      object-src 'none';
+      frame-ancestors https://trello.com https://*.trello.com;
+
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://p.trellocdn.com;
+      script-src-elem 'self' https://p.trellocdn.com;
+
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: blob: https:;
+      font-src 'self' data: https:;
+
+      connect-src
+        'self'
+        https://api.trello.com
+        https://auth.atlassian.com
+        https://id.atlassian.com
+        https://trello.com
+        https://*.trello.com
+        https://itero-api-fme7.onrender.com
+        https://itero-api-dev.onrender.com
+        https://itero-api-dev-zg94.onrender.com;
+
+      upgrade-insecure-requests;
+    """
+
+###############################################
+# File-specific headers
+###############################################
 
 [[headers]]
   for = "/powerup.js"
@@ -61,70 +94,14 @@
     Content-Type = "text/html; charset=utf-8"
 
 ###############################################
-# Security Headers — Production
+# Contexts (optional overrides if needed)
 ###############################################
 
+# Production — inherits global headers, no extra rules required
 [context.production]
-  [[context.production.headers]]
-    for = "/*"
-    [context.production.headers.values]
-      Content-Security-Policy = """
-default-src 'self';
-frame-ancestors https://trello.com https://*.trello.com;
-script-src 'self' https://p.trellocdn.com;
-script-src-elem 'self' https://p.trellocdn.com;
-style-src 'self' 'unsafe-inline';
-img-src 'self' data: https:;
-font-src 'self' data: https:;
-connect-src 'self' https://api.trello.com https://itero-api-fme7.onrender.com;
-object-src 'none';
-base-uri 'none';
-form-action 'self';
-upgrade-insecure-requests
-"""
 
-###############################################
-# Security Headers — Dev Branch: dev
-###############################################
-
+# Development branch — inherits global headers
 [context."dev"]
-  [[context."dev".headers]]
-    for = "/*"
-    [context."dev".headers.values]
-      Content-Security-Policy = """
-default-src 'self';
-frame-ancestors https://trello.com https://*.trello.com;
-script-src 'self' https://p.trellocdn.com;
-script-src-elem 'self' https://p.trellocdn.com;
-style-src 'self' 'unsafe-inline';
-img-src 'self' data: https:;
-font-src 'self' data: https:;
-connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com;
-object-src 'none';
-base-uri 'none';
-form-action 'self';
-upgrade-insecure-requests
-"""
 
-###############################################
-# Security Headers — Deploy Previews
-###############################################
-
+# Deploy previews — inherits global headers
 [context.deploy-preview]
-  [[context.deploy-preview.headers]]
-    for = "/*"
-    [context.deploy-preview.headers.values]
-      Content-Security-Policy = """
-default-src 'self';
-frame-ancestors https://trello.com https://*.trello.com;
-script-src 'self' https://p.trellocdn.com;
-script-src-elem 'self' https://p.trellocdn.com;
-style-src 'self' 'unsafe-inline';
-img-src 'self' data: https:;
-font-src 'self' data: https:;
-connect-src 'self' https://api.trello.com https://itero-api-dev.onrender.com https://itero-api-dev-zg94.onrender.com;
-object-src 'none';
-base-uri 'none';
-form-action 'self';
-upgrade-insecure-requests
-"""

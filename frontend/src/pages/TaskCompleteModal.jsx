@@ -12,13 +12,23 @@ const TaskCompleteModal = () => {
 
     (async () => {
       try {
-        if (!t) { if (!cancelled) setStatus('❌ Not inside Trello'); return; }
+        // ✅ move it right here — before you call t.arg(...)
+        if (!t) {
+          if (!cancelled) {
+            setStatus('❌ Not inside Trello iframe');
+            toast.error('Not inside Trello iframe');
+          }
+          return;
+        }
 
         const cardId = t.arg('cardId') || t.arg('card');
         const memberId = t.arg('member');
 
         if (!cardId || !memberId) {
-          if (!cancelled) setStatus('❌ Missing task info.');
+          if (!cancelled) {
+            setStatus('❌ Missing task info.');
+            toast.error('Missing task info');
+          }
           return;
         }
 
@@ -34,7 +44,9 @@ const TaskCompleteModal = () => {
         const xp = xp_gained ?? 10;
         const lvl = level ?? '✓';
         const streak = streak_count ?? 0;
-        const done = Array.isArray(completed_challenges) ? completed_challenges.length : 0;
+        const done = Array.isArray(completed_challenges)
+          ? completed_challenges.length
+          : 0;
 
         const parts = [`+${xp} XP`, `Level ${lvl}`];
         if (streak) parts.push(`${streak}-day streak`);
@@ -42,11 +54,12 @@ const TaskCompleteModal = () => {
         const msg = `🎉 ${parts.join(' · ')}`;
 
         if (!cancelled) {
-          toast.success(msg, { autoClose: 2000 });
+          toast.success(msg, { autoClose: 2500 });
           setStatus(`✅ ${msg}`);
         }
 
-        setTimeout(() => t.closeModal(), 2100);
+        // 🕒 give the toast enough time to render before Trello kills the iframe
+        setTimeout(() => t.closeModal(), 2800);
       } catch (err) {
         if (!cancelled) {
           toast.error('Could not complete task', { autoClose: 2000 });
@@ -55,8 +68,11 @@ const TaskCompleteModal = () => {
       }
     })();
 
-    return () => { cancelled = true; };
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+}, []);
+
 
   const toastTheme =
     (typeof document !== 'undefined' &&

@@ -131,7 +131,7 @@ const MotivationDashboard = ({ trelloMemberId }) => {
 
             <div className={sharedStyles.card}>
               <h2 className={sharedStyles.cardTitle}>Daily Streak</h2>
-              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Keep it going</p>
+              <p className={sharedStyles.muted} style={{ marginTop: -4, marginBottom: 8 }}>Keep the fire alive!</p>
               <div className={styles.innerCard}>
                 <StreakTracker userId={userId} refreshKey={refreshKey} />
               </div>

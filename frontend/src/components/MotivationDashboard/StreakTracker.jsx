@@ -36,7 +36,7 @@ const StreakTracker = ({ userId, refreshKey }) => {
         🔥 {streak.count} {streak.count === 1 ? 'day' : 'days'}
       </div>
 
-      <div className={shared.kpiSub}>Keep it going — complete a task today</div>
+      <div className={shared.kpiSub}>Keep it going!</div>
     </>
   );
 };

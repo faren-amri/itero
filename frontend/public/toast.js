@@ -31,7 +31,7 @@
     const pills = [
       { emoji: '🎉', label: 'XP',     value: `+${xp}` },
       { emoji: '🏅', label: 'Level',  value: `${level}` },
-      { emoji: '🔥', label: 'Streak', value: `${streak}-day` },
+      { emoji: '🔥', label: 'Streak', value: `${streak}-day${streak === 1 ? '' : 's'}` },
     ];
     if (done > 0) pills.push({ emoji: '🏆', label: 'Challenges', value: `${done} completed` });
 

@@ -32,7 +32,10 @@ const StreakTracker = ({ userId, refreshKey }) => {
 
   return (
     <>
-      <div className={styles.streakValue}>🔥 {streak.count} days</div>
+      <div className={styles.streakValue}>
+        🔥 {streak.count} {streak.count === 1 ? 'day' : 'days'}
+      </div>
+
       <div className={shared.kpiSub}>Keep it going — complete a task today</div>
     </>
   );

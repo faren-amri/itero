@@ -1,6 +1,41 @@
-<!-- Trello Power-Up SDK -->
-<script src="https://p.trellocdn.com/power-up.min.js"></script>
-<link rel="stylesheet" href="/toast.css" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Complete</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Add this line and delete the inline <script>...</script> -->
-<script src="./toast.js" defer></script>
+    <!-- your CSS + Trello SDK + toast JS -->
+    <link rel="stylesheet" href="./toast.css" />
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script src="./toast.js" defer></script>
+  </head>
+
+  <body>
+    <div class="itero-toast">
+      <!-- header row -->
+      <div class="itero-row">
+        <div class="itero-logo" aria-hidden="true">
+          <img src="https://itero-powerup.netlify.app/assets/itero-icon-w-24.png" alt="">
+        </div>
+
+        <div class="itero-head">
+          <h3 class="itero-title">Task Complete</h3>
+          <p class="itero-sub">Nice work! Here’s what you earned:</p>
+        </div>
+
+        <button id="closeBtn" class="itero-btn" aria-label="Close">✕</button>
+      </div>
+
+      <!-- achievements panel -->
+      <div class="itero-panel" id="pill-section">
+        <div id="pillbar" class="itero-pillbar"></div>
+      </div>
+
+      <!-- actions -->
+      <div class="itero-actions">
+        <button id="openDash" class="itero-btn itero-btn--primary">Open Dashboard</button>
+      </div>
+    </div>
+  </body>
+</html>

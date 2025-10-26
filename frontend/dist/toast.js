@@ -1,18 +1,27 @@
 // frontend/public/toast.js
 (function () {
-  const t = window.TrelloPowerUp?.iframe();
+  const t = window.TrelloPowerUp && window.TrelloPowerUp.iframe
+    ? window.TrelloPowerUp.iframe()
+    : null;
+
+  const $ = (sel) => document.querySelector(sel);
+
+  const titleEl = $('.itero-title');
+  const subEl   = $('.itero-sub');
+  const pillbar = $('#pillbar');
+  const pillSection = $('#pill-section');
+
+  if (!titleEl || !subEl || !pillbar || !pillSection) {
+    console.warn('[toast] Required DOM missing');
+    return;
+  }
+
   const q = new URLSearchParams(location.search);
-
-  const xp = Number(q.get('xp') || 0);
-  const level = q.get('level') || '?';
+  const xp     = Number(q.get('xp') || 0);
+  const level  = q.get('level') || '?';
   const streak = Number(q.get('streak') || 0);
-  const done = Number(q.get('done') || 0);
-  const note = q.get('note') || '';
-
-  const titleEl = document.querySelector('.itero-title');
-  const subEl = document.querySelector('.itero-sub');
-  const pillSection = document.getElementById('pill-section');
-  const pillbar = document.getElementById('pillbar');
+  const done   = Number(q.get('done') || 0);
+  const note   = q.get('note') || '';
 
   if (note === 'already') {
     titleEl.textContent = 'Already Completed';
@@ -20,8 +29,8 @@
     pillSection.style.display = 'none';
   } else {
     const pills = [
-      { emoji: '🎉', label: 'XP', value: `+${xp}` },
-      { emoji: '🏅', label: 'Level', value: `${level}` },
+      { emoji: '🎉', label: 'XP',     value: `+${xp}` },
+      { emoji: '🏅', label: 'Level',  value: `${level}` },
       { emoji: '🔥', label: 'Streak', value: `${streak}-day` },
     ];
     if (done > 0) pills.push({ emoji: '🏆', label: 'Challenges', value: `${done} completed` });
@@ -34,21 +43,26 @@
     });
   }
 
-  document.getElementById('openDash').addEventListener('click', async () => {
+  $('#openDash')?.addEventListener('click', async () => {
     try {
-      await t.modal({
-        url: '/index.html#/dashboard',
-        title: 'Itero Dashboard',
-        height: 620,
-        fullscreen: false,
-        accentColor: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#2f6aa6'
-      });
+      if (t) {
+        // branch-safe: no leading slash
+        await t.modal({
+          url: 'index.html#/dashboard',
+          title: 'Itero Dashboard',
+          height: 620,
+          fullscreen: false
+        });
+      } else {
+        // Fallback open in same tab if somehow outside Trello
+        location.href = 'index.html#/dashboard';
+      }
     } finally {
-      t.closePopup();
+      t && t.closePopup();
     }
   });
 
-  document.getElementById('closeBtn').addEventListener('click', () => t.closePopup());
-  window.addEventListener('keydown', (e) => e.key === 'Escape' && t.closePopup());
-  setTimeout(() => t.closePopup(), 4500);
+  $('#closeBtn')?.addEventListener('click', () => t && t.closePopup());
+  window.addEventListener('keydown', (e) => e.key === 'Escape' && t && t.closePopup());
+  setTimeout(() => t && t.closePopup(), 4500);
 })();
